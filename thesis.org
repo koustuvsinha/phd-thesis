@@ -1,0 +1,137 @@
+#+title: PhD Thesis
+#+SETUPFILE:latex-template.org
+#+OPTIONS: toc:nil date:nil
+
+* Acknowledgements
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+* Abstract
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+* Abstract in French
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+* Contributions to Original Knowledge
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+* List of Figures
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+* List of Tables
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+
+#+latex: \clearpage
+#+TOC: headlines 2
+
+
+#+latex: \clearpage
+* Introduction
+:PROPERTIES:
+:tags: newpage
+:END:
+
+**Central Theme of the thesis** : Understanding and evaluating systematicity in pre-trained language models through semantic and syntactic generalization...
+
+
+#+latex: \clearpage
+* Background
+
+** Neural Inductive bias of text representation
+*** Feed Forward Neural Networks
+*** Recurrent Neural Networks
+*** Transformer Models
+** Pre-training and the advent of Large Language Models
+*** Success of pre-training and scale
+** Systematicity and Generalization
+*** Definitions
+**** Productivity
+**** Word Order Sensitivity
+*** Tasks
+#+latex: \clearpage
+* Understanding semantic generalization through productivity
+
+** Related Work
+** CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text
+*** Dataset construction
+*** Productivity and reasoning
+** Results
+** Discussion
+** Follow-up findings in the community
+** Summary
+#+latex: \clearpage
+* Quantifying syntactic generalization using word order
+
+** Related Work
+** Word Order in Natural Language Inference
+*** Probe Construction
+** Experiments & Results
+** Discussion
+** Follow-up findings in the community
+** Summary
+
+#+latex: \clearpage
+* Probing syntax understanding through distributional hypothesis
+
+** Related Work
+** Dataset construction and pre-training
+** Experiments
+*** Downstream reasoning tasks
+*** Evaluating the effectiveness of probing syntax
+** Discussion
+** Follow-up findings in the community
+** Summary
+#+latex: \clearpage
+* Measuring systematic generalization by exploiting absolute positions
+
+** Related Work
+** Systematic understanding of absolute position embeddings
+** Experiments
+** Discussion
+** Summary
+#+latex: \clearpage
+* Conclusion
+** Future Work
+#+latex: \clearpage
+* Bibliography
+bibliographystyle:unsrt
+bibliography:/Users/koustuvs/mylibrefs_new.bib
+
+* Acronyms
+
+* Appendix
+** Org mode auto save
+Run the following snippet to auto save and compile in org mode.
+
+#+begin_src elisp
+(defun kdm/org-save-and-export ()
+(interactive)
+(if (and (eq major-mode 'org-mode)
+    (ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
+  (org-latex-export-to-pdf)))
+
+(add-hook 'after-save-hook 'kdm/org-save-and-export)
+#+end_src
+** Add newpage before a heading
+
+#+begin_src elisp
+(defun org/get-headline-string-element  (headline backend info)
+  (let ((prop-point (next-property-change 0 headline)))
+    (if prop-point (plist-get (text-properties-at prop-point headline) :parent))))
+
+(defun org/ensure-latex-clearpage (headline backend info)
+  (when (org-export-derived-backend-p backend 'latex)
+    (let ((elmnt (org/get-headline-string-element headline backend info)))
+      (when (member "newpage" (org-element-property :tags elmnt))
+        (concat "\\clearpage\n" headline)))))
+
+(add-to-list 'org-export-filter-headline-functions
+             'org/ensure-latex-clearpage)
+
+#+end_src

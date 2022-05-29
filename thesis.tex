@@ -1,0 +1,222 @@
+% Created 2022-05-29 Sun 11:04
+% Intended LaTeX compiler: pdflatex
+\documentclass[letterpaper, 11pt]{article}
+                      \usepackage{lmodern} % Ensures we have the right font
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage[table, xcdraw]{xcolor}
+\definecolor{bblue}{HTML}{0645AD}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{colorlinks, linkcolor=blue, urlcolor=bblue}
+\usepackage{titling}
+\setlength{\droptitle}{-6em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+\usepackage[stretch=10]{microtype}
+\usepackage{hyphenat}
+\usepackage{ragged2e}
+\usepackage{subfig} % Subfigures (not needed in Org I think)
+\usepackage{hyperref} % Links
+\usepackage{listings} % Code highlighting
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\renewcommand{\baselinestretch}{1}
+\usepackage[explicit]{titlesec}
+\pretitle{\begin{center}\fontsize{20pt}{20pt}\selectfont}
+\posttitle{\par\end{center}}
+\preauthor{\begin{center}\vspace{-6bp}\fontsize{14pt}{14pt}\selectfont}
+\postauthor{\par\end{center}\vspace{-25bp}}
+\predate{\begin{center}\fontsize{12pt}{12pt}\selectfont}
+\postdate{\par\end{center}\vspace{0em}}
+\titlespacing\section{0pt}{1pt}{5pt} % left margin, space before section header, space after section header
+\titlespacing\subsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header
+\titlespacing\subsubsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header
+\usepackage{enumitem}
+\setlist{itemsep=-2pt} % or \setlist{noitemsep} to leave space around whole list
+\author{Koustuv Sinha}
+\date{}
+\title{PhD Thesis}
+\hypersetup{
+ pdfauthor={Koustuv Sinha},
+ pdftitle={PhD Thesis},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.1 (Org mode 9.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section*{Acknowledgements}
+\label{sec:org5951b21}
+\section*{Abstract}
+\label{sec:org41606f3}
+\section*{Abstract in French}
+\label{sec:org596b6fe}
+\section*{Contributions to Original Knowledge}
+\label{sec:org8ddffa3}
+\section*{List of Figures}
+\label{sec:orgd8b047f}
+\section*{List of Tables}
+\label{sec:orgf3f937f}
+\clearpage
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+
+\clearpage
+\section{Introduction}
+\label{sec:org52ca774}
+\textbf{\textbf{Central Theme of the thesis}} : Understanding and evaluating systematicity in pre-trained language models through semantic and syntactic generalization\ldots{}
+
+
+\clearpage
+\section{Background}
+\label{sec:org846b772}
+
+\subsection{Neural Inductive bias of text representation}
+\label{sec:org170079f}
+\subsubsection{Feed Forward Neural Networks}
+\label{sec:org2043ad0}
+\subsubsection{Recurrent Neural Networks}
+\label{sec:org45b07d3}
+\subsubsection{Transformer Models}
+\label{sec:org419ecc5}
+\subsection{Pre-training and the advent of Large Language Models}
+\label{sec:orgfeea314}
+\subsubsection{Success of pre-training and scale}
+\label{sec:org1f27a82}
+\subsection{Systematicity and Generalization}
+\label{sec:org4964967}
+\subsubsection{Definitions}
+\label{sec:orge3e2d4c}
+\begin{enumerate}
+\item Productivity
+\label{sec:orgf2d9fac}
+\item Word Order Sensitivity
+\label{sec:org1a6941d}
+\end{enumerate}
+\subsubsection{Tasks}
+\label{sec:org1b919b9}
+\clearpage
+\section{Understanding semantic generalization through productivity}
+\label{sec:org2423bcb}
+
+\subsection{Related Work}
+\label{sec:orgf9f5916}
+\subsection{CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text}
+\label{sec:orgc39a643}
+\subsubsection{Dataset construction}
+\label{sec:orgc974792}
+\subsubsection{Productivity and reasoning}
+\label{sec:org2df3d81}
+\subsection{Results}
+\label{sec:orga40a102}
+\subsection{Discussion}
+\label{sec:orgf18f0b5}
+\subsection{Follow-up findings in the community}
+\label{sec:org82f4696}
+\subsection{Summary}
+\label{sec:org75a8ffe}
+\clearpage
+\section{Quantifying syntactic generalization using word order}
+\label{sec:orgdc11abe}
+
+\subsection{Related Work}
+\label{sec:org7d20b1f}
+\subsection{Word Order in Natural Language Inference}
+\label{sec:orgc53d29d}
+\subsubsection{Probe Construction}
+\label{sec:org2df2c43}
+\subsection{Experiments \& Results}
+\label{sec:orgdaa0470}
+\subsection{Discussion}
+\label{sec:orgac1b05a}
+\subsection{Follow-up findings in the community}
+\label{sec:orgfb754db}
+\subsection{Summary}
+\label{sec:orgdc86a0a}
+
+\clearpage
+\section{Probing syntax understanding through distributional hypothesis}
+\label{sec:org68d0083}
+
+\subsection{Related Work}
+\label{sec:orgf45bf8e}
+\subsection{Dataset construction and pre-training}
+\label{sec:orgd53cc12}
+\subsection{Experiments}
+\label{sec:orgdd86e4b}
+\subsubsection{Downstream reasoning tasks}
+\label{sec:org7255b43}
+\subsubsection{Evaluating the effectiveness of probing syntax}
+\label{sec:org78bc4b3}
+\subsection{Discussion}
+\label{sec:orgee338a7}
+\subsection{Follow-up findings in the community}
+\label{sec:orgf69807b}
+\subsection{Summary}
+\label{sec:org8d8d358}
+\clearpage
+\section{Measuring systematic generalization by exploiting absolute positions}
+\label{sec:orgeb8cb36}
+
+\subsection{Related Work}
+\label{sec:org16b0258}
+\subsection{Systematic understanding of absolute position embeddings}
+\label{sec:org320f105}
+\subsection{Experiments}
+\label{sec:orgcf49f75}
+\subsection{Discussion}
+\label{sec:org180c1ae}
+\subsection{Summary}
+\label{sec:orgd3e8a8b}
+\clearpage
+\section{Conclusion}
+\label{sec:orgd1e81e1}
+\subsection{Future Work}
+\label{sec:org6e5d10c}
+\clearpage
+\section{Bibliography}
+\label{sec:org90a42a7}
+\bibliographystyle{unsrt}
+\bibliography{../../../mylibrefs_new}
+
+\section{Acronyms}
+\label{sec:org602881a}
+
+\section{Appendix}
+\label{sec:org80e0213}
+\subsection{Org mode auto save}
+\label{sec:orgc1d3985}
+Run the following snippet to auto save and compile in org mode.
+
+\begin{verbatim}
+(defun kdm/org-save-and-export ()
+(interactive)
+(if (and (eq major-mode 'org-mode)
+    (ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
+  (org-latex-export-to-pdf)))
+
+(add-hook 'after-save-hook 'kdm/org-save-and-export)
+\end{verbatim}
+\subsection{Add newpage before a heading}
+\label{sec:orgdc04e92}
+
+\begin{verbatim}
+(defun org/get-headline-string-element  (headline backend info)
+  (let ((prop-point (next-property-change 0 headline)))
+    (if prop-point (plist-get (text-properties-at prop-point headline) :parent))))
+
+(defun org/ensure-latex-clearpage (headline backend info)
+  (when (org-export-derived-backend-p backend 'latex)
+    (let ((elmnt (org/get-headline-string-element headline backend info)))
+      (when (member "newpage" (org-element-property :tags elmnt))
+        (concat "\\clearpage\n" headline)))))
+
+(add-to-list 'org-export-filter-headline-functions
+             'org/ensure-latex-clearpage)
+
+\end{verbatim}
+\end{document}

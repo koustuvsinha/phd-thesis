@@ -1,0 +1,83 @@
+#+LaTeX_CLASS: report
+#+LaTeX_CLASS_OPTIONS: [letterpaper, 12pt]
+
+% Standard packages
+#+LATEX_HEADER: \usepackage{amsmath}		% Extra math definitions
+#+LATEX_HEADER: \usepackage{graphics}		% PostScript figures
+#+LATEX_HEADER: \usepackage{setspace}		% 1.5 spacing
+#+LATEX_HEADER: \usepackage{longtable}          % Tables spanning pages
+#+LATEX_HEADER: \usepackage{natbib}
+
+% packages from COLING 2016
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \usepackage{latexsym}
+#+LATEX_HEADER: \usepackage[usenames]{color}
+#+LATEX_HEADER: \usepackage{covington}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{multirow}
+%#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{subcaption}%#+LATEX_HEADER: \usepackage{subfigure}
+
+% packages from ACL 2018
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[english]{babel}
+#+LATEX_HEADER: \usepackage{blindtext}
+#+LATEX_HEADER: \usepackage{amsfonts}
+#+LATEX_HEADER: \usepackage{amsthm}
+%#+LATEX_HEADER: \newtheorem{example}{Example}
+
+#+LATEX_HEADER: \usepackage[table,xcdraw]{xcolor}
+#+LATEX_HEADER: \usepackage{rotating}
+
+#+LATEX_HEADER: \usepackage{listings}
+%#+LATEX_HEADER: \usepackage{color}
+#+LATEX_HEADER: \definecolor{NiceBlue}{RGB}{11, 102, 163}
+#+LATEX_HEADER: \definecolor{SlightRed}{RGB}{249,38,114}
+#+LATEX_HEADER: \usepackage{textcomp} % other glyphs needed for upquote in listings below
+#+LATEX_HEADER: \lstdefinelanguage{DemoExample}
+#+LATEX_HEADER: { basicstyle=\footnotesize \ttfamily,
+#+LATEX_HEADER:   commentstyle=\color{SlightRed} \rmfamily\itshape,
+#+LATEX_HEADER:   stringstyle=\color{NiceBlue},
+#+LATEX_HEADER:   morecomment=[s]{/*}{*/},
+#+LATEX_HEADER:   morestring=[b]'
+#+LATEX_HEADER: }
+
+
+% % Custom packages
+%#+LATEX_HEADER: \usepackage[first]{macros/datestamp}	% Datestamp on first page of each chapter
+#+LATEX_HEADER: \usepackage[fancyhdr]{macros/McECEThesis}	% Thesis style
+#+LATEX_HEADER: \usepackage{McGillLogo}		% McGill University crest
+
+% $Id: ThesisEx.tex,v 1.1 2005/06/09 12:48:46 kabal Exp $
+
+#+LATEX_HEADER: \usepackage{color}
+%#+LATEX_HEADER: \def#+LATEX_HEADER: \headrulehook{#+LATEX_HEADER: \color{red}}		% Color the header rule
+
+%===== page layout
+% Define the side margins for a right-side page
+#+LATEX_HEADER: \insidemargin = 1.1in
+#+LATEX_HEADER: \outsidemargin = 1.1in
+
+% Above margin is space above the header
+% Below margin is space below footer
+#+LATEX_HEADER: \abovemargin = 1.1in
+#+LATEX_HEADER: \belowmargin = 0.75in
+
+#+LATEX_HEADER: \newcommand{\beq}{\begin{equation}}
+#+LATEX_HEADER: \newcommand{\eeq}{\end{equation}}
+
+%========= Document start
+#+LATEX_HEADER: \usepackage{palatino}           % Less abusive fonts
+#+LATEX_HEADER: \usepackage{macros/palatcm}
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \let\mathexp=\exp %redefine \exp to \mathexp cuz gb4e package redefines \exp
+#+LATEX_HEADER: \usepackage{gb4e}
+#+LATEX_HEADER: \noautomath
+
+% Glossaries
+#+latex_header: \usepackage[acronym,toc,section=section]{glossaries}
+#+latex_header: \makeglossaries

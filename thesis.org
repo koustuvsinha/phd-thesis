@@ -1,6 +1,11 @@
 #+title: PhD Thesis
-#+SETUPFILE:latex-template.org
+#+SETUPFILE:mcgill_thesis.org
 #+OPTIONS: toc:nil date:nil
+#+bibliography: /Users/koustuvs/Documents/mylibrefs_new.bib
+
+#+latex: \raggedbottom
+#+latex: \spacing{1.5}%\onehalfspacing
+#+latex: \pagenumbering{roman}
 
 * Acknowledgements
 :PROPERTIES:
@@ -18,6 +23,10 @@
 :PROPERTIES:
 :UNNUMBERED: notoc
 :END:
+* Contributions of Authors
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
 * List of Figures
 :PROPERTIES:
 :UNNUMBERED: notoc
@@ -28,27 +37,44 @@
 :END:
 
 #+latex: \clearpage
-#+TOC: headlines 2
-
+#+TOC: headlines 3
 
 #+latex: \clearpage
+
+#+latex: \pagenumbering{arabic}
 * Introduction
 :PROPERTIES:
 :tags: newpage
 :END:
 
-**Central Theme of the thesis** : Understanding and evaluating systematicity in pre-trained language models through semantic and syntactic generalization...
+
+**Central Theme of the thesis** : Understanding systematicity in pre-trained language models through semantic and syntactic generalization.
 
 
 #+latex: \clearpage
 * Background
 
+#+name: glossary
+| label | name         | description                                            |
+|-------+--------------+--------------------------------------------------------|
+| tlm   | Transformers | A class of models first derived by Vaswani et al. 2017 |
+
+#+name: acronyms
+| Key | Short | Long                  |
+|-----+-------+-----------------------|
+| llm | LLMs  | Large Language Models |
+| qos | QoS   | quality-of-service    |
+| bb  | BB    | branch and bound      |
+
+** Early methods for text representation
 ** Neural Inductive bias of text representation
 *** Feed Forward Neural Networks
 *** Recurrent Neural Networks
 *** Transformer Models
+
+ac:llm are the state-of-the-art in language models, which are based on gls:tlm.
 ** Pre-training and the advent of Large Language Models
-*** Success of pre-training and scale
+Success of pre-training and scale
 ** Systematicity and Generalization
 *** Definitions
 **** Productivity
@@ -57,53 +83,62 @@
 #+latex: \clearpage
 * Understanding semantic generalization through productivity
 
-** Related Work
+** Technical Background
 ** CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text
+
+Paper: cite:sinha2019a
+
 *** Dataset construction
 *** Productivity and reasoning
 ** Results
 ** Discussion
 ** Follow-up findings in the community
-** Summary
+** Related Work
 #+latex: \clearpage
 * Quantifying syntactic generalization using word order
 
-** Related Work
+Paper cite:sinha2021a
+
+** Technical Background
 ** Word Order in Natural Language Inference
 *** Probe Construction
 ** Experiments & Results
 ** Discussion
 ** Follow-up findings in the community
-** Summary
-
+** Related Work
 #+latex: \clearpage
 * Probing syntax understanding through distributional hypothesis
 
-** Related Work
+Paper: cite:sinha2021
+
+** Technical Background
 ** Dataset construction and pre-training
 ** Experiments
 *** Downstream reasoning tasks
 *** Evaluating the effectiveness of probing syntax
 ** Discussion
 ** Follow-up findings in the community
-** Summary
+** Related Work
 #+latex: \clearpage
 * Measuring systematic generalization by exploiting absolute positions
 
-** Related Work
+** Technical Background
 ** Systematic understanding of absolute position embeddings
 ** Experiments
 ** Discussion
-** Summary
+** Related Work
 #+latex: \clearpage
 * Conclusion
+** Summary
+** Limitations
 ** Future Work
 #+latex: \clearpage
 * Bibliography
 bibliographystyle:unsrt
-bibliography:/Users/koustuvs/mylibrefs_new.bib
+bibliography:/Users/koustuvs/Documents/mylibrefs_new.bib
 
-* Acronyms
+
+#+latex: \printglossaries
 
 * Appendix
 ** Org mode auto save
@@ -134,4 +169,32 @@ Run the following snippet to auto save and compile in org mode.
 (add-to-list 'org-export-filter-headline-functions
              'org/ensure-latex-clearpage)
 
+#+end_src
+** Glossary and Acronym build using Latexmk
+
+Add the following snippet in the file "~/.latexmkrc": (Source: https://tex.stackexchange.com/a/44316)
+
+#+begin_src bash
+add_cus_dep('glo', 'gls', 0, 'run_makeglossaries');
+add_cus_dep('acn', 'acr', 0, 'run_makeglossaries');
+
+sub run_makeglossaries {
+    my ($base_name, $path) = fileparse( $_[0] ); #handle -outdir param by splitting path and file, ...
+    pushd $path; # ... cd-ing into folder first, then running makeglossaries ...
+
+    if ( $silent ) {
+        system "makeglossaries -q '$base_name'"; #unix
+        # system "makeglossaries", "-q", "$base_name"; #windows
+    }
+    else {
+        system "makeglossaries '$base_name'"; #unix
+        # system "makeglossaries", "$base_name"; #windows
+    };
+
+    popd; # ... and cd-ing back again
+}
+
+push @generated_exts, 'glo', 'gls', 'glg';
+push @generated_exts, 'acn', 'acr', 'alg';
+$clean_ext .= ' %R.ist %R.xdy';
 #+end_src

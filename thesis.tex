@@ -1,39 +1,72 @@
-% Created 2022-05-29 Sun 11:04
+% Created 2022-06-07 Tue 18:52
 % Intended LaTeX compiler: pdflatex
-\documentclass[letterpaper, 11pt]{article}
-                      \usepackage{lmodern} % Ensures we have the right font
+\documentclass[letterpaper, 12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{amsmath}		% Extra math definitions
+\usepackage{graphics}		% PostScript figures
+\usepackage{setspace}		% 1.5 spacing
+\usepackage{longtable}          % Tables spanning pages
+\usepackage{natbib}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage[usenames]{color}
+\usepackage{covington}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subcaption}%#+LATEX_HEADER: \usepackage{subfigure}
+\usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{amsmath, amsthm, amssymb}
-\usepackage[table, xcdraw]{xcolor}
-\definecolor{bblue}{HTML}{0645AD}
-\usepackage[colorlinks]{hyperref}
-\hypersetup{colorlinks, linkcolor=blue, urlcolor=bblue}
-\usepackage{titling}
-\setlength{\droptitle}{-6em}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{1em}
-\usepackage[stretch=10]{microtype}
-\usepackage{hyphenat}
-\usepackage{ragged2e}
-\usepackage{subfig} % Subfigures (not needed in Org I think)
-\usepackage{hyperref} % Links
-\usepackage{listings} % Code highlighting
-\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
-\renewcommand{\baselinestretch}{1}
-\usepackage[explicit]{titlesec}
-\pretitle{\begin{center}\fontsize{20pt}{20pt}\selectfont}
-\posttitle{\par\end{center}}
-\preauthor{\begin{center}\vspace{-6bp}\fontsize{14pt}{14pt}\selectfont}
-\postauthor{\par\end{center}\vspace{-25bp}}
-\predate{\begin{center}\fontsize{12pt}{12pt}\selectfont}
-\postdate{\par\end{center}\vspace{0em}}
-\titlespacing\section{0pt}{1pt}{5pt} % left margin, space before section header, space after section header
-\titlespacing\subsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header
-\titlespacing\subsubsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header
-\usepackage{enumitem}
-\setlist{itemsep=-2pt} % or \setlist{noitemsep} to leave space around whole list
+\usepackage[english]{babel}
+\usepackage{blindtext}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{rotating}
+\usepackage{listings}
+\definecolor{NiceBlue}{RGB}{11, 102, 163}
+\definecolor{SlightRed}{RGB}{249,38,114}
+\usepackage{textcomp} % other glyphs needed for upquote in listings below
+\lstdefinelanguage{DemoExample}
+{ basicstyle=\footnotesize \ttfamily,
+commentstyle=\color{SlightRed} \rmfamily\itshape,
+stringstyle=\color{NiceBlue},
+morecomment=[s]{/*}{*/},
+morestring=[b]'
+}
+\usepackage[fancyhdr]{macros/McECEThesis}	% Thesis style
+\usepackage{McGillLogo}		% McGill University crest
+\usepackage{color}
+\insidemargin = 1.1in
+\outsidemargin = 1.1in
+\abovemargin = 1.1in
+\belowmargin = 0.75in
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\usepackage{palatino}           % Less abusive fonts
+\usepackage{macros/palatcm}
+\usepackage{hyperref}
+\let\mathexp=\exp %redefine \exp to \mathexp cuz gb4e package redefines \exp
+\usepackage{gb4e}
+\noautomath
+\usepackage[acronym,toc,section=section]{glossaries}
+\makeglossaries
+\newglossaryentry{tlm}{name=Transformers,description={{A class of models first derived by Vaswani et al. 2017}}}
+\newacronym{llm}{LLMs}{Large Language Models}
+\newacronym{qos}{QoS}{quality-of-service}
+\newacronym{bb}{BB}{branch and bound}
 \author{Koustuv Sinha}
 \date{}
 \title{PhD Thesis}
@@ -47,149 +80,170 @@
 \begin{document}
 
 \maketitle
+\raggedbottom
+\spacing{1.5}%\onehalfspacing
+\pagenumbering{roman}
 
-\section*{Acknowledgements}
-\label{sec:org5951b21}
-\section*{Abstract}
-\label{sec:org41606f3}
-\section*{Abstract in French}
-\label{sec:org596b6fe}
-\section*{Contributions to Original Knowledge}
-\label{sec:org8ddffa3}
-\section*{List of Figures}
-\label{sec:orgd8b047f}
-\section*{List of Tables}
-\label{sec:orgf3f937f}
+\part*{Acknowledgements}
+\label{sec:org7e5c0aa}
+\part*{Abstract}
+\label{sec:org5a975de}
+\part*{Abstract in French}
+\label{sec:orge2ad76f}
+\part*{Contributions to Original Knowledge}
+\label{sec:org6846130}
+\part*{Contributions of Authors}
+\label{sec:org4da2d9f}
+\part*{List of Figures}
+\label{sec:org165ba31}
+\part*{List of Tables}
+\label{sec:orgc95eccf}
 \clearpage
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{3}
 \tableofcontents
 
+\clearpage
+
+\pagenumbering{arabic}
+\part{Introduction}
+\label{sec:org3362b2c}
+\textbf{\textbf{Central Theme of the thesis}} : Understanding systematicity in pre-trained language models through semantic and syntactic generalization.
+
 
 \clearpage
-\section{Introduction}
-\label{sec:org52ca774}
-\textbf{\textbf{Central Theme of the thesis}} : Understanding and evaluating systematicity in pre-trained language models through semantic and syntactic generalization\ldots{}
+\part{Background}
+\label{sec:org92ee0e4}
 
 
-\clearpage
-\section{Background}
-\label{sec:org846b772}
 
-\subsection{Neural Inductive bias of text representation}
-\label{sec:org170079f}
-\subsubsection{Feed Forward Neural Networks}
-\label{sec:org2043ad0}
-\subsubsection{Recurrent Neural Networks}
-\label{sec:org45b07d3}
-\subsubsection{Transformer Models}
-\label{sec:org419ecc5}
-\subsection{Pre-training and the advent of Large Language Models}
-\label{sec:orgfeea314}
-\subsubsection{Success of pre-training and scale}
-\label{sec:org1f27a82}
-\subsection{Systematicity and Generalization}
-\label{sec:org4964967}
-\subsubsection{Definitions}
-\label{sec:orge3e2d4c}
+\chapter{Early methods for text representation}
+\label{sec:orgb488c7b}
+\chapter{Neural Inductive bias of text representation}
+\label{sec:org1bb6be4}
+\section{Feed Forward Neural Networks}
+\label{sec:org18325e7}
+\section{Recurrent Neural Networks}
+\label{sec:org01a78da}
+\section{Transformer Models}
+\label{sec:org7c10c6c}
+
+\gls{llm} are the state-of-the-art in language models, which are based on \gls{tlm}.
+\chapter{Pre-training and the advent of Large Language Models}
+\label{sec:orgd878583}
+Success of pre-training and scale
+\chapter{Systematicity and Generalization}
+\label{sec:org6500ffe}
+\section{Definitions}
+\label{sec:org8c6da40}
 \begin{enumerate}
 \item Productivity
-\label{sec:orgf2d9fac}
+\label{sec:org351593c}
 \item Word Order Sensitivity
-\label{sec:org1a6941d}
+\label{sec:orgdd85c7b}
 \end{enumerate}
-\subsubsection{Tasks}
-\label{sec:org1b919b9}
+\section{Tasks}
+\label{sec:org459321e}
 \clearpage
-\section{Understanding semantic generalization through productivity}
-\label{sec:org2423bcb}
+\part{Understanding semantic generalization through productivity}
+\label{sec:org116f095}
 
-\subsection{Related Work}
-\label{sec:orgf9f5916}
-\subsection{CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text}
-\label{sec:orgc39a643}
-\subsubsection{Dataset construction}
-\label{sec:orgc974792}
-\subsubsection{Productivity and reasoning}
-\label{sec:org2df3d81}
-\subsection{Results}
-\label{sec:orga40a102}
-\subsection{Discussion}
-\label{sec:orgf18f0b5}
-\subsection{Follow-up findings in the community}
-\label{sec:org82f4696}
-\subsection{Summary}
-\label{sec:org75a8ffe}
-\clearpage
-\section{Quantifying syntactic generalization using word order}
-\label{sec:orgdc11abe}
+\chapter{Technical Background}
+\label{sec:org10c5fec}
+\chapter{CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text}
+\label{sec:org8609c5a}
 
-\subsection{Related Work}
-\label{sec:org7d20b1f}
-\subsection{Word Order in Natural Language Inference}
-\label{sec:orgc53d29d}
-\subsubsection{Probe Construction}
-\label{sec:org2df2c43}
-\subsection{Experiments \& Results}
-\label{sec:orgdaa0470}
-\subsection{Discussion}
-\label{sec:orgac1b05a}
-\subsection{Follow-up findings in the community}
-\label{sec:orgfb754db}
-\subsection{Summary}
-\label{sec:orgdc86a0a}
+Paper: \cite{sinha2019a}
 
+\section{Dataset construction}
+\label{sec:orgf581075}
+\section{Productivity and reasoning}
+\label{sec:orgbb2ea61}
+\chapter{Results}
+\label{sec:org555851f}
+\chapter{Discussion}
+\label{sec:org4b2a7cb}
+\chapter{Follow-up findings in the community}
+\label{sec:org2bf2420}
+\chapter{Related Work}
+\label{sec:orgc3b8019}
 \clearpage
-\section{Probing syntax understanding through distributional hypothesis}
-\label{sec:org68d0083}
+\part{Quantifying syntactic generalization using word order}
+\label{sec:org3c395f8}
 
-\subsection{Related Work}
-\label{sec:orgf45bf8e}
-\subsection{Dataset construction and pre-training}
-\label{sec:orgd53cc12}
-\subsection{Experiments}
-\label{sec:orgdd86e4b}
-\subsubsection{Downstream reasoning tasks}
-\label{sec:org7255b43}
-\subsubsection{Evaluating the effectiveness of probing syntax}
-\label{sec:org78bc4b3}
-\subsection{Discussion}
-\label{sec:orgee338a7}
-\subsection{Follow-up findings in the community}
-\label{sec:orgf69807b}
-\subsection{Summary}
-\label{sec:org8d8d358}
-\clearpage
-\section{Measuring systematic generalization by exploiting absolute positions}
-\label{sec:orgeb8cb36}
+Paper \cite{sinha2021a}
 
-\subsection{Related Work}
-\label{sec:org16b0258}
-\subsection{Systematic understanding of absolute position embeddings}
-\label{sec:org320f105}
-\subsection{Experiments}
-\label{sec:orgcf49f75}
-\subsection{Discussion}
-\label{sec:org180c1ae}
-\subsection{Summary}
-\label{sec:orgd3e8a8b}
+\chapter{Technical Background}
+\label{sec:orgb1e99cb}
+\chapter{Word Order in Natural Language Inference}
+\label{sec:orgd0c45b6}
+\section{Probe Construction}
+\label{sec:org0b6937c}
+\chapter{Experiments \& Results}
+\label{sec:org50de332}
+\chapter{Discussion}
+\label{sec:org6dbee37}
+\chapter{Follow-up findings in the community}
+\label{sec:org63e0600}
+\chapter{Related Work}
+\label{sec:org563142f}
 \clearpage
-\section{Conclusion}
-\label{sec:orgd1e81e1}
-\subsection{Future Work}
-\label{sec:org6e5d10c}
+\part{Probing syntax understanding through distributional hypothesis}
+\label{sec:org0e2525d}
+
+Paper: \cite{sinha2021}
+
+\chapter{Technical Background}
+\label{sec:org1c48b12}
+\chapter{Dataset construction and pre-training}
+\label{sec:org6fccae9}
+\chapter{Experiments}
+\label{sec:org128fd02}
+\section{Downstream reasoning tasks}
+\label{sec:org8fc623c}
+\section{Evaluating the effectiveness of probing syntax}
+\label{sec:org28dddc0}
+\chapter{Discussion}
+\label{sec:org5425dc6}
+\chapter{Follow-up findings in the community}
+\label{sec:org0c2fffd}
+\chapter{Related Work}
+\label{sec:org279d5b6}
 \clearpage
-\section{Bibliography}
-\label{sec:org90a42a7}
+\part{Measuring systematic generalization by exploiting absolute positions}
+\label{sec:orgf73b150}
+
+\chapter{Technical Background}
+\label{sec:org132da13}
+\chapter{Systematic understanding of absolute position embeddings}
+\label{sec:orgfd0d2b5}
+\chapter{Experiments}
+\label{sec:orgea347ef}
+\chapter{Discussion}
+\label{sec:org1bc127e}
+\chapter{Related Work}
+\label{sec:org75d823e}
+\clearpage
+\part{Conclusion}
+\label{sec:orgcc9c607}
+\chapter{Summary}
+\label{sec:orgf62566a}
+\chapter{Limitations}
+\label{sec:org3bdc714}
+\chapter{Future Work}
+\label{sec:orga1d02ce}
+\clearpage
+\part{Bibliography}
+\label{sec:org2722050}
 \bibliographystyle{unsrt}
-\bibliography{../../../mylibrefs_new}
+\bibliography{../../mylibrefs_new}
 
-\section{Acronyms}
-\label{sec:org602881a}
 
-\section{Appendix}
-\label{sec:org80e0213}
-\subsection{Org mode auto save}
-\label{sec:orgc1d3985}
+\printglossaries
+
+\part{Appendix}
+\label{sec:org594b8e8}
+\chapter{Org mode auto save}
+\label{sec:org2a75011}
 Run the following snippet to auto save and compile in org mode.
 
 \begin{verbatim}
@@ -201,8 +255,8 @@ Run the following snippet to auto save and compile in org mode.
 
 (add-hook 'after-save-hook 'kdm/org-save-and-export)
 \end{verbatim}
-\subsection{Add newpage before a heading}
-\label{sec:orgdc04e92}
+\chapter{Add newpage before a heading}
+\label{sec:orgc3c29fd}
 
 \begin{verbatim}
 (defun org/get-headline-string-element  (headline backend info)
@@ -218,5 +272,34 @@ Run the following snippet to auto save and compile in org mode.
 (add-to-list 'org-export-filter-headline-functions
              'org/ensure-latex-clearpage)
 
+\end{verbatim}
+\chapter{Glossary and Acronym build using Latexmk}
+\label{sec:org13c88af}
+
+Add the following snippet in the file ``\textasciitilde{}/.latexmkrc'': (Source: \url{https://tex.stackexchange.com/a/44316})
+
+\begin{verbatim}
+add_cus_dep('glo', 'gls', 0, 'run_makeglossaries');
+add_cus_dep('acn', 'acr', 0, 'run_makeglossaries');
+
+sub run_makeglossaries {
+    my ($base_name, $path) = fileparse( $_[0] ); #handle -outdir param by splitting path and file, ...
+    pushd $path; # ... cd-ing into folder first, then running makeglossaries ...
+
+    if ( $silent ) {
+        system "makeglossaries -q '$base_name'"; #unix
+        # system "makeglossaries", "-q", "$base_name"; #windows
+    }
+    else {
+        system "makeglossaries '$base_name'"; #unix
+        # system "makeglossaries", "$base_name"; #windows
+    };
+
+    popd; # ... and cd-ing back again
+}
+
+push @generated_exts, 'glo', 'gls', 'glg';
+push @generated_exts, 'acn', 'acr', 'alg';
+$clean_ext .= ' %R.ist %R.xdy';
 \end{verbatim}
 \end{document}

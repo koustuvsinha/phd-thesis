@@ -1,5 +1,5 @@
 #+LaTeX_CLASS: org-plain-latex
-#+LaTeX_CLASS_OPTIONS: [letterpaper, 11pt]
+#+LaTeX_CLASS_OPTIONS: [letterpaper, 12pt]
 #+LATEX_HEADER: \usepackage{lmodern} % Ensures we have the right font
 
 #+LATEX_HEADER: \usepackage[T1]{fontenc}
@@ -69,6 +69,9 @@
 # #+LATEX_HEADER: \newcommand{\sectionbreak}{\clearpage}
 # #+LATEX_HEADER: \newcommand{\subsectionbreak}{\clearpage}
 
+% Glossaries
+#+latex_header: \usepackage[acronym,toc,section=section]{glossaries}
+#+latex_header: \makeglossaries
 
 # %Section
 # #+LATEX_HEADER: \titleformat{\section} {\Large}{\thesection}{1em}{\textbf{#1}} % Section header formatting

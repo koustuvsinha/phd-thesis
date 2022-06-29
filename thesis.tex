@@ -1,4 +1,4 @@
-% Created 2022-06-07 Tue 18:52
+% Created 2022-06-29 Wed 01:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[letterpaper, 12pt]{report}
 \usepackage[utf8]{inputenc}
@@ -84,20 +84,20 @@ morestring=[b]'
 \spacing{1.5}%\onehalfspacing
 \pagenumbering{roman}
 
-\part*{Acknowledgements}
-\label{sec:org7e5c0aa}
-\part*{Abstract}
-\label{sec:org5a975de}
-\part*{Abstract in French}
-\label{sec:orge2ad76f}
-\part*{Contributions to Original Knowledge}
-\label{sec:org6846130}
-\part*{Contributions of Authors}
-\label{sec:org4da2d9f}
-\part*{List of Figures}
-\label{sec:org165ba31}
-\part*{List of Tables}
-\label{sec:orgc95eccf}
+\chapter*{Acknowledgements}
+\label{sec:orgecdfd06}
+\chapter*{Abstract}
+\label{sec:org5f97da3}
+\chapter*{Abstract in French}
+\label{sec:org0716849}
+\chapter*{Contributions to Original Knowledge}
+\label{sec:orge1b928a}
+\chapter*{Contributions of Authors}
+\label{sec:org67e36a0}
+\listoffigures{}
+
+\chapter*{List of Tables}
+\label{sec:orge4be181}
 \clearpage
 \setcounter{tocdepth}{3}
 \tableofcontents
@@ -105,145 +105,245 @@ morestring=[b]'
 \clearpage
 
 \pagenumbering{arabic}
-\part{Introduction}
-\label{sec:org3362b2c}
+\chapter{Introduction}
+\label{sec:org84b1781}
 \textbf{\textbf{Central Theme of the thesis}} : Understanding systematicity in pre-trained language models through semantic and syntactic generalization.
 
+In this thesis I discuss my work on understanding systematicity in pre-trained language models.
 
 \clearpage
-\part{Background}
-\label{sec:org92ee0e4}
+\chapter{Background}
+\label{sec:orge973dec}
 
 
 
-\chapter{Early methods for text representation}
-\label{sec:orgb488c7b}
-\chapter{Neural Inductive bias of text representation}
-\label{sec:org1bb6be4}
-\section{Feed Forward Neural Networks}
-\label{sec:org18325e7}
-\section{Recurrent Neural Networks}
-\label{sec:org01a78da}
-\section{Transformer Models}
-\label{sec:org7c10c6c}
+\section{Early methods for text representation}
+\label{sec:org36095ba}
+\section{Neural Inductive bias of text representation}
+\label{sec:org1962e2d}
+\subsection{Feed Forward Neural Networks}
+\label{sec:org0a7045d}
+\subsection{Recurrent Neural Networks}
+\label{sec:org768a21d}
+\subsection{Transformer Models}
+\label{sec:org16f1a22}
 
 \gls{llm} are the state-of-the-art in language models, which are based on \gls{tlm}.
-\chapter{Pre-training and the advent of Large Language Models}
-\label{sec:orgd878583}
+\section{Pre-training and the advent of Large Language Models}
+\label{sec:org7274d30}
 Success of pre-training and scale
-\chapter{Systematicity and Generalization}
-\label{sec:org6500ffe}
-\section{Definitions}
-\label{sec:org8c6da40}
+\section{Systematicity and Generalization}
+\label{sec:orgcf6e128}
+\subsection{Definitions}
+\label{sec:orga318eb1}
 \begin{enumerate}
 \item Productivity
-\label{sec:org351593c}
+\label{sec:orge58aa17}
 \item Word Order Sensitivity
-\label{sec:orgdd85c7b}
+\label{sec:org8020cf9}
 \end{enumerate}
-\section{Tasks}
-\label{sec:org459321e}
+\subsection{Tasks}
+\label{sec:org6657ae7}
 \clearpage
-\part{Understanding semantic generalization through productivity}
-\label{sec:org116f095}
+\chapter{Understanding semantic generalization through productivity}
+\label{sec:orgcc5df70}
 
-\chapter{Technical Background}
-\label{sec:org10c5fec}
-\chapter{CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text}
-\label{sec:org8609c5a}
+\section{Technical Background}
+\label{sec:org6187e60}
+\section{CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text}
+\label{sec:orgd01b38f}
 
 Paper: \cite{sinha2019a}
 
-\section{Dataset construction}
-\label{sec:orgf581075}
-\section{Productivity and reasoning}
-\label{sec:orgbb2ea61}
-\chapter{Results}
-\label{sec:org555851f}
-\chapter{Discussion}
-\label{sec:org4b2a7cb}
-\chapter{Follow-up findings in the community}
-\label{sec:org2bf2420}
-\chapter{Related Work}
-\label{sec:orgc3b8019}
+\subsection{Dataset construction}
+\label{sec:org704afa9}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=0.3\textwidth]{figs/clutrr/dataset_const_proof.png}
+\caption{Dataset generation pipeline.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=0.3\textwidth]{figs/clutrr/composition.png}
+\caption{Illustration of how a set of facts can split and combined in various ways across sentences.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=0.3\textwidth]{figs/clutrr/clutrr_noise.png}
+\caption{Noise generation procedures of CLUTRR.}
+\end{figure}
+
+\subsection{Productivity and reasoning}
+\label{sec:orgefd9eef}
+\section{Results}
+\label{sec:org8bb5b76}
+
+\begin{center}
+\includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_23.pdf}
+\includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_234.pdf}
+\end{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=0.0001in]{figs/empy_fig.png}
+\caption{Systematic generalization when train on k=\(2\) and \(3\).}
+\end{figure}
+
+
+\section{Related Work}
+\label{sec:org777df69}
+\section{Discussion}
+\label{sec:orgb3a0d20}
+\section{Follow-up findings in the community}
+\label{sec:org89d09b3}
 \clearpage
-\part{Quantifying syntactic generalization using word order}
-\label{sec:org3c395f8}
+\chapter{Quantifying syntactic generalization using word order}
+\label{sec:org4093e01}
 
 Paper \cite{sinha2021a}
 
-\chapter{Technical Background}
-\label{sec:orgb1e99cb}
-\chapter{Word Order in Natural Language Inference}
-\label{sec:orgd0c45b6}
-\section{Probe Construction}
-\label{sec:org0b6937c}
-\chapter{Experiments \& Results}
-\label{sec:org50de332}
-\chapter{Discussion}
-\label{sec:org6dbee37}
-\chapter{Follow-up findings in the community}
-\label{sec:org63e0600}
-\chapter{Related Work}
-\label{sec:org563142f}
+\section{Technical Background}
+\label{sec:org27e141c}
+\section{Word Order in Natural Language Inference}
+\label{sec:org0bc8be0}
+\subsection{Probe Construction}
+\label{sec:org0679257}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=0.3\textwidth]{figs/unli/nli_gen_perm_desc.pdf}
+\caption{Graphical representation of the Permutation Acceptance class of metrics.}
+\end{figure}
+
+\section{Experiments \& Results}
+\label{sec:org86be1bc}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unli/comb_plot_all.pdf}
+\caption{Comparison of \(\omega_{\text{max}}\), \(\omega_{\text{rand}}\), \(\mathcal{P}^{c}\) and \(\mathcal{P}^{f}\) with the model accuracy \(\mathcal{A}\) on multiple datasets, where all models are trained on the MNLI corpus \cite{williams-etal-2018-broad}.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unli/all_entropy.png}
+\caption{Average entropy of model confidences on permutations..}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unli/bleu_2_all.png}
+\caption{BLEU-2 score versus acceptability of permuted sentences across all test datasets.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unli/min_tree_4.png}
+\caption{POS Tag Mini-Tree overlap score and percentage of permutations which the models assigned the gold label.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unli/omega_threshold.png}
+\caption{\(\omega_{x}\) threshold for all datasets with varying \(x\) and computing the percentage of examples that fall within the threshold.}
+\end{figure}
+
+
+
+\section{Related Work}
+\label{sec:org90572c9}
+\section{Discussion}
+\label{sec:orgdd9c593}
+\section{Follow-up findings in the community}
+\label{sec:orgef6955a}
+
 \clearpage
-\part{Probing syntax understanding through distributional hypothesis}
-\label{sec:org0e2525d}
+\chapter{Probing syntax understanding through distributional hypothesis}
+\label{sec:org881cedf}
 
 Paper: \cite{sinha2021}
 
-\chapter{Technical Background}
-\label{sec:org1c48b12}
-\chapter{Dataset construction and pre-training}
-\label{sec:org6fccae9}
-\chapter{Experiments}
-\label{sec:org128fd02}
-\section{Downstream reasoning tasks}
-\label{sec:org8fc623c}
-\section{Evaluating the effectiveness of probing syntax}
-\label{sec:org28dddc0}
-\chapter{Discussion}
-\label{sec:org5425dc6}
-\chapter{Follow-up findings in the community}
-\label{sec:org0c2fffd}
-\chapter{Related Work}
-\label{sec:org279d5b6}
-\clearpage
-\part{Measuring systematic generalization by exploiting absolute positions}
-\label{sec:orgf73b150}
+\section{Technical Background}
+\label{sec:org21235b5}
+\section{Dataset construction and pre-training}
+\label{sec:orgc04b18b}
+\section{Experiments}
+\label{sec:org987c7f3}
+\subsection{Downstream reasoning tasks}
+\label{sec:org3d7661e}
 
-\chapter{Technical Background}
-\label{sec:org132da13}
-\chapter{Systematic understanding of absolute position embeddings}
-\label{sec:orgfd0d2b5}
-\chapter{Experiments}
-\label{sec:orgea347ef}
-\chapter{Discussion}
-\label{sec:org1bc127e}
-\chapter{Related Work}
-\label{sec:org75d823e}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unnat_pt/main_result_plot.pdf}
+\caption{Downstream results on scrambled pre-training.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unnat_pt/finetune_rand.pdf}
+\caption{GLUE and PAWS task dev set performance when finetuned on naturally and randomly ordered text, respectively, using pre-trained RoBERTa (base) models on different versions of BookWiki corpus.}
+\end{figure}
+
+\subsection{Evaluating the effectiveness of probing syntax}
+\label{sec:orgde81009}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/unnat_pt/rda_mdl_ep_3.pdf}
+\caption{Risannen Data Analysis.}
+\end{figure}
+
+\section{Related Work}
+\label{sec:orgc510385}
+\section{Discussion}
+\label{sec:org25a2834}
+\section{Follow-up findings in the community}
+\label{sec:orgf893721}
 \clearpage
-\part{Conclusion}
-\label{sec:orgcc9c607}
-\chapter{Summary}
-\label{sec:orgf62566a}
-\chapter{Limitations}
-\label{sec:org3bdc714}
-\chapter{Future Work}
-\label{sec:orga1d02ce}
+\chapter{Measuring systematic generalization by exploiting absolute positions}
+\label{sec:org4fe017f}
+
+\section{Technical Background}
+\label{sec:orge980475}
+\section{Systematic understanding of absolute position embeddings}
+\label{sec:orgc239d2d}
+\section{Related Work}
+\label{sec:org6149bb0}
+\section{Experiments}
+\label{sec:orgad6ec35}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/pos_enc/acceptability_scores.pdf}
+\caption{Grammatical acceptability scores on BLiMP dataset.}
+\end{figure}
+
+\section{Discussion}
+\label{sec:org8d72560}
 \clearpage
-\part{Bibliography}
-\label{sec:org2722050}
+\chapter{Conclusion}
+\label{sec:org0188af2}
+\section{Summary}
+\label{sec:org06f6c51}
+\section{Limitations}
+\label{sec:org338fd40}
+\section{Future Work}
+\label{sec:org67bf752}
+\clearpage
+\chapter{Bibliography}
+\label{sec:org49a30b2}
 \bibliographystyle{unsrt}
-\bibliography{../../mylibrefs_new}
+\bibliography{../../mylibrefs_new,bibfiles/unli,bibfiles/clutrr,bibfiles/pos_enc,bibfiles/unnat_pt,bibfiles/anthology}
 
 
 \printglossaries
 
-\part{Appendix}
-\label{sec:org594b8e8}
-\chapter{Org mode auto save}
-\label{sec:org2a75011}
+\chapter{Appendix}
+\label{sec:orgfe900d8}
+\section{Org mode auto save}
+\label{sec:org9aa068f}
 Run the following snippet to auto save and compile in org mode.
 
 \begin{verbatim}
@@ -251,12 +351,25 @@ Run the following snippet to auto save and compile in org mode.
 (interactive)
 (if (and (eq major-mode 'org-mode)
     (ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
-  (org-latex-export-to-pdf)))
+  (org-latex-export-to-latex)))
 
 (add-hook 'after-save-hook 'kdm/org-save-and-export)
 \end{verbatim}
-\chapter{Add newpage before a heading}
-\label{sec:orgc3c29fd}
+
+\section{Remove ``parts'' from report}
+\label{sec:org9b6eddf}
+
+\begin{verbatim}
+(add-to-list 'org-latex-classes
+             '("report-noparts"
+               "\\documentclass[11pt]{report}"
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+\end{verbatim}
+\section{Add newpage before a heading}
+\label{sec:org01683d7}
 
 \begin{verbatim}
 (defun org/get-headline-string-element  (headline backend info)
@@ -273,8 +386,9 @@ Run the following snippet to auto save and compile in org mode.
              'org/ensure-latex-clearpage)
 
 \end{verbatim}
-\chapter{Glossary and Acronym build using Latexmk}
-\label{sec:org13c88af}
+
+\section{Glossary and Acronym build using Latexmk}
+\label{sec:orga3bc779}
 
 Add the following snippet in the file ``\textasciitilde{}/.latexmkrc'': (Source: \url{https://tex.stackexchange.com/a/44316})
 
@@ -302,4 +416,45 @@ push @generated_exts, 'glo', 'gls', 'glg';
 push @generated_exts, 'acn', 'acr', 'alg';
 $clean_ext .= ' %R.ist %R.xdy';
 \end{verbatim}
+\section{Citation style buffer local}
+\label{sec:org61822fa}
+
+\begin{verbatim}
+(set (make-local-variable 'bibtex-completion-format-citation-functions)
+  '((org-mode      . my/bibtex-completion-format-citation-org-default-cite)))
+\end{verbatim}
+\section{Org latex compiler options}
+\label{sec:orgbba41e5}
+
+\begin{verbatim}
+(setq org-latex-pdf-process (list "latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+\end{verbatim}
+
+Original value
+
+\begin{verbatim}
+(setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
+\end{verbatim}
+
+Let us try Fast compile \url{https://gist.github.com/yig/ba124dfbc8f63762f222}.
+
+\begin{verbatim}
+(setq org-latex-pdf-process (list "latexmk-fast %f"))
+\end{verbatim}
+
+\begin{itemize}
+\item Doesn't seem to work from Emacs.
+\item I need to change the save function to only export in tex. Then, have a separate process run latexmk.
+\item Using the python package \texttt{when-changed} to watch the thesis.tex file for change.
+\item Usage:
+\end{itemize}
+
+\begin{verbatim}
+when-changed thesis.tex latexmk -f -pdf -interaction=nonstopmode -output-directory=%o thesis.tex
+\end{verbatim}
+
+\begin{itemize}
+\item The pdf does not update. It seems to but not always? No it does. For some reason, compilation takes ages.
+\item Works with \texttt{when-changed}!
+\end{itemize}
 \end{document}

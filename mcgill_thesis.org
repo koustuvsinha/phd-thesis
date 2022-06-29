@@ -1,4 +1,4 @@
-#+LaTeX_CLASS: report
+#+LaTeX_CLASS: report-noparts
 #+LaTeX_CLASS_OPTIONS: [letterpaper, 12pt]
 
 % Standard packages

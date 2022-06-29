@@ -27,10 +27,9 @@
 :PROPERTIES:
 :UNNUMBERED: notoc
 :END:
-* List of Figures
-:PROPERTIES:
-:UNNUMBERED: notoc
-:END:
+
+#+latex: \listoffigures{}
+
 * List of Tables
 :PROPERTIES:
 :UNNUMBERED: notoc
@@ -50,6 +49,7 @@
 
 **Central Theme of the thesis** : Understanding systematicity in pre-trained language models through semantic and syntactic generalization.
 
+In this thesis I discuss my work on understanding systematicity in pre-trained language models.
 
 #+latex: \clearpage
 * Background
@@ -89,11 +89,36 @@ Success of pre-training and scale
 Paper: cite:sinha2019a
 
 *** Dataset construction
+
+#+ATTR_LATEX: :height 0.3\textwidth
+#+CAPTION: Dataset generation pipeline.
+[[file:figs/clutrr/dataset_const_proof.png]]
+
+#+ATTR_LATEX: :height 0.3\textwidth
+#+CAPTION: Illustration of how a set of facts can split and combined in various ways across sentences.
+[[file:figs/clutrr/composition.png]]
+
+#+ATTR_LATEX: :height 0.3\textwidth
+#+CAPTION: Noise generation procedures of CLUTRR.
+[[file:figs/clutrr/clutrr_noise.png]]
+
 *** Productivity and reasoning
 ** Results
+
+#+begin_center
+#+ATTR_LATEX: :height 0.3\textwidth :center nil
+[[file:figs/clutrr/emnlp/sys_gen_23.pdf]]
+#+ATTR_LATEX: :height 0.3\textwidth :center nil
+[[file:figs/clutrr/emnlp/sys_gen_234.pdf]]
+#+end_center
+#+CAPTION: Systematic generalization when train on k=$2$ and $3$.
+#+ATTR_LATEX: :height 0.0001in
+[[file:figs/empy_fig.png]]
+
+
+** Related Work
 ** Discussion
 ** Follow-up findings in the community
-** Related Work
 #+latex: \clearpage
 * Quantifying syntactic generalization using word order
 
@@ -102,10 +127,34 @@ Paper cite:sinha2021a
 ** Technical Background
 ** Word Order in Natural Language Inference
 *** Probe Construction
+
+#+ATTR_LATEX: :height 0.3\textwidth
+#+CAPTION: Graphical representation of the Permutation Acceptance class of metrics.
+[[file:figs/unli/nli_gen_perm_desc.pdf]]
+
 ** Experiments & Results
+
+#+CAPTION: Comparison of $\omega_{\text{max}}$, $\omega_{\text{rand}}$, $\mathcal{P}^{c}$ and $\mathcal{P}^{f}$ with the model accuracy $\mathcal{A}$ on multiple datasets, where all models are trained on the MNLI corpus cite:williams-etal-2018-broad.
+[[file:figs/unli/comb_plot_all.pdf]]
+
+#+CAPTION: Average entropy of model confidences on permutations..
+[[file:figs/unli/all_entropy.png]]
+
+#+CAPTION: BLEU-2 score versus acceptability of permuted sentences across all test datasets.
+[[file:figs/unli/bleu_2_all.png]]
+
+#+CAPTION: POS Tag Mini-Tree overlap score and percentage of permutations which the models assigned the gold label.
+[[file:figs/unli/min_tree_4.png]]
+
+#+CAPTION: $\omega_{x}$ threshold for all datasets with varying $x$ and computing the percentage of examples that fall within the threshold.
+[[file:figs/unli/omega_threshold.png]]
+
+
+
+** Related Work
 ** Discussion
 ** Follow-up findings in the community
-** Related Work
+
 #+latex: \clearpage
 * Probing syntax understanding through distributional hypothesis
 
@@ -115,18 +164,33 @@ Paper: cite:sinha2021
 ** Dataset construction and pre-training
 ** Experiments
 *** Downstream reasoning tasks
+
+#+CAPTION: Downstream results on scrambled pre-training.
+[[file:figs/unnat_pt/main_result_plot.pdf]]
+
+#+CAPTION: GLUE and PAWS task dev set performance when finetuned on naturally and randomly ordered text, respectively, using pre-trained RoBERTa (base) models on different versions of BookWiki corpus.
+[[file:figs/unnat_pt/finetune_rand.pdf]]
+
 *** Evaluating the effectiveness of probing syntax
+
+#+CAPTION: Risannen Data Analysis.
+[[file:figs/unnat_pt/rda_mdl_ep_3.pdf]]
+
+** Related Work
 ** Discussion
 ** Follow-up findings in the community
-** Related Work
 #+latex: \clearpage
 * Measuring systematic generalization by exploiting absolute positions
 
 ** Technical Background
 ** Systematic understanding of absolute position embeddings
-** Experiments
-** Discussion
 ** Related Work
+** Experiments
+
+#+CAPTION: Grammatical acceptability scores on BLiMP dataset.
+[[file:figs/pos_enc/acceptability_scores.pdf]]
+
+** Discussion
 #+latex: \clearpage
 * Conclusion
 ** Summary
@@ -135,7 +199,7 @@ Paper: cite:sinha2021
 #+latex: \clearpage
 * Bibliography
 bibliographystyle:unsrt
-bibliography:/Users/koustuvs/Documents/mylibrefs_new.bib
+bibliography:/Users/koustuvs/Documents/mylibrefs_new.bib,bibfiles/unli.bib,bibfiles/clutrr.bib,bibfiles/pos_enc.bib,bibfiles/unnat_pt.bib,bibfiles/anthology.bib
 
 
 #+latex: \printglossaries
@@ -149,9 +213,24 @@ Run the following snippet to auto save and compile in org mode.
 (interactive)
 (if (and (eq major-mode 'org-mode)
     (ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
-  (org-latex-export-to-pdf)))
+  (org-latex-export-to-latex)))
 
 (add-hook 'after-save-hook 'kdm/org-save-and-export)
+#+end_src
+
+#+RESULTS:
+| kdm/org-save-and-export | doom-modeline-update-vcs-text | doom-modeline-update-vcs-icon | doom-modeline-update-buffer-file-name | rmail-after-save-hook | +evil-display-vimlike-save-message-h | doom-auto-revert-buffers-h | doom-guess-mode-h |
+
+** Remove "parts" from report
+
+#+begin_src elisp
+(add-to-list 'org-latex-classes
+             '("report-noparts"
+               "\\documentclass[11pt]{report}"
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 #+end_src
 ** Add newpage before a heading
 
@@ -170,6 +249,10 @@ Run the following snippet to auto save and compile in org mode.
              'org/ensure-latex-clearpage)
 
 #+end_src
+
+#+RESULTS:
+| org/ensure-latex-clearpage |
+
 ** Glossary and Acronym build using Latexmk
 
 Add the following snippet in the file "~/.latexmkrc": (Source: https://tex.stackexchange.com/a/44316)
@@ -198,3 +281,47 @@ push @generated_exts, 'glo', 'gls', 'glg';
 push @generated_exts, 'acn', 'acr', 'alg';
 $clean_ext .= ' %R.ist %R.xdy';
 #+end_src
+** Citation style buffer local
+
+#+begin_src elisp
+(set (make-local-variable 'bibtex-completion-format-citation-functions)
+  '((org-mode      . my/bibtex-completion-format-citation-org-default-cite)))
+#+end_src
+
+#+RESULTS:
+: ((org-mode . my/bibtex-completion-format-citation-org-default-cite))
+** Org latex compiler options
+
+#+begin_src elisp
+(setq org-latex-pdf-process (list "latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+#+end_src
+
+Original value
+
+#+begin_src elisp
+(setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
+#+end_src
+
+#+RESULTS:
+| latexmk -f -pdf %f |
+
+Let us try Fast compile https://gist.github.com/yig/ba124dfbc8f63762f222.
+
+#+begin_src elisp
+(setq org-latex-pdf-process (list "latexmk-fast %f"))
+#+end_src
+
+#+RESULTS:
+| latexmk-fast %f |
+
+- Doesn't seem to work from Emacs.
+- I need to change the save function to only export in tex. Then, have a separate process run latexmk.
+- Using the python package =when-changed= to watch the thesis.tex file for change.
+- Usage:
+
+#+begin_src bash
+when-changed thesis.tex latexmk -f -pdf -interaction=nonstopmode -output-directory=%o thesis.tex
+#+end_src
+
+- The pdf does not update. It seems to but not always? No it does. For some reason, compilation takes ages.
+- Works with =when-changed=!

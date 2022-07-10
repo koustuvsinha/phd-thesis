@@ -83,7 +83,28 @@ Success of pre-training and scale
 #+latex: \clearpage
 * Understanding semantic generalization through productivity
 
+Natural language understanding (NLU) systems have been extremely successful at reading comprehension tasks, such as question answering (QA) and natural language inference (NLI).
+An array of existing datasets are available for these tasks. This includes datasets that test a system's ability to extract factual answers from text cite:Rajpurkar2016-yc,Nguyen2016-ec,Trischler2016-fc,Mostafazadeh2016-hu,Su2016-so, as well as datasets that emphasize commonsense inference, such as entailment between sentences cite:bowman2015large,williams2018broad.
+
+However, there are growing concerns regarding the ability of NLU systems---and neural networks more generally---to generalize in a systematic and robust way cite:bahdanau2018systematic,lake2017generalization,Johnson2016-mw.
+For instance, recent work has highlighted the brittleness of NLU systems to adversarial examples cite:jia2017adversarial, as well as the fact that NLU models tend to exploit statistical artifacts in datasets, rather than exhibiting true reasoning and generalization capabilities cite:gururangan2018annotation,kaushik2018much.
+These findings have also dovetailed with the recent dominance of large pre-trained language models, such as BERT, on NLU benchmarks cite:devlin2018bert,peters2018deep, which suggest that the primary difficulty in these datasets is incorporating the statistics of the natural language, rather than reasoning.
+
+An important challenge is thus to develop NLU benchmarks that can precisely test a model's capability for robust and systematic generalization.
+Ideally, we want language understanding systems that can not only answer questions and draw inferences from text, but that can also do so in a systematic, logical, and robust way.
+While such reasoning capabilities are certainly required for many existing NLU tasks, most datasets combine several challenges of language understanding into one, such as co-reference/entity resolution, incorporating world knowledge, and semantic parsing---making it difficult to isolate and diagnose a model's capabilities for systematic generalization and robustness.
+
+Inspired by the classic AI challenge of inductive logic programming cite:Quinlan1990-iv, in this chapter I discuss my work on developing a semi-synthetic benchmark designed to explicitly test an NLU model's ability for systematic and robust logical generalization (cite:sinha2019a). Our work --- termed CLUTRR (Compositional Language Understanding and Text-based Relational Reasoning) --- contains a large set of semi-synthetic stories involving hypothetical families.
+Given a story, the goal is to infer the relationship between two family members, whose relationship is not explicitly mentioned.
+To solve this task, a learning agent must extract the relationships mentioned in the text, induce the logical rules governing the kinship relationships (e.g., the transitivity of the sibling relation), and use these rules to infer the relationship between a given pair of entities.
+Crucially, the CLUTRR benchmark allows us to test a learning agent's ability for /systematic generalization/ by testing on stories that contain unseen combinations of logical rules.
+CLUTRR also allows us to precisely test for the various forms of /model robustness/ by adding different kinds of superfluous /noise facts/ to the stories.
+
+
 ** Technical Background
+
+
+
 ** CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text
 
 Paper: cite:sinha2019a
@@ -196,8 +217,9 @@ Paper: cite:sinha2021
 ** Summary
 ** Limitations
 ** Future Work
+
 #+latex: \clearpage
-* Bibliography
+
 bibliographystyle:unsrt
 bibliography:/Users/koustuvs/Documents/mylibrefs_new.bib,bibfiles/unli.bib,bibfiles/clutrr.bib,bibfiles/pos_enc.bib,bibfiles/unnat_pt.bib,bibfiles/anthology.bib
 
@@ -232,6 +254,11 @@ Run the following snippet to auto save and compile in org mode.
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 #+end_src
+
+#+RESULTS:
+| report-noparts  | \documentclass[11pt]{report} | (\chapter{%s} . \chapter*{%s}) | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
+| org-plain-latex | \documentclass{article}      |                                |                                |                                      |                                            |
+
 ** Add newpage before a heading
 
 #+begin_src elisp

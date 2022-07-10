@@ -1,4 +1,3 @@
-% Created 2022-06-29 Wed 01:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[letterpaper, 12pt]{report}
 \usepackage[utf8]{inputenc}
@@ -62,11 +61,17 @@ morestring=[b]'
 \usepackage{gb4e}
 \noautomath
 \usepackage[acronym,toc,section=section]{glossaries}
+
 \makeglossaries
+
+% GLossary entries
 \newglossaryentry{tlm}{name=Transformers,description={{A class of models first derived by Vaswani et al. 2017}}}
+% Acronyms
 \newacronym{llm}{LLMs}{Large Language Models}
 \newacronym{qos}{QoS}{quality-of-service}
 \newacronym{bb}{BB}{branch and bound}
+
+
 \author{Koustuv Sinha}
 \date{}
 \title{PhD Thesis}
@@ -85,19 +90,19 @@ morestring=[b]'
 \pagenumbering{roman}
 
 \chapter*{Acknowledgements}
-\label{sec:orgecdfd06}
+\label{sec:org111920c}
 \chapter*{Abstract}
-\label{sec:org5f97da3}
+\label{sec:orgec62e8c}
 \chapter*{Abstract in French}
-\label{sec:org0716849}
+\label{sec:org71795cd}
 \chapter*{Contributions to Original Knowledge}
-\label{sec:orge1b928a}
+\label{sec:org3bc5b8a}
 \chapter*{Contributions of Authors}
-\label{sec:org67e36a0}
+\label{sec:org2435b5a}
 \listoffigures{}
 
 \chapter*{List of Tables}
-\label{sec:orge4be181}
+\label{sec:org85f7663}
 \clearpage
 \setcounter{tocdepth}{3}
 \tableofcontents
@@ -105,58 +110,78 @@ morestring=[b]'
 \clearpage
 
 \pagenumbering{arabic}
+
 \chapter{Introduction}
-\label{sec:org84b1781}
+\label{sec:orgeb32902}
+
 \textbf{\textbf{Central Theme of the thesis}} : Understanding systematicity in pre-trained language models through semantic and syntactic generalization.
 
 In this thesis I discuss my work on understanding systematicity in pre-trained language models.
 
 \clearpage
+
 \chapter{Background}
-\label{sec:orge973dec}
-
-
+\label{sec:orgaa03e11}
 
 \section{Early methods for text representation}
-\label{sec:org36095ba}
+\label{sec:org7176877}
 \section{Neural Inductive bias of text representation}
-\label{sec:org1962e2d}
+\label{sec:org2479903}
 \subsection{Feed Forward Neural Networks}
-\label{sec:org0a7045d}
+\label{sec:orgc5c64b1}
 \subsection{Recurrent Neural Networks}
-\label{sec:org768a21d}
+\label{sec:org081fc19}
 \subsection{Transformer Models}
-\label{sec:org16f1a22}
+\label{sec:orgce0ee81}
 
 \gls{llm} are the state-of-the-art in language models, which are based on \gls{tlm}.
 \section{Pre-training and the advent of Large Language Models}
-\label{sec:org7274d30}
+\label{sec:org754bcf3}
 Success of pre-training and scale
 \section{Systematicity and Generalization}
-\label{sec:orgcf6e128}
+\label{sec:orgb799e4e}
 \subsection{Definitions}
-\label{sec:orga318eb1}
+\label{sec:org70d8bf6}
 \begin{enumerate}
 \item Productivity
-\label{sec:orge58aa17}
+\label{sec:orgbb21691}
 \item Word Order Sensitivity
-\label{sec:org8020cf9}
+\label{sec:org41a33eb}
 \end{enumerate}
 \subsection{Tasks}
-\label{sec:org6657ae7}
+\label{sec:org51f5f2f}
 \clearpage
 \chapter{Understanding semantic generalization through productivity}
-\label{sec:orgcc5df70}
+\label{sec:org63ce972}
+
+Natural language understanding (NLU) systems have been extremely successful at reading comprehension tasks, such as question answering (QA) and natural language inference (NLI).
+An array of existing datasets are available for these tasks. This includes datasets that test a system's ability to extract factual answers from text \cite{Rajpurkar2016-yc,Nguyen2016-ec,Trischler2016-fc,Mostafazadeh2016-hu,Su2016-so}, as well as datasets that emphasize commonsense inference, such as entailment between sentences \cite{bowman2015large,williams2018broad}.
+
+However, there are growing concerns regarding the ability of NLU systems---and neural networks more generally---to generalize in a systematic and robust way \cite{bahdanau2018systematic,lake2017generalization,Johnson2016-mw}.
+For instance, recent work has highlighted the brittleness of NLU systems to adversarial examples \cite{jia2017adversarial}, as well as the fact that NLU models tend to exploit statistical artifacts in datasets, rather than exhibiting true reasoning and generalization capabilities \cite{gururangan2018annotation,kaushik2018much}.
+These findings have also dovetailed with the recent dominance of large pre-trained language models, such as BERT, on NLU benchmarks \cite{devlin2018bert,peters2018deep}, which suggest that the primary difficulty in these datasets is incorporating the statistics of the natural language, rather than reasoning.
+
+An important challenge is thus to develop NLU benchmarks that can precisely test a model's capability for robust and systematic generalization.
+Ideally, we want language understanding systems that can not only answer questions and draw inferences from text, but that can also do so in a systematic, logical, and robust way.
+While such reasoning capabilities are certainly required for many existing NLU tasks, most datasets combine several challenges of language understanding into one, such as co-reference/entity resolution, incorporating world knowledge, and semantic parsing---making it difficult to isolate and diagnose a model's capabilities for systematic generalization and robustness.
+
+Inspired by the classic AI challenge of inductive logic programming \cite{Quinlan1990-iv}, in this chapter I discuss my work on developing semi-synthetic benchmark designed to explicitly test an NLU model's ability for systematic and robust logical generalization \cite{sinha2019a}.
+Our benchmark suite---termed CLUTRR (Compositional Language Understanding and Text-based Relational Reasoning)---contains a large set of semi-synthetic stories involving hypothetical families.
+Given a story, the goal is to infer the relationship between two family members, whose relationship is not explicitly mentioned.
+To solve this task, a learning agent must extract the relationships mentioned in the text, induce the logical rules governing the kinship relationships (e.g., the transitivity of the sibling relation), and use these rules to infer the relationship between a given pair of entities.
+Crucially, the CLUTRR benchmark allows us to test a learning agent's ability for \emph{systematic generalization} by testing on stories that contain unseen combinations of logical rules.
+CLUTRR also allows us to precisely test for the various forms of \emph{model robustness} by adding different kinds of superfluous \emph{noise facts} to the stories.
+
 
 \section{Technical Background}
-\label{sec:org6187e60}
+\label{sec:org11db5fd}
 \section{CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text}
-\label{sec:orgd01b38f}
+\label{sec:orgf6fb520}
 
 Paper: \cite{sinha2019a}
 
 \subsection{Dataset construction}
-\label{sec:org704afa9}
+\label{sec:org086eed1}
 
 \begin{figure}[htbp]
 \centering
@@ -177,9 +202,9 @@ Paper: \cite{sinha2019a}
 \end{figure}
 
 \subsection{Productivity and reasoning}
-\label{sec:orgefd9eef}
+\label{sec:orgcfb448d}
 \section{Results}
-\label{sec:org8bb5b76}
+\label{sec:org9950ca0}
 
 \begin{center}
 \includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_23.pdf}
@@ -193,23 +218,23 @@ Paper: \cite{sinha2019a}
 
 
 \section{Related Work}
-\label{sec:org777df69}
+\label{sec:org90fb063}
 \section{Discussion}
-\label{sec:orgb3a0d20}
+\label{sec:orgaf96b9b}
 \section{Follow-up findings in the community}
-\label{sec:org89d09b3}
+\label{sec:org53c3914}
 \clearpage
 \chapter{Quantifying syntactic generalization using word order}
-\label{sec:org4093e01}
+\label{sec:orgc518e9d}
 
 Paper \cite{sinha2021a}
 
 \section{Technical Background}
-\label{sec:org27e141c}
+\label{sec:org79bc56d}
 \section{Word Order in Natural Language Inference}
-\label{sec:org0bc8be0}
+\label{sec:org08e7337}
 \subsection{Probe Construction}
-\label{sec:org0679257}
+\label{sec:orgaf44630}
 
 \begin{figure}[htbp]
 \centering
@@ -218,7 +243,7 @@ Paper \cite{sinha2021a}
 \end{figure}
 
 \section{Experiments \& Results}
-\label{sec:org86be1bc}
+\label{sec:org8b435b7}
 
 \begin{figure}[htbp]
 \centering
@@ -253,87 +278,87 @@ Paper \cite{sinha2021a}
 
 
 \section{Related Work}
-\label{sec:org90572c9}
+\label{sec:orgb553052}
 \section{Discussion}
-\label{sec:orgdd9c593}
+\label{sec:org6975f27}
 \section{Follow-up findings in the community}
-\label{sec:orgef6955a}
+\label{sec:orgb976e8a}
 
 \clearpage
 \chapter{Probing syntax understanding through distributional hypothesis}
-\label{sec:org881cedf}
+\label{sec:orgcdbaaa6}
 
 Paper: \cite{sinha2021}
 
 \section{Technical Background}
-\label{sec:org21235b5}
+\label{sec:orgcfd03af}
 \section{Dataset construction and pre-training}
-\label{sec:orgc04b18b}
+\label{sec:orgc115e76}
 \section{Experiments}
-\label{sec:org987c7f3}
+\label{sec:orgbbc65e2}
 \subsection{Downstream reasoning tasks}
-\label{sec:org3d7661e}
+\label{sec:orge082779}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unnat_pt/main_result_plot.pdf}
-\caption{Downstream results on scrambled pre-training.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unnat_pt/main_result_plot.pdf}
+% \caption{Downstream results on scrambled pre-training.}
+% \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unnat_pt/finetune_rand.pdf}
-\caption{GLUE and PAWS task dev set performance when finetuned on naturally and randomly ordered text, respectively, using pre-trained RoBERTa (base) models on different versions of BookWiki corpus.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unnat_pt/finetune_rand.pdf}
+% \caption{GLUE and PAWS task dev set performance when finetuned on naturally and randomly ordered text, respectively, using pre-trained RoBERTa (base) models on different versions of BookWiki corpus.}
+% \end{figure}
 
 \subsection{Evaluating the effectiveness of probing syntax}
-\label{sec:orgde81009}
+\label{sec:org56442b4}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unnat_pt/rda_mdl_ep_3.pdf}
-\caption{Risannen Data Analysis.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unnat_pt/rda_mdl_ep_3.pdf}
+% \caption{Risannen Data Analysis.}
+% \end{figure}
 
 \section{Related Work}
-\label{sec:orgc510385}
+\label{sec:org0d2da32}
 \section{Discussion}
-\label{sec:org25a2834}
+\label{sec:org2941af9}
 \section{Follow-up findings in the community}
-\label{sec:orgf893721}
+\label{sec:orgde3bd47}
 \clearpage
 \chapter{Measuring systematic generalization by exploiting absolute positions}
-\label{sec:org4fe017f}
+\label{sec:orga46bf45}
 
 \section{Technical Background}
-\label{sec:orge980475}
+\label{sec:orge8b9409}
 \section{Systematic understanding of absolute position embeddings}
-\label{sec:orgc239d2d}
+\label{sec:orgf8ea1d9}
 \section{Related Work}
-\label{sec:org6149bb0}
+\label{sec:org05c8af6}
 \section{Experiments}
-\label{sec:orgad6ec35}
+\label{sec:orgc6f5de8}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/pos_enc/acceptability_scores.pdf}
-\caption{Grammatical acceptability scores on BLiMP dataset.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/pos_enc/acceptability_scores.pdf}
+% \caption{Grammatical acceptability scores on BLiMP dataset.}
+% \end{figure}
 
 \section{Discussion}
-\label{sec:org8d72560}
+\label{sec:orgbc43cdd}
 \clearpage
 \chapter{Conclusion}
-\label{sec:org0188af2}
+\label{sec:org8fd280e}
 \section{Summary}
-\label{sec:org06f6c51}
+\label{sec:org94aab9a}
 \section{Limitations}
-\label{sec:org338fd40}
+\label{sec:org217d56a}
 \section{Future Work}
-\label{sec:org67bf752}
+\label{sec:org9de237c}
+
 \clearpage
-\chapter{Bibliography}
-\label{sec:org49a30b2}
+
 \bibliographystyle{unsrt}
 \bibliography{../../mylibrefs_new,bibfiles/unli,bibfiles/clutrr,bibfiles/pos_enc,bibfiles/unnat_pt,bibfiles/anthology}
 
@@ -341,9 +366,9 @@ Paper: \cite{sinha2021}
 \printglossaries
 
 \chapter{Appendix}
-\label{sec:orgfe900d8}
+\label{sec:orgd5099eb}
 \section{Org mode auto save}
-\label{sec:org9aa068f}
+\label{sec:orgde5798f}
 Run the following snippet to auto save and compile in org mode.
 
 \begin{verbatim}
@@ -357,7 +382,7 @@ Run the following snippet to auto save and compile in org mode.
 \end{verbatim}
 
 \section{Remove ``parts'' from report}
-\label{sec:org9b6eddf}
+\label{sec:orgacef247}
 
 \begin{verbatim}
 (add-to-list 'org-latex-classes
@@ -368,8 +393,9 @@ Run the following snippet to auto save and compile in org mode.
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 \end{verbatim}
+
 \section{Add newpage before a heading}
-\label{sec:org01683d7}
+\label{sec:org122b99a}
 
 \begin{verbatim}
 (defun org/get-headline-string-element  (headline backend info)
@@ -388,7 +414,7 @@ Run the following snippet to auto save and compile in org mode.
 \end{verbatim}
 
 \section{Glossary and Acronym build using Latexmk}
-\label{sec:orga3bc779}
+\label{sec:org94133e2}
 
 Add the following snippet in the file ``\textasciitilde{}/.latexmkrc'': (Source: \url{https://tex.stackexchange.com/a/44316})
 
@@ -417,14 +443,14 @@ push @generated_exts, 'acn', 'acr', 'alg';
 $clean_ext .= ' %R.ist %R.xdy';
 \end{verbatim}
 \section{Citation style buffer local}
-\label{sec:org61822fa}
+\label{sec:org97a37f4}
 
 \begin{verbatim}
 (set (make-local-variable 'bibtex-completion-format-citation-functions)
   '((org-mode      . my/bibtex-completion-format-citation-org-default-cite)))
 \end{verbatim}
 \section{Org latex compiler options}
-\label{sec:orgbba41e5}
+\label{sec:orgc7e24c0}
 
 \begin{verbatim}
 (setq org-latex-pdf-process (list "latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))

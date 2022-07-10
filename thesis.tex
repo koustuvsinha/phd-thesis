@@ -165,7 +165,7 @@ An important challenge is thus to develop NLU benchmarks that can precisely test
 Ideally, we want language understanding systems that can not only answer questions and draw inferences from text, but that can also do so in a systematic, logical, and robust way.
 While such reasoning capabilities are certainly required for many existing NLU tasks, most datasets combine several challenges of language understanding into one, such as co-reference/entity resolution, incorporating world knowledge, and semantic parsing---making it difficult to isolate and diagnose a model's capabilities for systematic generalization and robustness.
 
-Inspired by the classic AI challenge of inductive logic programming \cite{Quinlan1990-iv}, in this chapter I discuss my work on developing semi-synthetic benchmark designed to explicitly test an NLU model's ability for systematic and robust logical generalization \cite{sinha2019a}.
+Inspired by the classic AI challenge of inductive logic programming \cite{Quinlan1990-iv}, in this chapter I discuss my work on developing semi-synthetic benchmark designed to explicitly test an NLU model's ability for systematic and robust logical generalization \cite{sinha-etal-2019-clutrr}.
 Our benchmark suite---termed CLUTRR (Compositional Language Understanding and Text-based Relational Reasoning)---contains a large set of semi-synthetic stories involving hypothetical families.
 Given a story, the goal is to infer the relationship between two family members, whose relationship is not explicitly mentioned.
 To solve this task, a learning agent must extract the relationships mentioned in the text, induce the logical rules governing the kinship relationships (e.g., the transitivity of the sibling relation), and use these rules to infer the relationship between a given pair of entities.
@@ -183,38 +183,38 @@ Paper: \cite{sinha2019a}
 \subsection{Dataset construction}
 \label{sec:org086eed1}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[height=0.3\textwidth]{figs/clutrr/dataset_const_proof.png}
-\caption{Dataset generation pipeline.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[height=0.3\textwidth]{figs/clutrr/dataset_const_proof.png}
+% \caption{Dataset generation pipeline.}
+% \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[height=0.3\textwidth]{figs/clutrr/composition.png}
-\caption{Illustration of how a set of facts can split and combined in various ways across sentences.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[height=0.3\textwidth]{figs/clutrr/composition.png}
+% \caption{Illustration of how a set of facts can split and combined in various ways across sentences.}
+% \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[height=0.3\textwidth]{figs/clutrr/clutrr_noise.png}
-\caption{Noise generation procedures of CLUTRR.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[height=0.3\textwidth]{figs/clutrr/clutrr_noise.png}
+% \caption{Noise generation procedures of CLUTRR.}
+% \end{figure}
 
 \subsection{Productivity and reasoning}
 \label{sec:orgcfb448d}
 \section{Results}
 \label{sec:org9950ca0}
 
-\begin{center}
-\includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_23.pdf}
-\includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_234.pdf}
-\end{center}
-\begin{figure}[htbp]
-\centering
-\includegraphics[height=0.0001in]{figs/empy_fig.png}
-\caption{Systematic generalization when train on k=\(2\) and \(3\).}
-\end{figure}
+% \begin{center}
+% \includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_23.pdf}
+% \includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_234.pdf}
+% \end{center}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[height=0.0001in]{figs/empy_fig.png}
+% \caption{Systematic generalization when train on k=\(2\) and \(3\).}
+% \end{figure}
 
 
 \section{Related Work}
@@ -236,44 +236,44 @@ Paper \cite{sinha2021a}
 \subsection{Probe Construction}
 \label{sec:orgaf44630}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[height=0.3\textwidth]{figs/unli/nli_gen_perm_desc.pdf}
-\caption{Graphical representation of the Permutation Acceptance class of metrics.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[height=0.3\textwidth]{figs/unli/nli_gen_perm_desc.pdf}
+% \caption{Graphical representation of the Permutation Acceptance class of metrics.}
+% \end{figure}
 
 \section{Experiments \& Results}
 \label{sec:org8b435b7}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unli/comb_plot_all.pdf}
-\caption{Comparison of \(\omega_{\text{max}}\), \(\omega_{\text{rand}}\), \(\mathcal{P}^{c}\) and \(\mathcal{P}^{f}\) with the model accuracy \(\mathcal{A}\) on multiple datasets, where all models are trained on the MNLI corpus \cite{williams-etal-2018-broad}.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unli/comb_plot_all.pdf}
+% \caption{Comparison of \(\omega_{\text{max}}\), \(\omega_{\text{rand}}\), \(\mathcal{P}^{c}\) and \(\mathcal{P}^{f}\) with the model accuracy \(\mathcal{A}\) on multiple datasets, where all models are trained on the MNLI corpus \cite{williams-etal-2018-broad}.}
+% \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unli/all_entropy.png}
-\caption{Average entropy of model confidences on permutations..}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unli/all_entropy.png}
+% \caption{Average entropy of model confidences on permutations..}
+% \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unli/bleu_2_all.png}
-\caption{BLEU-2 score versus acceptability of permuted sentences across all test datasets.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unli/bleu_2_all.png}
+% \caption{BLEU-2 score versus acceptability of permuted sentences across all test datasets.}
+% \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unli/min_tree_4.png}
-\caption{POS Tag Mini-Tree overlap score and percentage of permutations which the models assigned the gold label.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unli/min_tree_4.png}
+% \caption{POS Tag Mini-Tree overlap score and percentage of permutations which the models assigned the gold label.}
+% \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/unli/omega_threshold.png}
-\caption{\(\omega_{x}\) threshold for all datasets with varying \(x\) and computing the percentage of examples that fall within the threshold.}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{figs/unli/omega_threshold.png}
+% \caption{\(\omega_{x}\) threshold for all datasets with varying \(x\) and computing the percentage of examples that fall within the threshold.}
+% \end{figure}
 
 
 
@@ -360,7 +360,7 @@ Paper: \cite{sinha2021}
 \clearpage
 
 \bibliographystyle{unsrt}
-\bibliography{../../mylibrefs_new,bibfiles/unli,bibfiles/clutrr,bibfiles/pos_enc,bibfiles/unnat_pt,bibfiles/anthology}
+\bibliography{bibfiles/unli,bibfiles/clutrr,bibfiles/pos_enc,bibfiles/unnat_pt,bibfiles/anthology}
 
 
 \printglossaries

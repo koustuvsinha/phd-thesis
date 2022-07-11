@@ -26,8 +26,9 @@
 \usepackage{subcaption}%#+LATEX_HEADER: \usepackage{subfigure}
 \usepackage{booktabs}
 \usepackage{tabularx}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+\usepackage{enumitem}
 \usepackage[english]{babel}
 \usepackage{blindtext}
 \usepackage{amsfonts}
@@ -68,9 +69,11 @@ morestring=[b]'
 \newglossaryentry{tlm}{name=Transformers,description={{A class of models first derived by Vaswani et al. 2017}}}
 % Acronyms
 \newacronym{llm}{LLMs}{Large Language Models}
-\newacronym{qos}{QoS}{quality-of-service}
+\newacronym{nlu}{NLU}{Natural Language Understanding}
 \newacronym{bb}{BB}{branch and bound}
 
+
+\newcommand{\xhdr}[1]{{\noindent\bfseries #1}.}
 
 \author{Koustuv Sinha}
 \date{}
@@ -150,22 +153,25 @@ Success of pre-training and scale
 \end{enumerate}
 \subsection{Tasks}
 \label{sec:org51f5f2f}
-\clearpage
-\chapter{Understanding semantic generalization through productivity}
-\label{sec:org63ce972}
 
-Natural language understanding (NLU) systems have been extremely successful at reading comprehension tasks, such as question answering (QA) and natural language inference (NLI).
+
+\clearpage
+
+\chapter{Understanding semantic generalization through productivity}
+\label{chap:clutrr}
+
+\gls{nlu} systems have been extremely successful at reading comprehension tasks, such as question answering (QA) and natural language inference (NLI).
 An array of existing datasets are available for these tasks. This includes datasets that test a system's ability to extract factual answers from text \cite{Rajpurkar2016-yc,Nguyen2016-ec,Trischler2016-fc,Mostafazadeh2016-hu,Su2016-so}, as well as datasets that emphasize commonsense inference, such as entailment between sentences \cite{bowman2015large,williams2018broad}.
 
-However, there are growing concerns regarding the ability of NLU systems---and neural networks more generally---to generalize in a systematic and robust way \cite{bahdanau2018systematic,lake2017generalization,Johnson2016-mw}.
-For instance, recent work has highlighted the brittleness of NLU systems to adversarial examples \cite{jia2017adversarial}, as well as the fact that NLU models tend to exploit statistical artifacts in datasets, rather than exhibiting true reasoning and generalization capabilities \cite{gururangan2018annotation,kaushik2018much}.
-These findings have also dovetailed with the recent dominance of large pre-trained language models, such as BERT, on NLU benchmarks \cite{devlin2018bert,peters2018deep}, which suggest that the primary difficulty in these datasets is incorporating the statistics of the natural language, rather than reasoning.
+However, there are growing concerns regarding the ability of \acrshort{nlu} systems---and neural networks more generally---to generalize in a systematic and robust way \cite{bahdanau2018systematic,lake2017generalization,Johnson2016-mw}.
+For instance, recent work has highlighted the brittleness of \acrshort{nlu} systems to adversarial examples \cite{jia2017adversarial}, as well as the fact that \acrshort{nlu} models tend to exploit statistical artifacts in datasets, rather than exhibiting true reasoning and generalization capabilities \cite{gururangan2018annotation,kaushik2018much}.
+These findings have also dovetailed with the recent dominance of large pre-trained language models, such as BERT, on \acrshort{nlu} benchmarks \cite{devlin2018bert,peters2018deep}, which suggest that the primary difficulty in these datasets is incorporating the statistics of the natural language, rather than reasoning.
 
-An important challenge is thus to develop NLU benchmarks that can precisely test a model's capability for robust and systematic generalization.
+An important challenge is thus to develop \acrshort{nlu} benchmarks that can precisely test a model's capability for robust and systematic generalization.
 Ideally, we want language understanding systems that can not only answer questions and draw inferences from text, but that can also do so in a systematic, logical, and robust way.
-While such reasoning capabilities are certainly required for many existing NLU tasks, most datasets combine several challenges of language understanding into one, such as co-reference/entity resolution, incorporating world knowledge, and semantic parsing---making it difficult to isolate and diagnose a model's capabilities for systematic generalization and robustness.
+While such reasoning capabilities are certainly required for many existing \acrshort{nlu} tasks, most datasets combine several challenges of language understanding into one, such as co-reference/entity resolution, incorporating world knowledge, and semantic parsing---making it difficult to isolate and diagnose a model's capabilities for systematic generalization and robustness.
 
-Inspired by the classic AI challenge of inductive logic programming \cite{Quinlan1990-iv}, in this chapter I discuss my work on developing semi-synthetic benchmark designed to explicitly test an NLU model's ability for systematic and robust logical generalization \cite{sinha-etal-2019-clutrr}.
+Inspired by the classic AI challenge of inductive logic programming \cite{Quinlan1990-iv}, in this chapter I discuss my work on developing semi-synthetic benchmark designed to explicitly test an \acrshort{nlu} model's ability for systematic and robust logical generalization \cite{sinha-etal-2019-clutrr}.
 Our benchmark suite---termed CLUTRR (Compositional Language Understanding and Text-based Relational Reasoning)---contains a large set of semi-synthetic stories involving hypothetical families.
 Given a story, the goal is to infer the relationship between two family members, whose relationship is not explicitly mentioned.
 To solve this task, a learning agent must extract the relationships mentioned in the text, induce the logical rules governing the kinship relationships (e.g., the transitivity of the sibling relation), and use these rules to infer the relationship between a given pair of entities.
@@ -174,38 +180,403 @@ CLUTRR also allows us to precisely test for the various forms of \emph{model rob
 
 
 \section{Technical Background}
-\label{sec:org11db5fd}
-\section{CLUTRR: A Diagnostic Benchmark for Inductive Reasoning in Text}
+\label{sec:clutrr_bg}
+
+\subsection{Notations and Terminology}
+
+Following standard practice in formal semantics, we use the term \textit{atom} to refer to a \textit{predicate} symbol and a list of terms, such as $[\texttt{grandfatherOf},X,Y]$, where the predicate $\texttt{grandfatherOf}$ denotes the \textit{relation} between the two \textit{variables}, $X$ and $Y$. We restrict the predicates to have an arity of 2, i.e.,  binary predicates.
+A logical \textit{rule} in this setting is of the form $\mathcal{H} \vdash \mathcal{B}$, where $\mathcal{B}$ is the \textit{body} of the rule, i.e., a conjunction of two \textit{atoms} ($[\alpha_1,\alpha_2]$) and $\mathcal{H}$ is the \textit{head}, i.e., a single \text{atom} ($\alpha$) that can be viewed as the goal or query.
+For instance, given a knowledge base (KB) $R$ that contains the single rule
+
+\begin{equation}
+  [\texttt{grandfatherOf},X,Y] \vdash [[\texttt{fatherOf},X,Z], [\texttt{fatherOf}, Z,Y]],
+\end{equation}
+
+\noindent the query $[\texttt{grandfatherOf},X,Y]$ evaluates to true if and only if the body
+
+\begin{equation}
+\mathcal{B}=[[\texttt{fatherOf},X,Z], [\texttt{fatherOf}, Z,Y]]
+\end{equation}
+
+\noindent is also true in a given world.
+A rule is called a \textit{grounded} rule if all atoms in the rule are themselves \textit{grounded}, i.e., all variables are replaced with \textit{constants} or entities in a world. A \textit{fact} is a grounded binary predicate. A \textit{clause} is a conjunction of two or more atoms ($\mathcal{C}=(\mathcal{H}_{\mathcal{C}} \vdash \mathcal{B}_{\mathcal{C}} = ([\alpha_1,...,\alpha_n]))$) which can be built using a set of rules.
+
+\section{Overview and construction of CLUTRR}
 \label{sec:orgf6fb520}
 
-Paper: \cite{sinha2019a}
+The core idea behind the CLUTRR benchmark suite is the following: Given a natural language story describing a set of kinship relations, the goal is to infer the relationship between two entities, whose relationship is {\em not} explicitly stated in the story.
+To generate these stories, we first design a knowledge base (KB) with rules specifying how kinship relations resolve, and we use the following steps to create semi-synthetic stories based on this knowledge base:
+\begin{enumerate}[topsep=3pt, parsep=6pt, leftmargin=40pt, itemsep=0pt, label={\bf Step \arabic*.}]
+    \item \textbf{Generate} a random kinship graph that satisfies the rules in our KB.
+    \item
+        \textbf{Sample a target fact} (i.e., relation) to predict from the kinship graph.
+    \item
+        \textbf{Apply backward chaining} to sample a set of facts that can prove the target relation (and optionally sample a set of ``distracting'' or ``irrelevant'' noise facts).
+    \item
+        \textbf{Convert the sampled facts into a natural language story} through pre-specified text templates and crowd-sourced paraphrasing.
+\end{enumerate}
 
-\subsection{Dataset construction}
-\label{sec:org086eed1}
+% Figure \ref{fig:data} provides a high-level overview of this idea, and the following subsections describe the data generation process in detail, as well as the diagnostic flexibility afforded by CLUTRR.
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[height=0.3\textwidth]{figs/clutrr/dataset_const_proof.png}
-% \caption{Dataset generation pipeline.}
-% \end{figure}
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[height=0.3\textwidth]{figs/clutrr/composition.png}
-% \caption{Illustration of how a set of facts can split and combined in various ways across sentences.}
-% \end{figure}
+% \subsection{Dataset construction}
+% \label{sec:clutrr_data_const}
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[height=0.3\textwidth]{figs/clutrr/clutrr_noise.png}
-% \caption{Noise generation procedures of CLUTRR.}
-% \end{figure}
+The short stories in CLUTRR are essentially narrativized renderings of a set of logical facts.
+In the following sections, we describe how we sample the logical facts that make up a story by generating random kinship graphs and using backward chaining to produce logical reasoning chains.
 
-\subsection{Productivity and reasoning}
-\label{sec:orgcfb448d}
+% \subsection{Terminology and background}
+
+\subsection{Graph generation}
+
+%We restrict the set of rules in $R$ to consist of two atoms in the body (see the Appendix for the full set of rules).
+% Using the logical rules in $R$ (see the Appendix for the full set of rules), we build a \textit{clause} which can be a conjunction of one or multiple rules.  %Further, we consider only binary predicates that make it easy to define a graph structure on the story.
+
+To generate a kinship graph (say, $G$) underlying a particular story, we first sample a set of gendered\footnote{Kinship and gender roles are oversimplified in our data (compared to the real world) to maintain tractability.} entities and kinship relations using a stochastic generation process.
+This generation process contains a number of tunable parameters---such as the maximum number of children at each node, the probability of an entity being married to another entity, etc.---and is designed to produce a valid, but possibly incomplete ``backbone graph''.
+For instance, this backbone graph generation process will specify ``parent''/``child'' relations between entities but does not add ``grandparent'' relations.
+After this initial generation process, we recursively apply the logical rules in $R$ to the backbone graph to produce a final graph $G$ that contains the full set of kinship relations between all the entities.
+\footnote{In the context of our data generation process, we distinguish between the knowledge base, $R$, which contains a finite number of predicates and rules specifying how kinship relations in a family resolve, and a particular kinship graph $G$, which contains a grounded set of atoms specifying the particular kinship relations that underlie a single story.
+In other words, $R$ contains the logical rules that govern all the generated stories in CLUTRR, while $G$ contains the grounded facts that underlie a specific story.}
+
+In the CLUTRR Benchmark, the following kinship relations are used: \textit{son, father, husband, brother, grandson, grandfather, son-in-law, father-in-law, brother-in-law, uncle, nephew, daughter, mother, wife, sister, granddaughter, grandmother, daughter-in-law, mother-in-law, sister-in-law, aunt, niece}.
+
+\footnotesize
+\begin{align*}
+\begin{split}
+    [\texttt{grand}, X,Y] &\vdash [[\texttt{child}, X,Z],[\texttt{child}, Z,Y]], \\
+    [\texttt{grand}, X,Y] &\vdash [[\texttt{SO}, X,Z],[\texttt{grand}, Z,Y]], \\
+    [\texttt{grand}, X,Y] &\vdash [[\texttt{grand}, X,Z], \\ & [\texttt{sibling}, Z,Y]], \\
+    [\texttt{inv-grand}, X,Y] &\vdash [[\texttt{inv-child}, X,Z], \\ & [\texttt{inv-child}, Z,Y]], \\
+    [\texttt{inv-grand}, X,Y] &\vdash [[\texttt{sibling}, X,Z], \\ & [\texttt{inv-grand}, Z,Y]], \\
+    [\texttt{child}, X,Y] &\vdash [[\texttt{child}, X,Z],\\ & [\texttt{sibling}, Z,Y]], \\
+  [\texttt{child}, X,Y] &\vdash [[\texttt{SO}, X,Z],\\ & [\texttt{child}, Z,Y]], \\
+  [\texttt{inv-child}, X,Y] &\vdash [[\texttt{sibling}, X,Z], \\ & [\texttt{inv-child}, Z,Y]], \\
+    [\texttt{inv-child}, X,Y] &\vdash [[\texttt{child}, X,Z], \\ & [\texttt{inv-grand}, Z,Y]], \\
+    [\texttt{sibling}, X,Y] &\vdash [[\texttt{child}, X,Z], \\ & [\texttt{inv-un}, Z,Y]], \\
+    [\texttt{sibling}, X,Y] &\vdash [[\texttt{inv-child}, X,Z], \\ & [\texttt{child}, Z,Y]]
+\end{split}
+\end{align*}
+
+\begin{align*}
+\begin{split}
+    [\texttt{sibling}, X,Y] &\vdash [[\texttt{sibling}, X,Z], \\ &[\texttt{sibling}, Z,Y]], \\
+    [\texttt{in-law}, X,Y] &\vdash [[\texttt{child}, X,Z], \\ & [\texttt{SO}, Z,Y]], \\
+    [\texttt{inv-in-law}, X,Y] &\vdash [[\texttt{SO}, X,Z], \\ & [\texttt{inv-child}, Z,Y]], \\
+    [\texttt{un}, X,Y] &\vdash [[\texttt{sibling}, X,Z], \\ & [\texttt{child}, Z,Y]], \\
+    [\texttt{inv-un}, X,Y] &\vdash [[\texttt{inv-child}, X,Z], \\ & [\texttt{sibling}, Z,Y]], \\
+\end{split}
+\end{align*}
+\normalsize
+
+
+We used a small, tractable, and logically sound KB of rules as mentioned above. We carefully select this set of deterministic rules to avoid ambiguity in the resolution. We use gender-neutral predicates and resolve the gender of the predicate in the head $\mathcal{H}$ of a clause $\mathcal{C}$ by deducing the gender of the second constant. We have two types of predicates, \textit{vertical} predicates (parent-child relations) and  \textit{horizontal} predicates (sibling or significant other). We denote all the vertical predicates by its \textit{child-to-parent} relation and append the prefix \texttt{inv-} to the predicates for the corresponding \textit{parent-to-child} relation. For example, \texttt{grandfatherOf} is denoted by the gender-neutral predicate $[\texttt{inv-grand},X,Y]$, where the gender is determined by the gender of $Y$.
+
+
+
+\subsection{Backward chaining}
+The resulting graph $G$ provides the \textit{background knowledge} for a specific story, as each edge in this graph can be treated as a grounded predicate (i.e., fact) between two entities.
+From this graph $G$, we sample the facts that make up the story, as well as the target fact that we seek to predict:
+First, we (uniformly) sample a target relation $\mathcal{H}_{\mathcal{C}}$, which is the fact that we want to predict from the story.
+Then, from this target relation $\mathcal{H}_{\mathcal{C}}$,  we run a simple variation of the backward chaining \citep{gallaire1978logic} algorithm for $k$ iterations starting from $\mathcal{H}_{\mathcal{C}}$, where at each iteration we uniformly sample a subgoal to resolve and then uniformly sample a KB rule that resolves this subgoal.
+Crucially, unlike traditional backward chaining, we do not stop the algorithm when a proof is obtained; instead, we run for a fixed number of iterations $k$ in order to sample a set of $k$ facts $\mathcal{B}_{\mathcal{C}}$ that imply the target relation $\mathcal{H}_{\mathcal{C}}$.
+
+\subsection{Adding natural language}
+\label{subsec:clutrr_nat_lang}
+
+So far, we have described the process of generating a  conjunctive logical clause $\mathcal{C}=(\mathcal{H}_{\mathcal{C}} \vdash \mathcal{B}_{\mathcal{C}})$, where $\mathcal{H}_{\mathcal{C}}=[\alpha^*]$ is the target fact (i.e., relation) we seek to predict and $\mathcal{B}_{\mathcal{C}} = [\alpha_1, ..., \alpha_k]$ is the set of supporting facts that imply the target relation.
+We now describe how we convert this logical representation to natural language through crowd-sourcing.
+
+\subsubsection{Paraphrasing using Amazon Mechanical Turk}
+
+The basic idea behind our approach is that we show Amazon Mechanical Turk (AMT) crowd-workers the set of facts $\mathcal{B}_{\mathcal{C}}$ corresponding to a story and ask the workers to paraphrase these facts into a narrative.
+Since workers are given a set of facts $\mathcal{B}_{\mathcal{C}}$ to work from, they are able to combine and split multiple facts across separate sentences and construct diverse narratives (Figure \ref{fig:clutrr:lang_composition}).
+
+We use ParlAI \cite{miller2017parlai} Mturk interface to collect paraphrases from the users. Specifically, given a set of facts, we ask the users to paraphrase the facts into a story. The users (\textit{turkers}) are free to construct any story they like as long as they mention all the entities and all the relations among them. We also provide the head $\mathcal{H}$ of the clause as an \textit{inferred} relation and specifically instruct the users to \textit{not} mention it in the paraphrased story. In order to evaluate the paraphrased stories, we ask the turkers to peer review a story paraphrased by a different turker. Since there are two tasks - paraphrasing a story and rating a story - we choose to pay 0.5\$ for each annotation. A sample task description in our MTurk interface is as follows:
+
+\begin{quote}\small
+    In this task, you will need to write a short, simple story based on a few facts. \textbf{It is crucial that the story mentions each of the given facts at least once.} The story does not need to be complicated! It just needs to be grammatical and mention the required facts.
+
+    After writing the story, you will be asked to evaluate the quality of a generated story (based on a different set of facts). \textbf{It is crucial that you check whether the generated story mentions each of the required facts.}
+
+    \textit{Example of good and bad stories: Good Example}
+
+    \textbf{Facts to Mention}
+    \begin{itemize}
+        \item John is the father of Sylvia.
+        \item Sylvia has a brother Patrick.
+    \end{itemize}
+
+    \textbf{Implied Fact}: John is the father of Patrick.
+
+    \textbf{Written story}
+
+    John is the proud father of the lovely Sylvia. Sylvia has a love-hate relationship with her brother Patrick.
+
+    \textit{Bad Example}
+
+    \textbf{Facts to Mention}
+
+    \begin{itemize}
+        \item Vincent is the son of Tim.
+        \item Martha is the wife of Tim.
+    \end{itemize}
+
+    \textbf{Implied Fact} : Martha is Vincent's mother.
+
+    \textbf{Written story}
+
+    Vincent is married at Tim and his mother is Martha.
+
+    \textit{The reason the above story is bad}:
+
+    \begin{itemize}
+        \item This story is bad because it is nonsense / ungrammatical.
+        \item This story is bad because it does not mention the proper facts.
+        \item This story is bad because it reveals the implied fact.
+    \end{itemize}
+\end{quote}
+
+A sample of the AMT interface is shown in \autoref{fig:clutrr:mturk}.
+To ensure that the turkers are providing high-quality annotations without revealing the inferred fact, we also launch another task to ask the turkers to rate three annotations to be either good or bad which are provided by a set of \textit{different} turkers. We pay 0.2\$ for each HIT consisting of three reviews. This helped to remove logical and grammatical inconsistencies to a large extent. Based on the reviews, 79\% of the collected paraphrases passed the peer-review sanity check where all the reviewers agree on the quality. This subset of the placeholders is used in the benchmark. A sample of programmatically generated dataset for clause length of $k=2$ to $k=6$ is provided in the tables \ref{tab:puzzle_data_1} to \ref{tab:puzzle_data_5}.
+
+\begin{figure*}[h]
+  \centering
+  \resizebox{0.8\textwidth}{!}{
+    \includegraphics[width=\textwidth]{figs/clutrr/mturk_interface.png}}
+    \caption{Amazon Mechanical Turker Interface built using ParlAI which was used to collect data as well as peer reviews.}%
+    \label{fig:clutrr:mturk}
+\end{figure*}
+
+
+
+\subsubsection{Reusability and composition}
+One challenge for data collection via AMT is that the number of possible stories generated by CLUTRR grows combinatorially as the number of supporting facts increases, i.e., as  $k=|\mathcal{B}_\mathcal{C}|$ grows.
+This combinatorial explosion for large $k$---combined with the difficulty of maintaining the quality of the crowd-sourced paraphrasing for long stories---makes it infeasible to obtain a large number of paraphrased examples for $k>3$.
+To circumvent this issue and increase the flexibility of our benchmark, we reuse and compose AMT paraphrases to generate longer stories.
+In particular, we collected paraphrases for stories containing $k=1,2,3$ supporting facts and then replaced the entities from these collected stories with placeholders in order to re-use them to generate longer semi-synthetic stories.
+An example of a story generated by stitching together two shorter paraphrases is provided below:
+\vspace{-5pt}
+\begin{quote}{\small
+    [Frank] went to the park with his father, [Brett]. [Frank] called his brother [Boyd] on the phone. He wanted to go out for some beers.
+    [Boyd] went to the baseball game with his son [Jim].\\
+    Q: What is [Brett] and [Jim]'s relationship?}
+\end{quote}
+\vspace{-5pt}
+Thus, instead of simply collecting paraphrases for a fixed number of stories, we instead obtain a diverse collection of natural language templates that can be programmatically recombined to generate stories with various properties.
+
+\subsection{AMT Template statistics}
+
+
+\input{tables/clutrr/table_place}
+
+At the time of submission, we have collected 6,016 unique paraphrases with an average of 19 paraphrases for every possible logical clause of length $k=1,2,3$. Table \ref{tab:placeholder} contains summary statistics of the collected paraphrases.
+Overall, we found high linguistic diversity in the collected paraphrases.
+For instance, the average Jaccard overlap in unigrams between pairs paraphrases corresponding to the same logical clause was only 0.201 and only 0.0385 for bigrams.
+
+\subsection{Human performance}
+
+\input{tables/clutrr/table_human_perf}
+
+To get a sense of the data quality and difficulty involved in CLUTRR, we asked human annotators to solve the task for random examples of length $k=2,3,...,6$. (\autoref{tab:clutrr:human_perf})
+We perform the evaluation in two scenarios: first a time-limited scenario where we ask AMT Turkers to solve the puzzle in a fixed time. Turkers were provided a maximum time of 30 mins, but they solved the puzzles in an average of 1 minute 23 seconds. Secondly, we use another set of expert evaluators who are given ample time to solve the tasks. Not surprisingly, if a human being is given ample time (experts took an average of 6 minutes per puzzle) and a pen and a paper to aid in the reasoning, they get all the relations correct. However, if an evaluator is short of time, they might miss important details on the relations and perform poorly. Thus, our tasks require \textit{active attention}.
+
+We found that time-constrained AMT annotators performed well (i.e., ${>70\%}$) accuracy for ${k\leq 3}$ but struggled with examples involving longer stories, achieving 40-50\% accuracy for ${k > 3}$. However, trained annotators with unlimited time were able to solve 100\% of the examples, highlighting the fact that this task requires attention and involved reasoning, even for humans.
+
+\subsection{Representing the question and entities}
+
+The AMT paraphrasing approach described above allows us to convert the set of supporting facts $\mathcal{B}_\mathcal{C}$ to a natural language story, which can be used to predict the target relation/query $\mathcal{H}_\mathcal{C}$.
+However, instead of converting the target query, $\mathcal{H}_\mathcal{C} = [\alpha^*]$, to a natural language question, we instead opt to represent the target query as a $K$-way classification task, where the two entities in the target relation are provided as input and the goal is to classify the relation that holds between these two entities.
+This representation avoids the pitfall of revealing information about the answer in the question \cite{kaushik2018much}.
+
+When generating stories, entity names are randomly drawn from a set of 300 common gendered English names.
+Thus, depending on each run, the entities are never the same.
+This ensures that the entity names are simply placeholders and uncorrelated from the task.
+
+
+
+\begin{figure}[t]
+\centering
+\resizebox{0.5\textwidth}{!}{\includegraphics[]{figs/clutrr/dataset_const_new.png}}
+\caption{Data generation pipeline. Step 1: generate a kinship graph. Step 2: sample a target fact. Step 3: Use backward chaining to sample a set of facts. Step 4: Convert sampled facts to a natural language story.}
+\label{fig:clutrr:data}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\resizebox{0.45\textwidth}{!}{\includegraphics[]{figs/clutrr/composition.png}}
+\caption{Illustration of how a set of facts can split and combined in various ways across sentences.}
+\label{fig:clutrr:lang_composition}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering
+\resizebox{0.38\textwidth}{!}{\includegraphics[]{figs/clutrr/clutrr_noise.png}}
+\caption{Noise generation procedures of CLUTRR.}
+\label{fig:clutrr:data_noise}
+\end{figure}
+
+
+
+\section{Experimental Setups}
+\label{sec:clutrr_setups}
+
+The modular nature of CLUTRR provides rich diagnostic capabilities for evaluating the robustness and generalization abilities of neural language understanding systems.
+We highlight some key diagnostic capabilities available via different variations of CLUTRR below.
+These diagnostic variations correspond to the concrete datasets that we generated in this work, and we describe the results on these datasets in \autoref{sec:clutrr_results}.
+
+\subsection{Systematic generalization on Productivity}
+
+Most prominently, CLUTRR allows us to explicitly evaluate a model's ability for systematic generalization, especially productivity.
+In particular, we rely on the following hold-out procedures to test systematic generalization:
+\begin{itemize}[leftmargin=*, topsep=2pt, itemsep=2pt, parsep=2pt]
+    \item During training, we hold out a subset of the collected paraphrases, and we only use this held-out subset of paraphrases when generating the test set.
+    Thus, to succeed on CLUTRR, an NLU system must exhibit {\em linguistic generalization} and be robust to linguistic variation at test time.
+    \item We also hold out a subset of the logical clauses during training (for clauses of length $k > 2$).\footnote{One should not holdout clauses from length $k=2$ in order to allow models to learn the compositionality of all possible binary predicates.}
+    In other words, during training, the model sees all logical rules but does not see all {\em combinations} of these logical rules.
+    Thus, in addition to linguistic generalization, success on this task also requires {\em logical generalization}.
+    \item
+    Lastly, as a more extreme form of both logical and linguistic generalization, we consider the setting where the models are trained on stories generated from clauses of length ${\leq k}$ and evaluated on stories generated from larger clauses of length ${>k}$. Thus, we explicitly test the ability for models to generalize on examples that require more steps of reasoning that any example they encountered during training.
+\end{itemize}
+
+\subsection{Robust Reasoning}
+\label{sec:clutrr_robust_data}
+
+In addition to evaluating systematic generalization, the modular setup of CLUTRR also allows us to diagnose model robustness by adding \textit{noise facts} to the generated narratives.
+Due to the controlled semi-synthetic nature of CLUTRR, we are able to provide a precise taxonomy of the kinds of noise facts that can be added (Figure \ref{fig:clutrr:data_noise}).
+In order to structure this taxonomy, it is important to recall that any set of supporting facts $\mathcal{B}_\mathcal{C}$ generated by CLUTRR can be interpreted as a path, $p_\mathcal{C}$, in the corresponding kinship graph $G$ (Figure \ref{fig:clutrr:data}).
+Based on this interpretation, we view adding noise facts from the perspective of sampling three different types of noise paths, $p_n$, from the kinship graph $G$:
+\begin{itemize}[  leftmargin=10pt, topsep=0pt, itemsep=0pt, parsep=0pt]
+    \item \textit{Irrelevant facts}: We add a path $p_n$, which has exactly one shared end-point with $p_c$. In this way, this is a \textit{distractor} path,
+    which contains facts that are connected to one of the entities in the target relation, $\mathcal{H}_\mathcal{C}$, but do not provide any information that could be used to help answer the query. %We name this task \texttt{CLUTRR-Irrelevant}
+     \item \textit{Supporting facts}:
+    We add a path $p_n$, whose two end-points are on the path $p_\mathcal{C}$.
+    The facts on this path $p_n$ are noise because they are not needed to answer the query, but they are supporting facts because they can, in principle, be used to construct alternative (longer) reasoning paths that connect the two target entities.
+    %We denote this setup as \texttt{CLUTRR-Supporting}
+    \item \textit{Disconnected facts}: We add paths which neither originate nor end in any entity on $p_c$. These disconnected facts involve entities and relations that are completely unrelated to the target query.
+    %We call this variant \texttt{CLUTRR-Disconnected}.
+\end{itemize}
+
+\subsection{Generated Datasets}
+
+For all experiments, we generated datasets with 10-15k training examples.
+In many experiments, we report training and testing results on stories with different clause lengths $k$.
+(For brevity, we use the phrase ``clause length'' throughout this section to refer to the value $k=|\mathcal{B}_\mathcal{C}|$, i.e., the number of steps of reasoning that are required to predict the target query.)
+In all cases, the training set contains 5000 train stories per $k$ value, and, during testing, all experiments use 100 test stories per $k$ value.
+All experiments were run 10 times with different randomly generated stories, and means and standard errors over these 10 runs are reported.
+As discussed above, during training we holdout 20\% of the paraphrases, as well as 10\% of the possible logical clauses.
+
+
+\input{tables/clutrr/puzzles/k_2}
+\input{tables/clutrr/puzzles/k_3}
+\input{tables/clutrr/puzzles/k_4}
+\input{tables/clutrr/puzzles/k_5}
+\input{tables/clutrr/puzzles/k_6}
+
+
+\section{Evaluated Models}
+\label{sec:clutrr_models}
+
+Our primary baselines are neural language understanding models that take unstructured text as input.
+We consider bidirectional LSTMs \citep{hochreiter1997long, cho2014learning} (with and without attention), as well as models that aim to incorporate inductive biases towards relational reasoning: Relation Networks (RN) \citep{santoro2017simple}, Relational Recurrent Networks (RMC) \citep{santoro2018relational} and Compositional Memory Attention Network (MAC) \citep{hudson2018compositional}. We also use the large pre-trained language model, BERT \cite{devlin2018bert}, as well as a modified version of BERT having a trainable LSTM encoder on top of the pretrained BERT embeddings.
+All of these models (except BERT) were re-implemented in PyTorch 1.0 \cite{paszke2017automatic} and adapted to work with the CLUTRR benchmark.
+
+Since the underlying relations in the stories generated by CLUTRR inherently form a graph, we also experiment with a Graph Attention Network (GAT) \citep{Velickovic2017-mh}.
+%Specifically, we consider }, as a representative model from the field of graph representation learning \cite{2017arXiv170905584H}.
+Rather than taking the textual stories as input, the GAT baseline receives a structured graph representation of the facts that underlie the story.
+%The motivation behind the inclusion of the GAT baseline is to evaluate the difficulty of the inductive reasoning task without the challenge of interpreting the natural language.
+%these two classes of models is to present the two extremes in current relational reasoning space : unstructured models which has to construct a latent graph, compared with structured model having the perfect graph as input.
+%Future explorations can target the space between these models where an information retrieval (IR) model \citep{schoenmackers2010learning} can be used to extract the underlying graph from text and fed into a reasoning model.
+
+
+\xhdr{Entity and query representations}
+We use the various baseline models to encode the natural language story (or graph) into a fixed-dimensional embedding.
+With the exception of the BERT models, we do not use pre-trained word embeddings and learn the word embeddings from scratch using end-to-end backpropagation.
+An important note, however, is that we perform Cloze-style anonymization \cite{hermann2015teaching} of the entities (i.e., names) in the stories, where each entity name is replaced by a \textit{@entity-k} placeholder, which is randomly sampled from a small, fixed pool of placeholder tokens. The embeddings for these placeholders are randomly initialized and fixed during training.
+
+To make a prediction about a target query given a story, we concatenate the embedding of the story (generated by the baseline model) with the embeddings of the two target entities and we feed this concatenated embedding to a 2-layer feed-forward neural network with a softmax prediction layer.
+
+\subsection{Hyperparameters}
+
+For all models, the common hyperparameters used are: Embedding dimension: 100 (except BERT based models), Optimizer: Adam, Learning rate: 0.001, Number of epochs: 100, Number of runs: 10. Specific model-based hyperparameters are given as follows:
+
+\begin{itemize}
+    \item \textbf{Bidirectional LSTM}: LSTM hidden dimension: 100, \# layers: 2, Classifier MLP hidden dimension: 200
+    \item \textbf{Relation Networks}: $f_{{\theta}_1}$ : 256, $f_{{\theta}_2}$: 64, $g_{\theta}$ : 64
+    \item \textbf{MAC}: \# Iterations: 6, \texttt{shareQuestion}: True, Dropout - Memory, Read and Write: 0.2
+    \item \textbf{Relational Recurrent Networks}: Memory slots: 2, Head size: 192, Number of heads: 4, Number of blocks : 1, forget bias : 1, input bias: 0, gate style: unit, key size: 64, \# Attention layers: 3, Dropout: 0
+    \item \textbf{BERT}: Layers : 12, Fixed pretrained embeddings from \texttt{bert-base-uncased} using Pytorch HuggingFace BERT repository \footnote{\hyperlink{https://github.com/huggingface/pytorch-pretrained-BERT}{https://github.com/huggingface/pytorch-pretrained-BERT}}, Word dimension: 768, appended with a two-layer MLP for final prediction.
+    \item \textbf{BERT-LSTM}: Same parameters as above, with a two-layer unidirectional LSTM encoder on top of BERT word embeddings.
+    \item \textbf{GAT}: Node dimension: 100, Message dimension: 100, Edge dimension: 20, number of rounds: 3
+\end{itemize}
+
+
+
 \section{Results}
-\label{sec:org9950ca0}
+\label{sec:clutrr_results}
 
+We evaluate several \acrshort{nlu} systems on the proposed CLUTRR benchmark to surface the relative strengths and shortcomings of these models in the context of inductive reasoning and combinatorial generalization.\footnote{Code to reproduce all the results in this section are available at  \href{https://github.com/facebookresearch/clutrr/}{https://github.com/facebookresearch/clutrr/}.} We aim to answer the following key questions:
+\begin{enumerate}[label=({\bf Q\arabic*}), leftmargin=28pt, topsep=0pt, itemsep=0pt, parsep=0pt]
+\item How do state-of-the-art NLU models compare in terms of systematic generalization? Can these models generalize to stories with unseen combinations of logical rules?
+ \item How does the performance of neural language understanding models compare to a graph neural network that has full access to graph structure underlying the stories?
+    \item How robust are these models to the addition of noise facts to a given story?
+\end{enumerate}
+
+\subsection{Systematic Generalization with Productivity}
+\label{sec:clutrr_sys_gen}
+
+We begin by using CLUTRR to evaluate the ability of the baseline models to perform systematic generalization (\textbf{Q1}).
+In this setting, we consider two training regimes: in the first regime, we train all models with clauses of length $k=2,3$, and in the second regime, we train with clauses of length $k=2,3,4$.
+We then test the generalization of these models on test clauses of length $k=2,...,10$.
+
+Figure \ref{fig:gen_1} illustrates the performance of different models on this generalization task.
+We observe that the GAT model is able to perform near-perfectly on the held-out logical clauses of length $k=3$, with the BERT-LSTM being the top-performer among the text-based models but still significantly below the GAT.
+Not surprisingly, the performance of all models degrades monotonically as we increase the length of the test clauses, which highlights the challenge of ``zero-shot'' systematic generalization \cite{lake2017generalization, 2018arXiv181107017S}.
+However, as expected, all models improve on their generalization performance when trained on $k=2,3,4$ rather than just $k=2,3$ (Figure \ref{fig:gen_1}, right). The GAT, in particular, achieves the biggest gain by this expanded training.
+
+\begin{figure*}[!htb]
+     \centering
+    \subfloat{{\includegraphics[width=0.48\textwidth]{figs/clutrr/emnlp/sys_gen_23.pdf} }}%
+    \qquad
+    \hspace{-20pt}
+    \subfloat{{\includegraphics[width=0.48\textwidth]{figs/clutrr/emnlp/sys_gen_234.pdf} }}%
+    \caption{Systematic generalization performance of different models when trained on clauses of length $k=2,3$ (Left) and $k=2,3,4$ (Right).}
+    \label{fig:gen_1}
+\end{figure*}
+
+
+
+\subsection{The benefit of structure}
+\label{sec:clutrr_structure}
+
+The empirical results on systematic generalization also provide insight into how the text-based NLU systems compare against the graph-based GAT model that has full access to the logical graph structure underlying the stories (\textbf{Q2}).
+Indeed, the relatively strong performance of the GAT model (Figure \ref{fig:gen_1}) suggests that the language-based models fail to learn a robust mapping from the natural language narratives to the underlying logical facts.
+
+
+To further confirm this trend, we ran experiments with modified train and test splits for the text-based models, where the same set of natural language paraphrases were used to construct the narratives in both the train and test splits. In this simplified setting, the text-based models must still learn to reason about held-out logical patterns, but the difficulty of parsing the natural language is essentially removed, as the same natural language paraphrases are used during testing and training. We found that the text-based models were competitive with the GAT model in this simplified setting, confirming that the poor performance of the text-based models on the main task is driven by the difficulty of parsing the unseen natural language narratives.
+
+\subsection{Robust Reasoning}
+\label{sec:clutrr_robust_reasoning}
+
+\input{tables/clutrr/table_amt_robust.tex}
+
+Finally, we use CLUTRR to systematically evaluate how various baseline neural language understanding systems cope with noise (\textbf{Q3}).
+In all the experiments we provide a combination of $k=2$ and $k=3$ length clauses in training and testing, with noise facts being added to the train and/or test set depending on the setting (Table \ref{tab:robust}).
+We use the different types of noise facts defined in Section \ref{sec:clutrr_robust_data}..
+
+Overall, we find that the GAT baseline outperforms the unstructured text-based models across most testing scenarios (Table \ref{tab:robust}), which showcases the benefit of a structured feature space for robust reasoning.
+When training on clean data and testing on noisy data, we observe two interesting trends that highlight the benefits and shortcomings of the various model classes:
+\begin{enumerate}[leftmargin=*, topsep=2pt, itemsep=0pt]
+    \item All the text-based models excluding BERT actually perform better when testing on examples that have {\em supporting} or {\em irrelevant} facts added. This suggests that these models actually benefit from having more content related to the entities in the story. Even though this content is not strictly useful or needed for the reasoning task, it may provide some linguistic cues (e.g., about entity genders) that the models exploit. In contrast, the BERT-based models do not benefit from the inclusion of this extra content, which is perhaps due to the fact that they are already built upon a strong language model (e.g., that already adequately captures entity genders.)
+    \item  The GAT model performs poorly when {\em supporting} facts are added but has no performance drop when {\em disconnected} facts are added. This suggests that the GAT model is sensitive to changes that introduce cycles in the underlying graph structure but is robust to the addition of noise that is disconnected from the target entities.
+\end{enumerate}
+Moreover, when we trained on noisy examples, we found that only the GAT model was able to consistently improve its performance (Table \ref{tab:robust}).
+Again, this highlights the performance gap between the unstructured text-based models and the GAT.
+
+
+
+% TODO insert figure
 % \begin{center}
 % \includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_23.pdf}
 % \includegraphics[height=0.3\textwidth]{figs/clutrr/emnlp/sys_gen_234.pdf}
@@ -218,11 +589,39 @@ Paper: \cite{sinha2019a}
 
 
 \section{Related Work}
-\label{sec:org90fb063}
+\label{sec:clutrr_related_work}
+
+To design the CLUTRR dataset, we draw inspiration from the classic work on inductive logic programming (ILP), a long line of reading comprehension benchmarks in NLP, as well as work combining language and knowledge graphs.
+
+\subsection{Reading comprehension benchmarks}
+
+Many datasets have been proposed to test the reading comprehension ability of NLP systems. This includes the SQuAD \cite{Rajpurkar2016-yc}, NewsQA \cite{Trischler2016-fc}, and MCTest \cite{richardson2013mctest} benchmarks that focus on factual questions; the SNLI \cite{bowman2015large} and MultiNLI \cite{williams2018broad} benchmarks for sentence understanding; and the bABI tasks \cite{Weston2015-is}, to name a few.
+Our primary contribution to this line of work is the development of a carefully designed {\em diagnostic} benchmark to evaluate model robustness and systematic generalization in the context of NLU.
+
+\subsection{Systematic generalization}
+
+A growing body of literature has demonstrated that NLU models tend to exploit statistical artifacts in datasets and lack true generalization capabilities \cite{jia2017adversarial,gururangan2018annotation, kaushik2018much, lake2017generalization}.
+These critical examinations have dovetailed with similar studies on visual question answering \citep{agrawal2016analyzing,bahdanau2018systematic,Johnson2016-mw}.
+CLUTRR, contributes to this growing area by introducing a principled and flexible benchmark to evaluate systematic generalization in the context of language understanding---with our notion of systematic generalization being grounded in classic work on inductive logic programming (ILP) \cite{Quinlan1990-iv}.
+
+
+\subsection{Question-answering with knowledge graphs}
+
+Our work is also related to the domain of question answering and reasoning in knowledge graphs \citep{das2017go, xiong2018one, NIPS2018_7473, 8587330, xiong2017deeppath, welbl2018constructing, kartsaklis2018mapping}, where either the model is provided with a knowledge graph to perform inference over or where the model must infer a knowledge graph from the text itself.
+However, unlike previous benchmarks in this domain---which are generally {\em transductive} and focus on leveraging and extracting knowledge graphs as a source of background knowledge about a fixed set of entities---CLUTRR requires {\em inductive logical reasoning}, where every example requires reasoning over a new set of previously unseen entities.
+
+
 \section{Discussion}
-\label{sec:orgaf96b9b}
+\label{sec:clutrr_discussion}
+
+In this paper we introduced the CLUTRR benchmark suite to test the systematic generalization and inductive reasoning capababilities of NLU systems.
+We demonstrated the diagnostic capabilities of CLUTRR and found that existing NLU systems exhibit relatively poor robustness and systematic generalization capabilities---especially when compared to a graph neural network that works directly with symbolic input.
+These results highlight the gap that remains between machine reasoning models that work with unstructured text and models that are given access to more structured input.
+
 \section{Follow-up findings in the community}
-\label{sec:org53c3914}
+\label{sec:clutrr_followup}
+
+
 \clearpage
 \chapter{Quantifying syntactic generalization using word order}
 \label{sec:orgc518e9d}

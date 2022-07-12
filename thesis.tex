@@ -30,6 +30,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{adjustbox}
+% \usepackage{subfigure}
 % \usepackage[T1]{fontenc}
 % \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
@@ -737,6 +738,19 @@ Thus, in this chapter I discuss our contributions in \citet{sinha-etal-2021-unna
 \section{Technical Background}
 \label{sec:unli_technical_bg}
 
+In this chapter, we investigate the task of Natural Language Inference (NLI), also known as Recognizing Textual Entailment (RTE). NLI task consists of inferring the logical relation between two sentences, typically known as the \textit{premise} and the \textit{hypothesis}. The logical relations that can exist between these two sentences can be on of three types: \textit{entailment} if the premise \textit{entails} the hypothesis, \textit{contradiction} if it is the opposite, and \textit{neutral} if the sentences have non overlapping meaning. Historically, this logical relation formulation is derived from \textit{natural logic} \citep{maccartney-manning-2007-natural}, which consisted of seven set-theoretic relations between any given pair of sentences. We use the formulation prescribed by \cite{bowman-etal-2015-large}, which is the simplified formulation consisting of the three standard relations.
+
+Linguists generally take syntactic structure to be necessary for humans to know what sentences mean. Many also find the NLI task to a very promising approximation of human natural language understanding, in part because it is rooted in the tradition of logical entailment. In the spirit of propositional logic, sentence meaning is taken to be %the spirit of many propositional logics with
+truth-conditional \citep{frege1948sense, montague-1970-universal, chierchia-mcconnell-1990-meaning, heim-kratzer-1998-semantics}. That is to say that understanding a sentence is equivalent to knowing the actual conditions of the world under which the sentences would be (judged) true \citep{wittgenstein-1922-tractatus}. If grammatical sentences are required for sentential inference, as per a truth conditional approach \citep{montague-1970-universal}, then permuted sentences should be meaningless. Put another way, the meanings of highly permuted sentences (if they exist) are not propositions, and thus those sentences don't have truth conditions. Only from their truth conditions of sentences can we tell if a sentence entails another.
+In short, the textual entailment task is technically undefined in our ``unnatural'' setting. %Given our working definitions of textual entailment from the NLI task, it's not reasonable to say, for example, whether ``The the yesterday bit dog hard man'' is entailed by ``The man bit the dog hard yesterday'' or not.
+
+
+Since existing definitions don't immediately extend to unnatural word orders, we outline several hypothetical \textit{systematic} ways that a model might perform, had it been sensitive to word order. We hypothesize two models that operate on the first principles of NLI, and one that doesn't. In the first case, Model A deems permuted sentences meaningless (devoid of truth values), as formal semantic theories of human language would predict. Thus, it assigns \textit{``neutral"} to every permuted example. Next, Model B does not deem permuted sentences meaningless, and attempts to understand them. Humans find understanding permuted sentences difficult (see our human evaluations in \autoref{sec:unli_human_eval}). Model B could also similarly struggle to decipher the meaning, and just equally sample labels for each example (i.e., assigns equal probability mass to the outcome of each label). Finally, we hypothesize a non-systematic model, Model C, which attempts to treat permuted sentences as though they weren't permuted at all. This model could operate similarly as bag-of-words (BOW), and thus always assign the same label to the permuted examples as it would to the un-permuted examples. If the model failed to assign the original gold label to the original unpermuted examples, it will also fail to assign the original gold label to its permutations; it will never get higher accuracy on permuted examples than on unpermuted ones.
+
+We find in our experiments that the state-of-the-art Transformer-based NLI models (as well as pre-Transformer class of models) do not perform like any of the above hypothetical models. They perform closest to Model C, but are, in some cases, actually able to achieve \emph{higher} accuracy on permuted examples. To better quantitatively describe this behaviour,
+we introduce our suite of \textbf{\PermAcc} metrics that enable us to quantify how accepting models are of permuted sentences.
+
+
 \section{Experimental Setup}
 \label{sec:unli_exp_setup}
 
@@ -807,30 +821,53 @@ We run our experiments on two types of models: \textbf{(a)} Transformer-based mo
 \subsection{Models accept many permuted examples.}
 \label{sec:unli_results_accept}
 
-We find $\Omega_{\text{max}}$ is very high for models trained and evaluated on MNLI (in-domain generalization), reaching \textbf{98.7\%} on MNLI dev. and test sets (in RoBERTa, compared to $\mathcal{A}$ of 90.6\% (\autoref{table:main}). Recall, human accuracy is approximately 92\% on MNLI dev.,  \citealt{nangia-bowman-2019-human}). This shows that there exists at least one permutation (usually many more) for almost all examples in $D_{\text{test}}$ such that model $M$ predicts the gold label. We also observe high $\Omega_{\text{rand}}$ at 79.4\%, showing that there are many examples for which the models outperform even a random baseline in accepting permuted sentences (see \autoref{app_sec:threshold} for more $\Omega$ values.) We provide an example of the behaviour in \autoref{tab:unli:example}.
+\begin{figure}[ht]
+    \centering
+    \resizebox{0.7\linewidth}{!}{
+        \includegraphics{figs/unli/comb_plot_0.png}}
+    \caption{Comparison of $\Omega_{\text{max}}$,$\Omega_{\text{rand}}$,$\mathcal{P}^c$ and $\mathcal{P}^f$ with the model accuracy $\mathcal{A}$ on multiple datasets, where all models are trained on the MNLI corpus \cite{williams-etal-2018-broad}.}
+    \label{fig:comb_plot}
+\end{figure}
+
+We find $\Omega_{\text{max}}$ is very high for models trained and evaluated on MNLI (in-domain generalization), reaching \textbf{98.7\%} on MNLI dev. and test sets (in RoBERTa, compared to $\mathcal{A}$ of 90.6\% (\autoref{table:unli_main}). Recall, human accuracy is approximately 92\% on MNLI dev.,  \citealt{nangia-bowman-2019-human}). This shows that there exists at least one permutation (usually many more) for almost all examples in $D_{\text{test}}$ such that model $M$ predicts the gold label. We also observe high $\Omega_{\text{rand}}$ at 79.4\%, showing that there are many examples for which the models outperform even a random baseline in accepting permuted sentences. We provide an example of the behaviour in \autoref{tab:unli:example}.
 
 Evaluating out-of-domain generalization with ANLI dataset splits resulted in an $\Omega_{\text{max}}$ value that is notably higher than $\mathcal{A}$ (89.7\% $\Omega_{\text{max}}$ for RoBERTa compared to 45.6\% $\mathcal{A}$). As a consequence, we encounter many \textit{flips}, i.e., examples where the model is unable to predict the gold label, but at least one permutation of that example is able to. However, recall this analysis expects us to know the gold label upfront, so this test can be thought of as running a word-order probe test on the model until the model predicts the gold label (or give up by exhausting our set of $q$ permutations). For out-of-domain generalization, $\Omega_{\text{rand}}$ decreases considerably (36.4\% $\Omega_{\text{rand}}$ on A1), which means fewer permutations are accepted by the model. Next, recall that a classic bag-of-words model would have $\mathcal{P}^c=100$ and $\mathcal{P}^f=0$. No model performs strictly like a classic bag of words although they do perform somewhat BOW-like ($\mathcal{P}^c >> \mathcal{P}^f$ for all test splits, \autoref{fig:comb_plot}). %Although it is harder to find the correct permutation for already misclassified, non-generalizable sentences, state-of-the-art models still behave somewhat BOW-like.
 We find this BOW-likeness to be higher for certain non-Transformer models, (InferSent) as they exhibit higher $\mathcal{P}^c$ (84.2\% for InferSent compared to 70.7\% for RoBERTa on MNLI).
 
 
 \input{tables/unli/nli_rand}
-\input{tables/unli/ocnli_rand_all}
 
 
 
-% Will it be too small?
-\begin{figure}[t]
+\subsubsection{Investigating other $\Omega$ values}
+
+\begin{figure*}
     \centering
-    \resizebox{0.48\textwidth}{!}{
-        \includegraphics{figs/unli/entropy_plot.png}}
-    \caption{Average entropy of model confidences on permutations that yielded the correct results for Transformer-based models (top) and Non-Transformer-based models (bottom). Results are shown for $D^c$ (orange) and $D^f$ (blue). The boxes show the quartiles of the entropy distributions.}
-    \label{fig:all_entropy}
-\end{figure}
+    \resizebox{\textwidth}{!}{
+        \includegraphics{figs/unli/omega_threshold.png}}
+    \caption{$\Omega_x$ threshold for all datasets with varying $x$ and computing the percentage of examples that fall within the threshold. The top row consists of in-distribution datasets (MNLI, SNLI) and the bottom row contains out-of-distribution datasets (ANLI)}
+    \label{fig:unli:threshold_omega_x}
+\end{figure*}
+
+
+We defined two variations of $\Omega_x$, $\Omega_{\text{max}}$ and $\Omega_{\text{rand}}$, but theoretically it is possible to define any arbitrary threshold percentage $x$ to evaluate the unnatural language inference mechanisms of different models. In \autoref{fig:unli:threshold_omega_x} we show the effect of different thresholds, including $\Omega_{\text{max}}$ where $x = 1/|D_{\text{test}|}$ and $\Omega_{\text{rand}}$ where $x = 0.34$. We observe for in-distribution datasets (top row, MNLI and SNLI splits), in the extreme setting when $x=1.0$, there are more than 10\% of examples available, and more than 25\% in case of InferSent and DistilBERT. For out-of-distribution datasets (bottom row, ANLI splits) we observe a much lower trend, suggesting generalization itself is the bottleneck in permuted sentence understanding.
+
+
 
 \subsection{Models are very confident.}
 \label{sec:unli_results_conf}
 
-The phenomenon we observe would be of less concern if the correct label prediction was just an outcome of chance, which could occur when the entropy of the log probabilities of the model output is high (suggesting uniform probabilities on entailment, neutral and contradiction labels, recall Model B from \autoref{sec:permutation}). We first investigate the model probabilities for the Transformer-based models on the permutations that lead to the correct answer in \autoref{fig:all_entropy}. We find overwhelming evidence that model confidences on in-distribution datasets (MNLI, SNLI) are highly skewed, resulting in low entropy, and it varies among different model types. BART proves to be the most skewed Transformer-based model. This skewness is not a property of model capacity, as we observe DistilBERT log probabilities to have similar skewness as RoBERTa (large) model, while exhibiting lower $\mathcal{A}$, $\Omega_{\text{max}}$, and $\Omega_{\text{rand}}$.
+% Will it be too small?
+\begin{figure}[t]
+    \centering
+    \resizebox{0.7\textwidth}{!}{
+        \includegraphics{figs/unli/entropy_plot.png}}
+    \caption{Average entropy of model confidences on permutations that yielded the correct results for Transformer-based models (top) and Non-Transformer-based models (bottom). Results are shown for $D^c$ (orange) and $D^f$ (blue). The boxes show the quartiles of the entropy distributions.}
+    \label{fig:unli_all_entropy}
+\end{figure}
+
+
+The phenomenon we observe would be of less concern if the correct label prediction was just an outcome of chance, which could occur when the entropy of the log probabilities of the model output is high (suggesting uniform probabilities on entailment, neutral and contradiction labels, recall Model B from \autoref{sec:unli_technical_bg}). We first investigate the model probabilities for the Transformer-based models on the permutations that lead to the correct answer in \autoref{fig:unli_all_entropy}. We find overwhelming evidence that model confidences on in-distribution datasets (MNLI, SNLI) are highly skewed, resulting in low entropy, and it varies among different model types. BART proves to be the most skewed Transformer-based model. This skewness is not a property of model capacity, as we observe DistilBERT log probabilities to have similar skewness as RoBERTa (large) model, while exhibiting lower $\mathcal{A}$, $\Omega_{\text{max}}$, and $\Omega_{\text{rand}}$.
 
 % KS: I think this paper has the inverse result!
 % The high confidence of Transformer-based model can be attributed to their tendency to be mis-calibrated in an out-of-domain setting, which is opposite to \newcite{desai2020calibration}!!!.
@@ -841,16 +878,58 @@ The phenomenon we observe would be of less concern if the correct label predicti
 % https://arxiv.org/pdf/2003.07892.pdf
 % http://proceedings.mlr.press/v119/braverman20a/braverman20a.pdf
 
-For non-Transformers whose accuracy $\mathcal{A}$ is lower, the $\Omega_{\text{max}}$ achieved by these models are also predictably lower. We observe roughly the same relative performance in the terms of $\Omega_{\text{max}}$ (\autoref{fig:comb_plot} and Appendix \autoref{table:main}) and Average entropy (Figure \ref{fig:all_entropy}). However, while comparing the averaged entropy of the model predictions, it is clear that there is some benefit to being a worse model---non-Transformer models are not as overconfident on randomized sentences as Transformers are.
+For non-Transformers whose accuracy $\mathcal{A}$ is lower, the $\Omega_{\text{max}}$ achieved by these models are also predictably lower. We observe roughly the same relative performance in the terms of $\Omega_{\text{max}}$ (\autoref{fig:comb_plot} and \autoref{table:unli_main}) and Average entropy (Figure \ref{fig:unli_all_entropy}). However, while comparing the averaged entropy of the model predictions, it is clear that there is some benefit to being a worse model---non-Transformer models are not as overconfident on randomized sentences as Transformers are.
 High confidence of Transformer models can be attributed to the \textit{overthinking} phenomenon commonly observed in deep neural networks \cite{kaya2019shallowdeep} and BERT-based models \cite{zhou2020bert}.
 % KS: I think this is a better reasoning? Please check.
 
 
 \subsection{Similar artifacts in Chinese NLU.}
+\label{sec:unli_ocnli_results}
+
+\input{tables/unli/ocnli_rand_all}
 
 We extended the experiments to the Original Chinese NLI dataset \citep[OCNLI]{hu-etal-2020-ocnli}, and re-used the pre-trained RoBERTa-Large and InferSent (non-Transformer) models on OCNLI. Our findings are similar to the English results (\autoref{table:ocnli_all}), thereby suggesting that the phenomenon is not just an artifact of English text or tokenization.
 
-\subsection{Other Results.} We investigated the effect of sentence length (which correlates with number of possible permutations; \autoref{app_sec:length}), and hypothesis-only randomization (models exhibit similar phenomenon even when only hypothesis is permuted; \autoref{app_sec:HO}).
+\subsection{Other Results.} We investigated the effect of sentence length (which correlates with number of possible permutations), and hypothesis-only randomization (models exhibit similar phenomenon even when only hypothesis is permuted). In terms of sentence length, we observe that shorter sentences in general have a somewhat higher probability of acceptance for examples which was originally predicted correctly---since shorter sentences have fewer unique permutations (\autoref{fig:unli_length}). However, for the examples which were originally incorrect, the trend is not present.
+
+\begin{figure}[ht]
+    \centering
+    \resizebox{0.8\textwidth}{!}{
+      \includegraphics{figs/unli/transformer_length.png}
+      % \includegraphics{example-image-a}
+    }
+    \caption{Length and \PermAcc by Transformer-based models.}
+    \label{fig:unli_length}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \resizebox{0.7\textwidth}{!}{
+      \includegraphics{figs/unli/hypothesis_compare.png}
+    }
+    \caption{Comparing the effect between randomizing both premise and hypothesis and only hypothesis on two Transformer-based models, RoBERTa and BART. Here, we observe the difference of $\Omega_{\text{max}}$ is marginal in in-distribution datasets (SNLI, MNLI), while hypothesis-only randomization is worse for out-of-distribution datasets (ANLI).}
+    \label{fig:unli_hp_compare}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+    \resizebox{0.7\textwidth}{!}{
+      \includegraphics{figs/unli/hypothesis_compare_cor_mean.png}
+      % \includegraphics{example-image-c}
+    }
+    \caption{Comparing the effect between randomizing both premise and hypothesis and only hypothesis on two Transformer-based models, RoBERTa and BART. In this figure, we compare the mean number of permutations which elicited correct response, and naturally the hypothesis-only randomization causes more percentage of randomizations to be correct.}
+    \label{fig:unli_hp_compare_cor}
+\end{figure}
+
+
+In recent years, the impact of the hypothesis sentence \citep{gururangan-etal-2018-annotation, tsuchiya-2018-performance, poliak-etal-2018-hypothesis} on NLI classification has been a topic of much interest. As we define in \autoref{sec:unli_technical_bg}, logical entailment can only be defined for pairs of propositions. We investigated one effect where we randomize only the hypothesis sentences while keeping the premise intact. \autoref{fig:unli_hp_compare} and \autoref{fig:unli_hp_compare_cor} shows that the $\Omega_{\text{max}}$ value is almost the same for the two schemes; randomizing the hypothesis alone also leads the model to accept many permutations.
+
+
+\section{Analysis}
+
+\subsection{Analyzing Syntactic Structure Associated with Tokens}
+\label{sec:unli_pos_mini_tree}
+
 
 \begin{figure}[t]
     \centering
@@ -859,11 +938,6 @@ We extended the experiments to the Original Chinese NLI dataset \citep[OCNLI]{hu
     \caption{BLEU-2 score versus acceptability of permuted sentences across all test datasets. RoBERTa and BART performance is similar but differs considerably from the performance of non-Transformer-based models, such as InferSent and ConvNet. }
     \label{fig:bleu_2}
 \end{figure}
-
-\section{Analysis}
-
-\subsection{Analyzing Syntactic Structure Associated with Tokens}
-\label{sec:unli_pos_mini_tree}
 
 A natural question to ask following our findings: what is it about particular permutations that leads models to accept them? Since the permutation operation is drastic and only rarely preserves local word relations, we first investigate whether there exists a relationship between \PermAcc\ scores and local word order preservation. Concretely, we compare bi-gram word overlap (BLEU-2) with the percentage of permutations that are deemed correct (\autoref{fig:bleu_2}).\footnote{We observe, due to our permutation process, the maximum BLEU-3 and BLEU-4 scores are negligibly low ($< 0.2$  BLEU-3 and $< 0.1$ BLEU-4), already calling into question the hypothesis that n-grams are the sole explanation for our finding. Because of this, we only compare BLEU-2 scores. Detailed experiments on specially constructed permutations that cover the entire range of BLEU-3 and BLEU-4 is provided in \autoref{app_sec:bleu_all}.} Although the probability of a permuted sentence to be predicted correctly does appear to track BLEU-2 score (Figure \ref{fig:bleu_2}), the percentage of examples which were assigned the gold label by the Transformer-based models is still higher than we would expect from permutations with lower BLEU-2 (66\% for the lowest BLEU-2 range of $0-0.15$), suggesting preserved relative word order alone cannot explain the high permutation acceptance rates.
 
@@ -889,7 +963,7 @@ We speculate that our NLI models might accept permuted examples at high rates, %
 because they are (perhaps noisily) reconstructing the original sentence from abstract, word-anchored information about common neighbors.
 
 To test this, we POS-tagged $D_{\text{train}}$ using 17 Universal Part-of-Speech tags (using spaCy, \citealt{spacy2}). %For each token in $D_{\text{train}}$, we get a summary of that token's syntactic context (at a symmetrical distance set by a hyperparameter we call the \textbf{radius}). Concretely,
-For each $w_i \in S_i$, we compute the occurrence probability of POS tags on tokens in the \textit{neighborhood} of $w_i$. The neighborhood is specified by the radius $r$ (a symmetrical window $r$ tokens from $w_i \in S_i$ to the left and right). We denote this sentence level probability of neighbor POS tags for a word $w_i$ as $\psi^r_{\{w_i, S_i\}} \in \mathcal{R}^{17}$ (see an example in \autoref{fig:exPOSsignature} in the Appendix). Sentence-level word POS neighbor scores can be averaged across $ D_{\text{train}}$ to get a type level score $\psi^r_{\{w_i, D_{\text{train}}\}} \in \mathcal{R}^{17}, \forall w_i \in D_{\text{train}}$.  Then, for a sentence $S_i \in D_{\text{test}}$, for each word $w_i \in S_i$, we compute a \textbf{POS mini-tree overlap score}:
+For each $w_i \in S_i$, we compute the occurrence probability of POS tags on tokens in the \textit{neighborhood} of $w_i$. The neighborhood is specified by the radius $r$ (a symmetrical window $r$ tokens from $w_i \in S_i$ to the left and right). We denote this sentence level probability of neighbor POS tags for a word $w_i$ as $\psi^r_{\{w_i, S_i\}} \in \mathcal{R}^{17}$. Sentence-level word POS neighbor scores can be averaged across $ D_{\text{train}}$ to get a type level score $\psi^r_{\{w_i, D_{\text{train}}\}} \in \mathcal{R}^{17}, \forall w_i \in D_{\text{train}}$.  Then, for a sentence $S_i \in D_{\text{test}}$, for each word $w_i \in S_i$, we compute a \textbf{POS mini-tree overlap score}:
 %\begin{align}
 \begin{equation} % want left align
 \begin{split}
@@ -901,8 +975,19 @@ For each $w_i \in S_i$, we compute the occurrence probability of POS tags on tok
 
 % POS signature?
 Concretely, $\beta^k_{\{w_i,S_i\}}$ computes the overlap of top-$k$ POS tags in the neighborhood of a word $w_i$ in $S$ with that of the train statistic. If a word has the same mini-tree in a given sentence as it has in the training set, then the overlap would be 1. For a given sentence $S_i$, the aggregate $\beta^k_{\{S_i\}}$ is defined by the average of the overlap scores of all its words: $\beta^k_{\{S_i\}} = \frac{1}{|S_i|}\sum_{w_i \in S_i} \beta^k_{\{w_i,S_i\}}$, and we call it a POS minitree \textit{signature}. We can also compute the POS minitree signature of a permuted sentence $\hat{S}_i$ to have $\beta^k_{\{\hat{S}_i\}}$.  If the permuted sentence POS signature comes close to that of the true sentence, then their ratio (i.e.,  $\beta^k_{\{\hat{S}_i\}} / \beta^k_{\{S_i\}}$) will be close to 1. Also, since POS signature is computed with respect to the train distribution, a ratio of $>$ 1 indicates that the permuted sentence is closer to the overall train statistic than to the original unpermuted sentence in terms of POS signature. %If models ``know syntax'' then for any samples (from the permuted test set or from the original training) that have high average (?) POS tag minitree overlap scores (i.e., words with POS tag minitree scores similar to their POS tag minitree overlap score on the training set), we should expect those samples to be fairly easy for models to do well on.
-If  high overlap with the training distribution correlates with percentage of permutations deemed correct, then our models treat words as if they project syntactic minitrees.
+If high overlap with the training distribution correlates with percentage of permutations deemed correct, then our models treat words as if they project syntactic minitrees.
 %Therefore, for $\hat{D}_{\text{test}}$ where many of the $n$ permutations have high average POS minitree overlap score, we should expect a higher prediction accuracy.
+\autoref{fig:unli_pos_signature} provides a snapshot a word ``river" from the test set and shows how the POS signature distribution of the word in a particular example match with that of aggregated training statistic. In practice, we select the top $k$ POS tags for the word in the test signature as well as the train, and calculate their overlap. When comparing the model performance with permuted sentences, we compute a ratio between the original test overlap score and an overlap score calculated instead from the permuted test. In the \autoref{fig:unli_pos_signature}, `river' would have a POS tag minitree score of 0.75.
+
+\begin{figure}[ht]
+    \centering
+    \resizebox{0.7\linewidth}{!}{
+        \includegraphics{figs/unli/riverPOSsig}}
+    \caption{Example POS signature for the word `river', calculated with a radius of 2. Probability of each neighbor POS tag is provided. Orange examples come from the permuted test set, and blue come from the original training data. }
+    \label{fig:unli_pos_signature}
+\end{figure}
+
+
 
 \begin{figure}[t]
     \centering
@@ -984,7 +1069,17 @@ If performance isn't affected (or if permutation helps, as we find it does in so
 
 
 \section{Discussion}
-\label{sec:org6975f27}
+\label{sec:unli_discussion}
+
+In this chapter, we observe that state-of-the-art models do not rely on sentence structure the way we think they should: NLI models (Transformer-based models, RNNs, and ConvNets) are largely insensitive to permutations of word order that corrupt the original syntax. This raises questions about the extent to which such systems understand ``syntax'', and highlights the unnatural language understanding processes they employ.
+%While we have shown that classification labels can be flipped based solely on a sentence reordering, on interesting future direction to explore might be to additionally consider dropping tokens. Such an approach has been taken in the realm of interpretability to determine the impact of particular tokens on model decisions \citep{serrano-smith-2019-attention}. %% COMMENT OUT ABOVE FOR ARXIV SUBMIT.
+We also observe that reordering words can cause models to flip classification labels. % future work could additionally explore the relationship between permutation and deletion.
+We do find that models seem to have learned some syntactic information as is evidenced by a correlation between preservation of abstract POS neighborhood information and rate of acceptance by models, but these results do not discount the high rates of \PermAcc, and require further verification. Coupled with the finding that humans cannot perform UNLI at all well, the high rate of permutation acceptance that we observe leads us to conclude that current models do not yet ``know syntax'' in the fully systematic and humanlike way we would like them to.
+
+
+% A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consider ``the details of human language, how it is learned, processed, and how it changes, rather than just chasing state-of-the-art numbers on a benchmark task.'' We expand upon this view, and suggest one particular future direction: we should train models not only to do well on clean test data, but also to not to overgeneralize to corrupted input. %perform natural language understanding in an humanlike way
+
+
 
 \section{Follow-up findings in the community}
 \label{sec:orgb976e8a}

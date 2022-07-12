@@ -1071,10 +1071,21 @@ If performance isn't affected (or if permutation helps, as we find it does in so
 \section{Discussion}
 \label{sec:unli_discussion}
 
-In this chapter, we observe that state-of-the-art models do not rely on sentence structure the way we think they should: NLI models (Transformer-based models, RNNs, and ConvNets) are largely insensitive to permutations of word order that corrupt the original syntax. This raises questions about the extent to which such systems understand ``syntax'', and highlights the unnatural language understanding processes they employ.
+In this chapter, we observe that state-of-the-art models do not rely on sentence structure the way we think they should: NLI models (Transformer-based models, RNNs, and ConvNets) are largely insensitive to permutations of word order that corrupt the original syntax. This raises questions about the extent to which such systems understand ``syntax'', and highlights the unnatural language understanding processes they employ. To summarize, our primary observations from this chapter are:
+
+\begin{itemize}
+  \item \textbf{\acrshort{nlu} models can still perform the task even if the word orders are scrambled} We observed overwhelming evidence in \autoref{sec:unli_results_accept} that state-of-the-art \acrshort{nlu} models tend to perform the task comparably even on word order scrambled text, which has no inherent semantic meaning.
+
+  \item \textbf{Certain permutations allow \acrshort{nlu} models to flip classification labels, leading to better task scores.} We find that certain permutations of the order of words in a given input sentence pair can trigger the model to change the classification labels from the baseline, leading to large performance gains in the scores of the NLI task. For instance, in the examples which the models find difficult to predict, a permutation of the word order can elicit the model to assign the gold label.
+
+  \item \textbf{\acrshort{nlu} models display rudimentary understanding of syntax, as evident by the preservation of abstract parts-of-speech neighborhood information.} We do find that models seem to have learned some syntactic information as is evidenced by a correlation between preservation of abstract POS neighborhood information and rate of acceptance by models, but these results do not discount the high rates of \PermAcc, and require further verification.
+
+\end{itemize}
+
+
 %While we have shown that classification labels can be flipped based solely on a sentence reordering, on interesting future direction to explore might be to additionally consider dropping tokens. Such an approach has been taken in the realm of interpretability to determine the impact of particular tokens on model decisions \citep{serrano-smith-2019-attention}. %% COMMENT OUT ABOVE FOR ARXIV SUBMIT.
-We also observe that reordering words can cause models to flip classification labels. % future work could additionally explore the relationship between permutation and deletion.
-We do find that models seem to have learned some syntactic information as is evidenced by a correlation between preservation of abstract POS neighborhood information and rate of acceptance by models, but these results do not discount the high rates of \PermAcc, and require further verification. Coupled with the finding that humans cannot perform UNLI at all well, the high rate of permutation acceptance that we observe leads us to conclude that current models do not yet ``know syntax'' in the fully systematic and humanlike way we would like them to.
+% We also observe that reordering words can cause models to flip classification labels. % future work could additionally explore the relationship between permutation and deletion.
+Given these findings, and coupled with the observation that humans cannot perform UNLI at all well, the high rate of permutation acceptance that we observe leads us to conclude that current models do not yet ``know syntax'' in the fully systematic and humanlike way we would like them to. This study leads us to further investigate the training dynamics employed by these large language models. In the next chapter, we will investigate the training data dependency of one such model family in detail, to shed more light on the sentence processing pipelines employed by these models.
 
 
 % A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consider ``the details of human language, how it is learned, processed, and how it changes, rather than just chasing state-of-the-art numbers on a benchmark task.'' We expand upon this view, and suggest one particular future direction: we should train models not only to do well on clean test data, but also to not to overgeneralize to corrupted input. %perform natural language understanding in an humanlike way

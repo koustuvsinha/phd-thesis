@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \resizebox{0.7\linewidth}{!}{%
+        \begin{tabular}{llrrrrrr}
+            \toprule
+             Model              & $\mathcal{A}$ & $\Omega_{\text{max}}$ & $\mathcal{P}^c$ & $\mathcal{P}^f$ & $\Omega_{\text{rand}}$ \\ \midrule
+             RoBERTa-Large   & \textbf{0.784} &         \boldred{0.988} &                  0.726 &             \boldred{0.339} &                        \boldred{0.773}            \\
+             InferSent &             0.573 &         0.931 &                  0.771 &             0.265 &                        0.615 \\
+   ConvNet &              0.407 &         0.752 &                  \boldred{0.808} &             0.199 &                        0.426 \\
+    BiLSTM &              0.566 &         0.963 &                  0.701 &             0.271 &                        0.611 \\
+            \bottomrule
+        \end{tabular}}
+    \caption{Results on evaluation on OCNLI Dev set. All models are trained on OCNLI corpus \cite{hu-etal-2020-ocnli}. 
+    % Max accuracy ($\Omega_{\text{max}}$) is computed based on whether \textit{any} of the $n=100$ permutations per data point yield correct results. $\mathcal{P}^c$  stands for the mean number of permutations which were correct when the original prediction is correct. $\mathcal{P}^f$  stats for the mean number of permutations which are correct when the original prediction is incorrect (flip). 
+    Bold marks the highest value per metric (\boldred{red} shows the model is insensitive to permutation).}
+    \label{table:ocnli_all}
+\end{table}

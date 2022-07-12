@@ -1,0 +1,16 @@
+\begin{table*}[]
+\caption{Various dataset variants of CLUTRR that are examined in this work.}
+\label{tab:data_variants}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llll@{}}
+\toprule
+Task & Variant name & Training Clause length $k$ & Testing Clause length $k$ \\ \midrule
+Systematic Generalization & \texttt{CLUTRR-Gen} & $(2,3)$, $(2,3,4)$, & $(2,3, \ldots, 10)$ \\
+Robust Reasoning - Training on clean data & \texttt{CLUTRR-AMT} & $(2,3)$ & $(2,3)$ \\
+Robust Reasoning - Training on supporting facts & \texttt{CLUTRR-Supporting} & $(2,3)$ & $(2,3)$ \\
+Robust Reasoning - Training on irrelevant facts & \texttt{CLUTRR-Irrelevant} & $(2,3)$ & $(2,3)$ \\
+Robust Reasoning - Training on disconnected facts & \texttt{CLUTRR-Disconnected} & $(2,3)$ & $(2,3)$ \\ \bottomrule
+\end{tabular}%
+}
+\end{table*}

@@ -1,0 +1,20 @@
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
+\begin{table*}[]
+\centering
+\caption{Snapshot of puzzles in the dataset for k=2}
+\label{tab:puzzle_data_1}
+\resizebox{0.7\textwidth}{!}{%
+\begin{tabular}{@{}p{7cm}lll@{}}
+\toprule
+\textbf{Puzzle} & \textbf{Question} & \textbf{Gender} & \textbf{Answer} \\ \midrule
+\addlinespace[0.5em]
+\noindent\parbox[c]{\hsize}{\textit{Charles}'s son \textit{Christopher} entered rehab for the ninth time at the age of thirty. \textit{Randolph} had a nephew called \textit{Christopher} who had n't seen for a number of years.} & Randolph is the \_\_\_\_\_ of Charles & \begin{tabular}[c]{@{}l@{}}Charles:male,\\ Christopher:male,\\ Randolph:male\end{tabular} & brother \\
+\addlinespace[0.5em]
+\noindent\parbox[c]{\hsize}{\textit{Randolph} and his sister \textit{Sharon} went to the park. \textit{Arthur} went to the baseball game with his son \textit{Randolph}}. & Sharon is the \_\_\_\_\_ of Arthur & \begin{tabular}[c]{@{}l@{}}Arthur:male,\\ Randolph:male,\\ Sharon:female\end{tabular} & daughter \\
+\addlinespace[0.5em]
+\noindent\parbox[c]{\hsize}{\textit{Frank} went to the park with his father, \textit{Brett}. \textit{Frank} called his brother \textit{Boyd} on the phone. He wanted to go out for some beers.} & Brett is the \_\_\_\_\_ of Boyd & \begin{tabular}[c]{@{}l@{}}Boyd:male,\\ Frank:male,\\ Brett:male\end{tabular} & father \\ \bottomrule
+\end{tabular}%
+}
+\end{table*}

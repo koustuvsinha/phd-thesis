@@ -1,0 +1,21 @@
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage{graphicx}
+\begin{table}[]
+\centering
+\resizebox{0.7\textwidth}{!}{%
+\begin{tabular}{@{}llll@{}}
+\toprule
+\multirow{2}{*}{Relation Length} & \multicolumn{2}{l}{Human Performance} & \multirow{2}{*}{Reported Difficulty} \\
+ & Time Limited & Unlimited Time &  \\ \midrule
+2 & 0.848 & 1 & 1.488 +- 1.25 \\
+3 & 0.773 & 1 & 2.41 +- 1.33 \\
+4 & 0.477 & 1 & 3.81 +- 1.46 \\
+5 & 0.424 & 1 & 3.78 +- 0.96 \\
+6 & 0.406 & 1 & 4.46 +- 0.87 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Human performance accuracies on CLUTRR dataset. Humans are provided the Clean-Generalization version of the dataset, and we test on two scenarios: when a human is given limited time to solve the task, and when a human is given unlimited time to solve the task. Regardless of time, our evaluators provide a score of difficulty of individual puzzles.}
+\label{tab:clutrr:human_perf}
+\end{table}

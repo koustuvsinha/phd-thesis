@@ -1,0 +1,20 @@
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
+\begin{table}[t]
+\centering
+\resizebox{0.7\linewidth}{!}{%
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Evaluator & Accuracy & Macro F1 & Acc on $D^{c}$ & Acc on $D^{f}$ \\ \midrule
+X & 0.581 $\tiny\pm 0.068$ & 0.454 & 0.649 $\tiny\pm 0.102$ & 0.515 $\tiny\pm 0.089$ \\
+Y &  0.378 $\tiny\pm 0.064$ & 0.378 & 0.411 $\tiny\pm 0.098$ & 0.349 $\tiny\pm 0.087$ \\ %\midrule
+%crowd^{*} & & 0.35 & \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Human (expert) evaluation on 200 permuted examples from the MNLI matched development set. Half of the permuted pairs contained shorter sentences and the other, longer ones. %Experts were provided only the permuted sentences (not the original example or the label) and were disallowed from consulting with one another. 
+All permuted examples were assigned the gold label by RoBERTa-Large. %crowd$^*$ was crowdworker accuracy measured by \newcite{gupta-etal-2021-bert} on the GLUE Benchmark. 
+}
+\label{tab:human_eval}
+\end{table}

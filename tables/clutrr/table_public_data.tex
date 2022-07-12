@@ -1,0 +1,17 @@
+\begin{table*}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Dataset & Variant - Training & Variant - Testing & Training Clause length & Testing Clause length \\ \midrule
+\texttt{data\_089907f8} & \multirow{2}{*}{Clean - Generalization} & \multirow{2}{*}{Clean - Generalization} & $(k=2,3)$ & \multirow{2}{*}{$(k=2,3, \ldots, 10)$} \\
+\texttt{data\_db9b8f04} &  &  & $(k=2,3,4)$ &  \\ \midrule
+\texttt{data\_7c5b0e70} & Clean & Clean, Supporting, Irrelevant, Disconnected & $(k=2,3)$ & $(k=2,3)$ \\ \midrule
+\texttt{data\_06b8f2a1} & Supporting & Clean, Supporting, Irrelevant, Disconnected & $(k=2,3)$ & $(k=2,3)$ \\ \midrule
+\texttt{data\_523348e6} & Irrelevant & Clean, Supporting, Irrelevant, Disconnected & $(k=2,3)$ & $(k=2,3)$ \\ \midrule
+\texttt{data\_d83ecc3e} & Disconnected & Clean, Supporting, Irrelevant, Disconnected & $(k=2,3)$ & $(k=2,3)$ \\ \bottomrule
+\end{tabular}%
+}
+\caption{Details of publicly released data}
+\label{tab:public_data}
+\end{table*}

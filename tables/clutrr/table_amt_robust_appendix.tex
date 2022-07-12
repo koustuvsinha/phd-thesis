@@ -1,0 +1,25 @@
+\begin{table*}[t!]
+\resizebox{\textwidth}{!}{
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{tabular}{@{}cccccccc|c@{}}
+\toprule
+\multicolumn{1}{l}{} & \multicolumn{1}{l}{Models} & \multicolumn{6}{c}{Unstructured models (no graph)} & \multicolumn{1}{l}{Structured model (with graph)} \\ \midrule
+\multicolumn{1}{l|}{Training} & \multicolumn{1}{l|}{Testing} & BiLSTM - Attention & BiLSTM - Mean & RN & MAC & \multicolumn{1}{l}{BERT} & \multicolumn{1}{l|}{BERT-LSTM} & GAT \\ \midrule
+Supporting & \multicolumn{1}{c|}{Clean} & 0.38 \tiny $\pm 0.04$ & 0.32 \tiny $\pm 0.04$ & 0.4 \tiny $\pm 0.09$ & 0.45 \tiny $\pm 0.03$ & 0.19 \tiny $\pm 0.06$ & 0.39 \tiny $\pm 0.06$ & \textbf{0.92} \tiny $\pm 0.17$ \\
+\multicolumn{1}{l}{} & \multicolumn{1}{c|}{Supporting} & 0.67 \tiny $\pm 0.06$ & 0.66 \tiny $\pm 0.07$ & 0.68 \tiny $\pm 0.05$ & 0.65 \tiny $\pm 0.04$ & 0.32 \tiny $\pm 0.09$ & 0.57 \tiny $\pm 0.04$ & \textbf{0.98} \tiny $\pm 0.01$ \\
+ & \multicolumn{1}{c|}{Irrelevant} & 0.44 \tiny $\pm 0.03$ & 0.39 \tiny $\pm 0.03$ & \textbf{0.51} \tiny $\pm 0.08$ & 0.46 \tiny $\pm 0.09$ & 0.2 \tiny $\pm 0.06$ & 0.36 \tiny $\pm 0.05$ & 0.5 \tiny $\pm 0.23$ \\
+ & \multicolumn{1}{c|}{Disconnected} & 0.31 \tiny $\pm 0.21$ & 0.25 \tiny $\pm 0.16$ & 0.47 \tiny $\pm 0.08$ & 0.41 \tiny $\pm 0.06$ & 0.2 \tiny $\pm 0.08$ & 0.32 \tiny $\pm 0.04$ & \textbf{0.92} \tiny $\pm 0.05$ \\ \midrule
+Irrelevant & \multicolumn{1}{c|}{Clean} & 0.57 \tiny $\pm 0.05$ & 0.56 \tiny $\pm 0.05$ & 0.46 \tiny $\pm 0.13$ & 0.67 \tiny $\pm 0.05$ & 0.24 \tiny $\pm 0.06$ & 0.46 \tiny $\pm 0.08$ & \textbf{0.92} \tiny $\pm 0.0$ \\
+ & \multicolumn{1}{c|}{Supporting} & 0.38 \tiny $\pm 0.22$ & 0.31 \tiny $\pm 0.16$ & 0.61 \tiny $\pm 0.07$ & 0.61 \tiny $\pm 0.04$ & 0.27 \tiny $\pm 0.06$ & 0.46 \tiny $\pm 0.04$ & \textbf{0.77} \tiny $\pm 0.12$ \\
+\multicolumn{1}{l}{} & \multicolumn{1}{c|}{Irrelevant} & 0.51 \tiny $\pm 0.06$ & 0.52 \tiny $\pm 0.06$ & 0.5 \tiny $\pm 0.04$ & 0.56 \tiny $\pm 0.04$ & 0.25 \tiny $\pm 0.06$ & 0.53 \tiny $\pm 0.06$ & \textbf{0.93} \tiny $\pm 0.01$ \\
+ & \multicolumn{1}{c|}{Disconnected} & 0.44 \tiny $\pm 0.26$ & 0.54 \tiny $\pm 0.27$ & 0.55 \tiny $\pm 0.05$ & 0.61 \tiny $\pm 0.06$ & 0.26 \tiny $\pm 0.03$ & 0.45 \tiny $\pm 0.08$ & \textbf{0.85} \tiny $\pm 0.25$ \\ \midrule
+\multirow{3}{*}{Disconnected} & \multicolumn{1}{c|}{Clean} & 0.45 \tiny $\pm 0.02$ & 0.47 \tiny $\pm 0.03$ & 0.53 \tiny $\pm 0.09$ & 0.5 \tiny $\pm 0.06$ & 0.22 \tiny $\pm 0.09$ & 0.44 \tiny $\pm 0.05$ & \textbf{0.75} \tiny $\pm 0.07$ \\
+ & \multicolumn{1}{c|}{Supporting} & 0.47 \tiny $\pm 0.03$ & 0.46 \tiny $\pm 0.05$ & 0.54 \tiny $\pm 0.03$ & 0.58 \tiny $\pm 0.06$ & 0.22 \tiny $\pm 0.06$ & 0.38 \tiny $\pm 0.08$ & \textbf{0.78} \tiny $\pm 0.12$ \\
+ & \multicolumn{1}{c|}{Irrelevant} & 0.47 \tiny $\pm 0.05$ & 0.48 \tiny $\pm 0.03$ & 0.52 \tiny $\pm 0.04$ & 0.51 \tiny $\pm 0.05$ & 0.17 \tiny $\pm 0.04$ & 0.38 \tiny $\pm 0.05$ & \textbf{0.56} \tiny $\pm 0.26$ \\
+\multicolumn{1}{l}{} & \multicolumn{1}{c|}{Disconnected} & 0.57 \tiny $\pm 0.07$ & 0.57 \tiny $\pm 0.06$ & 0.45 \tiny $\pm 0.11$ & 0.4 \tiny $\pm 0.1$ & 0.17 \tiny $\pm 0.05$ & 0.47 \tiny $\pm 0.06$ & \textbf{0.96} \tiny $\pm 0.01$ \\ \midrule
+\multicolumn{1}{l}{Average} & \multicolumn{1}{c|}{} & 0.47 \tiny $\pm 0.08$ & 0.46 \tiny $\pm 0.08$ & 0.52 \tiny $\pm 0.07$ & \textbf{0.53} \tiny $\pm 0.06$ & 0.23 \tiny $\pm 0.07$ & 0.43 \tiny $\pm 0.05$ & \textbf{0.82} \tiny $\pm 0.09$ \\ \bottomrule
+\end{tabular}}
+\caption{Testing the robustness of the various models when trained various types of noisy facts and evaluated on other noisy / clean facts.}
+\label{tab:robust_appen}
+\end{table*}

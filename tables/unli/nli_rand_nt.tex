@@ -1,0 +1,43 @@
+\begin{table}[ht]
+    \centering
+    \resizebox{\linewidth}{!}{%
+        \begin{tabular}{@{}llrrrrr@{}}
+            \toprule
+     Model &    Eval Dataset &  $\mathcal{A}$ &  $\Omega_{\text{max}}$ &  $\mathcal{P}^c$ &  $\mathcal{P}^f$ &  $\Omega_{\text{rand}}$ \\
+\midrule
+ \multirow{7}{*}{\bf InferSent} 
+ &   MNLI\_m\_dev &              0.658 &         0.904 &                  0.842 &             0.359 &                        0.712 \\
+ &  MNLI\_mm\_dev &              0.669 &         0.905 &                  0.844 &             0.368 &                        0.723 \\
+ &     SNLI\_dev &              0.556 &         0.820 &                  0.821 &             0.323 &                        0.587 \\
+ &    SNLI\_test &              0.560 &         0.826 &                  0.824 &             0.321 &                        0.600 \\
+ &  A1\_dev &              0.316 &         0.669 &                  0.425 &             0.395 &                        0.313 \\
+ &  A2\_dev &              0.310 &         0.662 &                  0.689 &             0.249 &                        0.330 \\
+ &  A3\_dev &              0.300 &         0.677 &                  0.675 &             0.236 &                        0.332 \\ \midrule
+ & Mean &  \textbf{0.481} & 0.780 & 0.731 & \boldred{0.322} & 0.514 \\ 
+ & Harmonic Mean &  0.429 & 0.767 & 0.694 & \boldred{0.311} & 0.455 \\ \midrule
+ \multirow{7}{*}{\bf ConvNet}
+ &   MNLI\_m\_dev &              0.631 &         0.926 &                  0.773 &             0.340 &                        0.684 \\
+ &  MNLI\_mm\_dev &              0.640 &         0.926 &                  0.782 &             0.343 &                        0.694 \\
+ &     SNLI\_dev &              0.506 &         0.819 &                  0.813 &             0.339 &                        0.597 \\
+ &    SNLI\_test &              0.501 &         0.821 &                  0.809 &             0.341 &                        0.596 \\
+ &  A1\_dev &              0.271 &         0.708 &                  0.648 &             0.218 &                        0.316 \\
+ &  A2\_dev &              0.307 &         0.725 &                  0.703 &             0.224 &                        0.356 \\
+ &  A3\_dev &              0.306 &         0.798 &                  0.688 &             0.234 &                        0.388 \\ \midrule
+ & Mean &  0.452 & \boldred{0.817} & \boldred{0.745} & 0.291 & 0.519 \\ 
+& Harmonic Mean &  0.404 & \boldred{0.810} & \boldred{0.740} & 0.279 & \boldred{0.473} \\ \midrule
+ \multirow{7}{*}{\bf BiLSTM} 
+ &   MNLI\_m\_dev &              0.662 &         0.925 &                  0.800 &             0.351 &                        0.711 \\
+ &  MNLI\_mm\_dev &              0.681 &         0.924 &                  0.809 &             0.344 &                        0.724 \\
+ &     SNLI\_dev &              0.547 &         0.860 &                  0.762 &             0.351 &                        0.598 \\
+ &    SNLI\_test &              0.552 &         0.862 &                  0.771 &             0.363 &                        0.607 \\
+ &  A1\_dev &              0.262 &         0.671 &                  0.648 &             0.271 &                        0.340 \\
+ &  A2\_dev &              0.297 &         0.728 &                  0.672 &             0.209 &                        0.328 \\
+ &  A3\_dev &              0.304 &         0.731 &                  0.656 &             0.219 &                        0.331 \\ \midrule
+ & Mean &  0.472 & 0.814 & 0.731 & 0.301 & \boldred{0.520} \\
+& Harmonic Mean &  0.410 & 0.803 & 0.725 & 0.287 & 0.463 \\
+ 
+\bottomrule
+        \end{tabular}}
+    \caption{Statistics for Non-Transformer Models. All models are trained on MNLI corpus \cite{williams-etal-2018-broad}. $\Omega_{\text{max}}$ or Max accuracy is computed if \textit{any} of the $n=100$ permutations per data point yield correct results. $\mathcal{P}^c$  stands for the mean number of permutations which were correct when the original prediction is correct. $\mathcal{P}^f$  stats for the mean number of permutations which are correct when the original prediction is incorrect (flip). $\Omega_{\text{rand}}$ is computed as the percentage of data points the ground truth label is chosen over a random uniform baseline (1/3). Bold marks the highest value per metric (\boldred{red} shows  the model is insensitive to permutation).}
+    \label{table:main_non_t}
+\end{table}

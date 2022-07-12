@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\resizebox{0.7\linewidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+   Eval Dataset &   $\mathcal{A}$ (V) &  $\mathcal{A}$ (ME) &  $\Omega_{\text{max}}$ (V) &  $\Omega_{\text{max}}$ (ME) \\
+\midrule
+  MNLI\_m\_dev &  0.905 &     0.908 &    0.984 &        0.328 \\
+ MNLI\_mm\_dev &  0.901 &     0.903 &    0.985 &        0.329 \\
+   SNLI\_test &  0.882 &     0.888 &    0.983 &        0.329 \\
+    SNLI\_dev &  0.879 &     0.887 &    0.984 &        0.333 \\
+ ANLI\_r1\_dev &  0.456 &     0.470 &    0.890 &        0.333 \\
+ ANLI\_r2\_dev &  0.271 &     0.258 &    0.880 &        0.333 \\
+ ANLI\_r3\_dev &  0.268 &     0.243 &    0.892 &        0.334 \\
+\bottomrule
+\end{tabular}}
+\caption{NLI Accuracy ($\mathcal{A}$) and \PermAcc\ metrics ($\Omega_{\text{max}}$) of RoBERTa when trained on MNLI dataset using vanilla (V) and Maximum Random Entropy (ME) method.}
+  \label{table:ME_train_roberta}
+\end{table}

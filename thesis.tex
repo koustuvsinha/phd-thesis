@@ -1727,122 +1727,122 @@ A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consid
 
 \printglossaries
 
-\chapter{Appendix}
-\label{sec:orgd5099eb}
-\section{Org mode auto save}
-\label{sec:orgde5798f}
-Run the following snippet to auto save and compile in org mode.
+% \chapter{Appendix}
+% \label{sec:orgd5099eb}
+% \section{Org mode auto save}
+% \label{sec:orgde5798f}
+% Run the following snippet to auto save and compile in org mode.
 
-\begin{verbatim}
-(defun kdm/org-save-and-export ()
-(interactive)
-(if (and (eq major-mode 'org-mode)
-    (ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
-  (org-latex-export-to-latex)))
+% \begin{verbatim}
+% (defun kdm/org-save-and-export ()
+% (interactive)
+% (if (and (eq major-mode 'org-mode)
+%     (ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
+%   (org-latex-export-to-latex)))
 
-(add-hook 'after-save-hook 'kdm/org-save-and-export)
-\end{verbatim}
+% (add-hook 'after-save-hook 'kdm/org-save-and-export)
+% \end{verbatim}
 
-\section{Remove ``parts'' from report}
-\label{sec:orgacef247}
+% \section{Remove ``parts'' from report}
+% \label{sec:orgacef247}
 
-\begin{verbatim}
-(add-to-list 'org-latex-classes
-             '("report-noparts"
-               "\\documentclass[11pt]{report}"
-               ("\\chapter{%s}" . "\\chapter*{%s}")
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-\end{verbatim}
+% \begin{verbatim}
+% (add-to-list 'org-latex-classes
+%              '("report-noparts"
+%                "\\documentclass[11pt]{report}"
+%                ("\\chapter{%s}" . "\\chapter*{%s}")
+%                ("\\section{%s}" . "\\section*{%s}")
+%                ("\\subsection{%s}" . "\\subsection*{%s}")
+%                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+% \end{verbatim}
 
-\section{Add newpage before a heading}
-\label{sec:org122b99a}
+% \section{Add newpage before a heading}
+% \label{sec:org122b99a}
 
-\begin{verbatim}
-(defun org/get-headline-string-element  (headline backend info)
-  (let ((prop-point (next-property-change 0 headline)))
-    (if prop-point (plist-get (text-properties-at prop-point headline) :parent))))
+% \begin{verbatim}
+% (defun org/get-headline-string-element  (headline backend info)
+%   (let ((prop-point (next-property-change 0 headline)))
+%     (if prop-point (plist-get (text-properties-at prop-point headline) :parent))))
 
-(defun org/ensure-latex-clearpage (headline backend info)
-  (when (org-export-derived-backend-p backend 'latex)
-    (let ((elmnt (org/get-headline-string-element headline backend info)))
-      (when (member "newpage" (org-element-property :tags elmnt))
-        (concat "\\clearpage\n" headline)))))
+% (defun org/ensure-latex-clearpage (headline backend info)
+%   (when (org-export-derived-backend-p backend 'latex)
+%     (let ((elmnt (org/get-headline-string-element headline backend info)))
+%       (when (member "newpage" (org-element-property :tags elmnt))
+%         (concat "\\clearpage\n" headline)))))
 
-(add-to-list 'org-export-filter-headline-functions
-             'org/ensure-latex-clearpage)
+% (add-to-list 'org-export-filter-headline-functions
+%              'org/ensure-latex-clearpage)
 
-\end{verbatim}
+% \end{verbatim}
 
-\section{Glossary and Acronym build using Latexmk}
-\label{sec:org94133e2}
+% \section{Glossary and Acronym build using Latexmk}
+% \label{sec:org94133e2}
 
-Add the following snippet in the file ``\textasciitilde{}/.latexmkrc'': (Source: \url{https://tex.stackexchange.com/a/44316})
+% Add the following snippet in the file ``\textasciitilde{}/.latexmkrc'': (Source: \url{https://tex.stackexchange.com/a/44316})
 
-\begin{verbatim}
-add_cus_dep('glo', 'gls', 0, 'run_makeglossaries');
-add_cus_dep('acn', 'acr', 0, 'run_makeglossaries');
+% \begin{verbatim}
+% add_cus_dep('glo', 'gls', 0, 'run_makeglossaries');
+% add_cus_dep('acn', 'acr', 0, 'run_makeglossaries');
 
-sub run_makeglossaries {
-    my ($base_name, $path) = fileparse( $_[0] ); #handle -outdir param by splitting path and file, ...
-    pushd $path; # ... cd-ing into folder first, then running makeglossaries ...
+% sub run_makeglossaries {
+%     my ($base_name, $path) = fileparse( $_[0] ); #handle -outdir param by splitting path and file, ...
+%     pushd $path; # ... cd-ing into folder first, then running makeglossaries ...
 
-    if ( $silent ) {
-        system "makeglossaries -q '$base_name'"; #unix
-        # system "makeglossaries", "-q", "$base_name"; #windows
-    }
-    else {
-        system "makeglossaries '$base_name'"; #unix
-        # system "makeglossaries", "$base_name"; #windows
-    };
+%     if ( $silent ) {
+%         system "makeglossaries -q '$base_name'"; #unix
+%         # system "makeglossaries", "-q", "$base_name"; #windows
+%     }
+%     else {
+%         system "makeglossaries '$base_name'"; #unix
+%         # system "makeglossaries", "$base_name"; #windows
+%     };
 
-    popd; # ... and cd-ing back again
-}
+%     popd; # ... and cd-ing back again
+% }
 
-push @generated_exts, 'glo', 'gls', 'glg';
-push @generated_exts, 'acn', 'acr', 'alg';
-$clean_ext .= ' %R.ist %R.xdy';
-\end{verbatim}
-\section{Citation style buffer local}
-\label{sec:org97a37f4}
+% push @generated_exts, 'glo', 'gls', 'glg';
+% push @generated_exts, 'acn', 'acr', 'alg';
+% $clean_ext .= ' %R.ist %R.xdy';
+% \end{verbatim}
+% \section{Citation style buffer local}
+% \label{sec:org97a37f4}
 
-\begin{verbatim}
-(set (make-local-variable 'bibtex-completion-format-citation-functions)
-  '((org-mode      . my/bibtex-completion-format-citation-org-default-cite)))
-\end{verbatim}
-\section{Org latex compiler options}
-\label{sec:orgc7e24c0}
+% \begin{verbatim}
+% (set (make-local-variable 'bibtex-completion-format-citation-functions)
+%   '((org-mode      . my/bibtex-completion-format-citation-org-default-cite)))
+% \end{verbatim}
+% \section{Org latex compiler options}
+% \label{sec:orgc7e24c0}
 
-\begin{verbatim}
-(setq org-latex-pdf-process (list "latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
-\end{verbatim}
+% \begin{verbatim}
+% (setq org-latex-pdf-process (list "latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+% \end{verbatim}
 
-Original value
+% Original value
 
-\begin{verbatim}
-(setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
-\end{verbatim}
+% \begin{verbatim}
+% (setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
+% \end{verbatim}
 
-Let us try Fast compile \url{https://gist.github.com/yig/ba124dfbc8f63762f222}.
+% Let us try Fast compile \url{https://gist.github.com/yig/ba124dfbc8f63762f222}.
 
-\begin{verbatim}
-(setq org-latex-pdf-process (list "latexmk-fast %f"))
-\end{verbatim}
+% \begin{verbatim}
+% (setq org-latex-pdf-process (list "latexmk-fast %f"))
+% \end{verbatim}
 
-\begin{itemize}
-\item Doesn't seem to work from Emacs.
-\item I need to change the save function to only export in tex. Then, have a separate process run latexmk.
-\item Using the python package \texttt{when-changed} to watch the thesis.tex file for change.
-\item Usage:
-\end{itemize}
+% \begin{itemize}
+% \item Doesn't seem to work from Emacs.
+% \item I need to change the save function to only export in tex. Then, have a separate process run latexmk.
+% \item Using the python package \texttt{when-changed} to watch the thesis.tex file for change.
+% \item Usage:
+% \end{itemize}
 
-\begin{verbatim}
-when-changed thesis.tex latexmk -f -pdf -interaction=nonstopmode -output-directory=%o thesis.tex
-\end{verbatim}
+% \begin{verbatim}
+% when-changed thesis.tex latexmk -f -pdf -interaction=nonstopmode -output-directory=%o thesis.tex
+% \end{verbatim}
 
-\begin{itemize}
-\item The pdf does not update. It seems to but not always? No it does. For some reason, compilation takes ages.
-\item Works with \texttt{when-changed}!
-\end{itemize}
+% \begin{itemize}
+% \item The pdf does not update. It seems to but not always? No it does. For some reason, compilation takes ages.
+% \item Works with \texttt{when-changed}!
+% \end{itemize}
 \end{document}

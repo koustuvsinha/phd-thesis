@@ -1,0 +1,33 @@
+\begin{table*}
+\centering
+\footnotesize
+% \resizebox{\linewidth}{!}{%
+\begin{tabular}{
+    l
+    c
+    c
+}
+\toprule 
+Name       &  Release Year  & Positional Encoding Type  \\
+\midrule
+BERT \citep{Devlin2019:BERT} & 2019 & Learned Absolute \\
+RoBERTa \citep{Liu2019:RoBERTa} & 2019 & Learned Absolute \\
+GPT2 \citep{Radford2019:GPT2} & 2019 & Learned Absolute \\
+BART \citep{Lewis2020:BART} & 2020 & Learned Absolute \\
+LongFormer \citep{longformer} & 2020 & Learned Absolute \\
+T5 \citep{Raffel2020:T5} & 2020 & Relative Learned Bias \\
+GPT3 \citep{Brown2020:GPT3} & 2020 & Learned Absolute \\
+GPT-Neo \citep{gpt-neo} & 2021 & Learned Absolute \\
+Fairseq-Dense \citep{fairseq} & 2021 & Fixed Absolute  \\
+ShortFormer \citep{shortformer} & 2021 & Fixed Absolute \\
+GPT-J \citep{mesh-transformer-jax} & 2021 & Rotary \\
+GPT-NeoX \citep{Black2022:GPTNeoX} & 2022 & Rotary \\
+OPT \citep{Zhang2022:OPT} & 2022 & Learned Absolute \\
+PaLM \citep{palm} & 2022 & Rotary \\
+
+\bottomrule
+\end{tabular}
+% }
+\caption{Positional encoding of commonly used pretrained language models.}
+\label{tab:models_pe}
+\end{table*}

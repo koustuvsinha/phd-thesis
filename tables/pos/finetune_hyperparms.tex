@@ -1,0 +1,31 @@
+\newcommand{\fthyperparam}[1]{
+
+\begin{table}[#1]
+\centering
+\footnotesize
+% \resizebox{\linewidth}{!}{%
+\begin{tabular}{
+    l@{\hskip 0.2in}
+    r
+}
+\toprule 
+Parameter       &  Value  \\
+\midrule
+Learning rate & $\{0.0001, 0.0002, 0.0003\}$ \\
+Batch size & $\{16, 32\}$ \\
+\# Train Epochs & 10 \\
+Early Stopping & On \\
+Early Stopping Tolerance & 3 \\
+Optimizer & AdamW \\
+Learning Rate Schedule & Linear \\
+Weight Decay & 0.0 \\
+Warm Up & 6\% of initial training steps \\
+
+\bottomrule
+\end{tabular}
+% }
+\caption{Summary of hyperparamters used in finetuning experiments.}
+\label{tab:finetune_hyperparam}
+\end{table}{}
+
+}

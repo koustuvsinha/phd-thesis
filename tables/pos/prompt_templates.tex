@@ -1,0 +1,75 @@
+\begin{table*}
+\centering
+% \footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{
+    l@{\hskip 0.3in}
+    l@{\hskip 0.3in} 
+    l
+}
+\toprule 
+Dataset &  \multicolumn{2}{c}{Template}    \\
+\midrule
+
+COPA & 
+Prompt &
+\texttt{<premise>} because/therefore \texttt{<possible-continuation>}
+\\[1mm] 
+& Example &\emph{The water in the teapot started to boil} therefore \emph{the teapot whistled.}
+\\
+\midrule
+PIQA & 
+Prompt &
+ \makecell[l]{Question: \texttt{<question>}\backslash n \\   Answer: \texttt{<possible-answer>}} 
+\\[3mm] 
+& Example & \makecell[l]{Question: \emph{How can I quickly clean my blender without washing?}\backslash n\\
+Answer: \emph{Put some ice, water, and a half cup of baking soda in the blender and puree for 3 min.}}\\
+
+\midrule
+WinoGrande & 
+Prompt &
+ \makecell[l]{\texttt{<context>} because \texttt{<replaced-pronoun>} \texttt{<continuation>}} 
+\\[1mm] 
+& Example & \makecell[l]{\emph{Angela was better suited to conduct the science experiment than Katrina} because \emph{Katrina was less disciplined.}}\\
+
+\midrule
+ARC & 
+Prompt &
+ \makecell[l]{Question: \texttt{<question>}\backslash n \\   Answer: \texttt{<possible-answer>}} 
+\\[3mm] 
+& Example & \makecell[l]{Question: \emph{Amanda is learning about different adaptations of animals. Which is an example of a behavioral adaptation?}\backslash n\\
+Answer: \emph{migration of songbirds}}\\
+
+\midrule
+MRPC & 
+Prompt &
+ \makecell[l]{Sentence 1: \texttt{<sentence1>}\backslash n \\Sentence 2: \texttt{<sentence2>}\backslash n \\ Question: Do both sentences mean the same thing?\backslash n \\Answer: \texttt{<label>}} 
+\\[6.5mm]  
+& Example & \makecell[l]{Sentence 1: \emph{Inamed shares closed down nearly 12 percent on Nasdaq, where it was one of the top percentage losers.}\backslash n \\Sentence 2: \emph{Inamed shares dropped as much as about 16 percent on Nasdaq, where it was one of the top percentage losers.}\backslash n \\ Question: Do both sentences mean the same thing?\backslash n \\Answer: \emph{yes}} 
+\\
+
+
+\midrule
+RTE & 
+Prompt &
+ \makecell[l]{\texttt{<premise>}\backslash n \\Question:  \texttt{<sentence2>}. True or False?\backslash n \\Answer: \texttt{<label>}} 
+\\[5mm]
+& Example & 
+\makecell[l]{\emph{United States astronaut Sunita Williams, currently on board the International Space Station, has today broken the record for\dots}\backslash n \\Question: \emph{Anousheh Ansari paid to go in space}. True or False?\backslash n \\Answer: \emph{False}}
+\\
+
+\midrule
+CoLA & 
+Prompt &
+ \makecell[l]{\texttt{<sentence>}\backslash n \\Question: Does this sentence make sense?\backslash n \\Answer: \texttt{<label>}} 
+\\[5mm]
+& Example & 
+\makecell[l]{\emph{Brandon read every book that Megan did.}\backslash n \\Question: Does this sentence make sense?\backslash n \\Answer: \emph{yes}}\\
+
+
+\bottomrule
+\end{tabular}
+}
+\caption{Prompt templates used in EleutherAI Language Model Evaluation Harness library \citep{lm-eval-harness}}
+\label{tab:prompt_template}
+\end{table*}

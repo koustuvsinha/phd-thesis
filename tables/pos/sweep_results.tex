@@ -1,0 +1,349 @@
+\newcommand{\sweepresults}[1]{
+
+\begin{table*}[#1]
+\centering
+\footnotesize
+
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{
+    l@{\hskip 0.1in}
+    c
+    c@{\hskip 0.4in}
+    c
+    c@{\hskip 0.4in}
+    c
+    c@{\hskip 0.4in}
+    c
+    c
+}
+\toprule 
+ & \multicolumn{8}{c}{Phase shifts} \\
+%  \cmidrule{2-9}
+ & \multicolumn{2}{c}{$k=0$} & \multicolumn{2}{c}{$k=100$} & \multicolumn{2}{c}{$k=200$} & \multicolumn{2}{c}{$k=300$} \\
+ \cmidrule{2-9}
+Model & Learning Rate & Batch Size & Learning Rate & Batch Size & Learning Rate & Batch Size & Learning Rate & Batch Size \\
+\midrule
+\multicolumn{9}{c}{CoLA} \\
+\midrule
+
+$\text{RoBERTa}_\text{BASE}$ & 
+%ps = 0
+0.00002 & % lr
+32 & % batch_size
+
+
+%ps = 100
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 300
+0.00002 & % lr
+16 % batch_size
+
+
+\\ 
+
+$\text{RoBERTa}_\text{LARGE}$ & 
+%ps = 0
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 200
+0.00001 & % lr
+32 & % batch_size
+
+
+%ps = 300
+0.00002 & % lr
+16 % batch_size
+\\ 
+
+$\text{BART}_\text{BASE}$ & 
+%ps = 0
+0.00002 & % lr
+32 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+16 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 300
+0.00002 & % lr
+32 % batch_size
+
+\\ 
+
+$\text{BART}_\text{LARGE}$ & 
+%ps = 0
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 200
+0.00003 & % lr
+16 & % batch_size
+
+
+%ps = 300
+0.00003 & % lr
+32 % batch_size
+
+
+\\ 
+
+GPT2 & 
+0.00002&16 & 0.00003&32 & 0.00003&16 & 0.00003&16 \\
+
+
+$\text{GPT2}_\text{MEDIUM}$ & 
+0.00002&32 & 0.00001&16 & 0.00003&16 & 0.00003&16 \\
+
+$\text{OPT}_\text{125M}$ & 
+0.00002&16 & 0.00001&16 & 0.00001&32 & 0.00001&16 \\
+
+$\text{OPT}_\text{350M}$ & 
+0.00001&16 & 0.00001&32 & 0.00002&32 & 0.00001&16 \\
+
+\midrule
+\multicolumn{9}{c}{MRPC} \\
+\midrule
+
+$\text{RoBERTa}_\text{BASE}$ & 
+%ps = 0
+0.00002 & % lr
+32 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+16 & % batch_size
+
+
+%ps = 200
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 300
+0.00001 & % lr
+32 % batch_size
+\\ 
+
+$\text{RoBERTa}_\text{LARGE}$ & 
+%ps = 0
+0.00002 & % lr
+32 & % batch_size
+
+
+%ps = 100
+0.00001 & % lr
+16 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+32 & % batch_size
+
+
+%ps = 300
+0.00002 & % lr
+16 % batch_size
+\\ 
+
+$\text{BART}_\text{BASE}$ & 
+%ps = 0
+0.00001 & % lr
+16 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 300
+0.00003 & % lr
+16 % batch_size
+\\ 
+
+$\text{BART}_\text{LARGE}$ & 
+%ps = 0
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+16 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 300
+0.00003 & % lr
+16 % batch_size
+\\ 
+
+GPT2 & 
+0.00002&16 & 0.00003&16 & 0.00002&16 & 0.00003&16 \\
+
+$\text{GPT2}_\text{MEDIUM}$ & 
+0.00002&16 & 0.00003&16 & 0.00003&16 & 0.00003&16 \\
+
+$\text{OPT}_\text{125M}$ & 
+0.00003&16 & 0.00002&32 & 0.00002&16 & 0.00003&32 \\
+
+$\text{OPT}_\text{350M}$ & 
+0.00003&32 & 0.00001&16 & 0.00001&32 & 0.00001&32 \\ 
+
+
+\midrule
+\multicolumn{9}{c}{RTE} \\
+\midrule
+
+$\text{RoBERTa}_\text{BASE}$ & 
+%ps = 0
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+16 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 300
+0.00002 & % lr
+16 % batch_size
+
+
+\\ 
+
+$\text{RoBERTa}_\text{LARGE}$ & 
+%ps = 0
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 100
+0.00001 & % lr
+32 & % batch_size
+
+
+%ps = 200
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 300
+0.00001 & % lr
+32 % batch_size
+
+
+\\ 
+
+$\text{BART}_\text{BASE}$ & 
+%ps = 0
+0.00003 & % lr
+16 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+32 & % batch_size
+
+
+%ps = 300
+0.00003 & % lr
+16 % batch_size
+
+
+\\ 
+
+$\text{BART}_\text{LARGE}$ & 
+%ps = 0
+0.00003 & % lr
+32 & % batch_size
+
+
+%ps = 100
+0.00003 & % lr
+16 & % batch_size
+
+
+%ps = 200
+0.00002 & % lr
+16 & % batch_size
+
+
+%ps = 300
+0.00003 & % lr
+16 % batch_size
+
+
+\\ 
+
+GPT2 & 
+0.00001&16 & 0.00003&16 & 0.00003&16 & 0.00003&16 \\
+
+$\text{GPT2}_\text{MEDIUM}$ & 
+0.00002&16 & 0.00003&16 & 0.00001&16 & 0.00002&32 \\
+
+$\text{OPT}_\text{125M}$ & 
+0.00003&16 & 0.00001&32 & 0.00001&16 & 0.00001&32 \\
+
+$\text{OPT}_\text{350M}$ & 
+0.00001&16 & 0.00001&16 & 0.00001&32 & 0.00001&16 \\
+
+
+
+\bottomrule
+\end{tabular}
+}
+\caption{Result of hyperparamter sweep for finetuning experiments.}
+\label{tab:sweep_results}
+\end{table*}{}
+
+}

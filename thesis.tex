@@ -25,6 +25,8 @@
 \usepackage[usenames]{color}
 \usepackage{covington}
 \usepackage{graphicx}
+\usepackage[capitalise]{cleveref}
+\usepackage{makecell}
 \usepackage{multirow}
 \usepackage{subcaption}%#+LATEX_HEADER: \usepackage{subfigure}
 \usepackage{booktabs}
@@ -68,6 +70,9 @@ morestring=[b]'
 \let\mathexp=\exp %redefine \exp to \mathexp cuz gb4e package redefines \exp
 \usepackage{gb4e}
 \noautomath
+% Note: requires shell-escape
+% \usepackage{minted}
+% \usemintedstyle{tango}
 \usepackage[acronym,toc,section=section]{glossaries}
 
 \makeglossaries
@@ -1685,25 +1690,416 @@ To summarize, in this chapter, we revisited the hypothesis that masked language 
 
 \clearpage
 \chapter{Measuring systematic generalization by exploiting absolute positions}
-\label{sec:orga46bf45}
+\label{sec:pos}
+
+Recently, Transformer \citep{vaswani2017} language models (TLMs) have been widely used for natural language applications. Such models incorporate positional encodings: vectors encoding information about the order of words in context. Many models, such as RoBERTa \citep{Liu2019:RoBERTa}, GPT3 \citep{Brown2020:GPT3} and OPT \citep{Zhang2022:OPT}, utilize \textit{absolute} position embeddings (APEs) that directly encode absolute (linear) word order. APEs appear to contribute to the performance of such models.
+
+However, in our previous chapters (\autoref{sec:unli} and \autoref{sec:mlm}), we observe models lack a sense of relative positions, as they become (in)sensitive to ablative word scrambles. Furthermore, recent studies have shown that removing APE's seem to work optimally \citep{haviv2022}. Thus, what precisely APEs contribute remains unclear.
+
+It is conceivable that APEs may enable the model to handle the relative distances between words. % Using embeddings that explicitly encode relative distance have been found to improve performance on machine translation \citep{shaw-etal-2018-self}, although they are somewhat less space inefficient \citep{velickovic-etal-2018-graph} than their absolute counterparts.
+If models were somehow learning relative position information despite using \emph{absolute} positional embeddings, we would expect sentence encodings to be the same in most cases, regardless of where they appear in the context window. For example, the meaning of ``smoking kills'' should be constant in ``Kim said \textit{smoking kills}'' (positions 2--3)  and ``It was commonly believed by most adult Americans in the 90s that \textit{smoking kills}'' (positions 13--14), despite the fact that these words appear in different absolute positions.
+% These findings encourage further investigation on one specific component of TLMs, which are often overlooked: the role of position embeddings.
+% In this work, we revisit the role of APEs, a class of position embeddings which are typically learned during pre-training.
+Given this, our central question is: do APEs enable the model to learn the relative distances between the words in a sentence?
+
+Prior work has attempted to explore the consequences of APEs using probing methods \citep{wang2021on}.
+APEs have been found to not capture the meaning of absolute or relative positions \citep{wang-chen-2020-position}.
+APEs have also been found to bias model output with positional artefacts \citep{luo-etal-2021-positional}, leading to better performance on token to position de-correlation \citep{ke2021}.
+\citet{haviv2022} even find that causal TLMs perform adequately even without an explicit APEs.
+%For instance, \citet{wang2021on} establish key required properties of APEs involving monotonicity, translation and symmetry.
+However, a systematic study on relativity of positional encodings is still needed.
+
+% \KS{insert representative image}
+\begin{figure}
+    \centering
+    \resizebox{\linewidth}{!}{
+    \includegraphics[width=\textwidth]{figs/pos/bert_confused.pdf}}
+    \caption{Transformer models with absolute positional embeddings have different representations for sentences starting from non-zero positions. }
+    \label{fig:bert_confused}
+\end{figure}
+
+% We argue APEs on various downstream tasks might answer the question as yes, but it obfuscates position importance with task-level token associations.
+% Transformer models are usually trained in a batch containing multiple sentences, with a fixed window size of maximum tokens per batch element, or context window.
+% During pre-training, sentences are packed together in this context window until the window is exhausted.
+% Thus, the model is able to learn sentences starting from different positions in this window during pre-training. This type of pre-training supports the hypothesis that APEs should learn a relative position information of the tokens in a given sentence, regardless of the start position of the sentence.
+% However, in this work we observe that hypothesis to be not necessarily true.
+To better understand the relativity of absolute position embeddings, we first need to ascertain the robustness of relative position understanding for a given input.
+TLMs are typically trained in a batch containing multiple sentences, with a limited sequence window size, which is typically much larger than an average sentence.
+We hypothesize that a systematic model should encode the same sentence equally throughout this context window.
+%Sentences are usually packed together to fill the sequence window.
+%If TLMs are using the positions solely to ascertain the relative distances of the tokens in the input, then they should be robust to changes in the starting position of the sentence within this window.
+However, evaluating the encoding of a sentence starting from any position in this window in isolation is hard, as the representation of the sentence would depend on the prior context \cite{misra2020exploring,kassner-schutze-2020-negated}.
+%in the window.
+
+In this chapter, we talk about our work \cite{sinha2022pos}, where we subject models from several different architectures and sizes to \textit{phase shifting}.
+In this paradigm, the sentences exposed to the model are provided contiguous position identifiers starting from a non-zero position (\autoref{fig:bert_confused}).
+Such inspection allows us to gauge the model's sentence encodings on different positions, emulating sub-window sentence representation, while factoring out the influence of prior context.
+We investigate several zero shot, few shot and full shot tasks by shifting the start positions of the sentences. We observe the following:
+
+
+
+\begin{itemize}
+    \item TLMs display different sub-window sentence representation capabilities, resulting in decreased zero shot task performance and variability in sentence perplexities.
+    %when evaluated with \textit{phase-shifted} sentences.
+    % However, this phenomena is not uniform across tasks, highlighting a potential task to token position bias.
+    % However, for some tasks phase-shifted sentences allow for better zero shot task performance, highlighting the token to position bias.
+    \item Autoregressive models, including the recently published OPT \cite{Zhang2022:OPT}, show erratic zero and few-shot performance on sub-window representations, highlighting the brittleness of in-context learning evaluation.
+    \item Masked Language Models (MLMs) encode sentences in non-standard positions better than their autoregressive counterparts.
+    \item During fine-tuning models suffer drastically on cross phase-shifted evaluation, suggesting position specific overfitting.
+\end{itemize}
+
+\noindent We aim to raise awareness about issues with APEs, which are still widely used in pre-training large language models.
+% The consequences of our results are two fold.
+%First, it provides an explanation for the unnatural language understanding phenomena reported by \citet{sinha-etal-2021-unnatural}. If the positional embeddings are themselves weak in understanding relative positions, they might not understand the concept of human-like word order just by pre-training. Secondly,
+Our results highlight the severity of position shortcuts taken by the model during pre-training and fine-tuning, and imply that TLMs may have vastly varying sub-window sentence representation capability than previously assumed.
+%
 
 \section{Technical Background}
-\label{sec:orge8b9409}
-\section{Systematic understanding of absolute position embeddings}
-\label{sec:orgf8ea1d9}
-\section{Related Work}
-\label{sec:org05c8af6}
-\section{Experiments}
-\label{sec:orgc6f5de8}
+\label{sec:pos_technical_bg}
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[width=.9\linewidth]{figs/pos_enc/acceptability_scores.pdf}
-% \caption{Grammatical acceptability scores on BLiMP dataset.}
-% \end{figure}
+Position encodings used by TLMs come in three broad categories: fixed sinusoidal embeddings as proposed by \citet{vaswani2017}, absolute or learned popularized by BERT \cite{Devlin2019:BERT} family of masked language models, and relative positions \citep{shaw-etal-2018-self} used by T5 \cite{Raffel2020:T5}.
+Fixed position embeddings \cite{vaswani2017} consists of representing token positions with a sinusoidal function. BERT (cite:devlin)-style family of masked language models propose using absolute position embeddings, which learn an unique vector assigned to each position.
+Subsequently, relative position embedding techniques have been proposed, which involve computing position embeddings on the fly based on a neighborhood window. \autoref{tab:models_pe} provides an overview of different positional encodings used in public models.
+\citet{wang2021on} presents a comprehensive overview of current encoding strategies.
+
+
+\input{tables/pos/list_of_models_pe}
+
+Despite being an older method, absolute positional embeddings (APEs) are reportedly better than its relative counterparts on several tasks \citep{ravishankar-etal-2021-multilingual}, and are still used by majority of the large pre-trained TLMs, including the recently released OPT \cite{Zhang2022:OPT}.
+APEs compute token representation after adding the input token to the position embedding for the corresponding position: $x_i = \theta_{W}[w_i] + \theta_{P}[i]$,
+where, $\theta_W \in \mathbf{R}^{|V| \times d}$ is the token vocabulary of size $|V|$, embedding dimension $d$, and the absolute position embedding matrix $\theta_P \in \mathbf{R}^{|T|\times d}$, where $T$ is the maximum context window size of the model.
+Now, a sentence $S=[w_1,w_2 ... w_n]$ containing $n$ tokens, is mapped during inference to positions 1,2, ... $n$ contiguously for all models.
+
+TLM offer various sizes of \textit{context window}, which is the maximum sequence length in tokens it can train and infer on.
+%\footnote{Typically, $T$ ranges from 512 (BERT, RoBERTa) to 1024 (GPT2, BART) to even 4096 (LongFormer).}
+Since this context window is usually larger than the average sentence length, multiple sentences can be packed together to ``fill" the context window during pre-training.
+This allows TLMs to learn that sentences can start from various positions in their context window. If models trained with APEs do encode relativity of position, then the sentence representations should be roughly equal throughout the context window, regardless of their starting position.
+
+% In this work, we challenge the above hypothesis.
+To understand the relativity of APEs, we examine the model performance under \textit{phase shift} conditions.
+Phase shift\footnote{More related to our work, \citet{kiyono2021} train a Transformer model from scratch using shifted positional embeddings for machine translation, and observe improved performance in extrapolation and intrapolation setup.} involves right-shifting the absolute positions of all tokens in the sentence by an equal distance $k$, such that the tokens are now mapped to new positions $1+k, 2+k, ... , n+k$, or $x_i = \theta_{W}[w_i] + \theta_{P}[i+k]$.
+As such, phase shifting changes only the absolute position, but preserves the relative distances between tokens in the a sentence.
+Theoretically, we can shift the positions within the context window as long as $k+n \leq T$. %, and as long as the relative distances are maintained, a systematic model should treat the sentence representations equally.
+
+\section{Evaluated Models}
+\label{sec:pos_evaluated_models}
+
+
+We used 11 publicly available pretrained language models in this work, ranging across different architecture families: Encoder, Sequence-to-Sequence, and Auto regressive models. All of them use absolute positional embeddings (APE) that is learned during pretraining. In \autoref{sec:pos_prompting}, we follow the standard practice for in-context learning evaluation \citep{Brown2020:GPT3,Black2022:GPTNeoX, lm-eval-harness} and use autoregressive models. In our initial experiments, we found GPT2 to have a similar behaviour to OPT models, and since the OPT models are available in a wider range of sizes, we primarily focus on them for these experiments.
+In fine-tuning (\autoref{sec:pos_finetuning}) and acceptability (\autoref{sec:pos_acceptability}) experiments, we assess all model families. However, because of the computational costs associated with these experiments, we opt for model variants with \textless~1B parameters. The details of all models can be found in \autoref{tab:model_detail}. We use HuggingFace \citep{huggingface} model hub to load, fine-tune train, and run infererence for all models.
+
+
+\input{tables/pos/model_details}
+
+\subsection{Prompting}
+\label{sec:pos_prompting}
+% lm-eval-harness
+% template
+% five-shot: five seeds
+% same input protocol
+% list of all templates
+For evaluating zero-shot inference and in-context learning, we make use of EleutherAI Language Model Evaluation Harness \citep{lm-eval-harness}, an open-source library that is used for evaluating autoregressive pretrained language models \citep{Black2022:GPTNeoX}.
+In the zero-shot setting, each example is converted to a prompt using task-specific templates. Then, the prompt is fed to the language model to elicit the answer. Similarly, in the few-shot setup, a prompt is created from the concatenation of few dataset examples base on the same template and are prepended as a context to validation instances.
+In our experiments, we use default templates provided by the EleutherAI Language Model Evaluation Harness. The task performance is computed over the validation set of due to the lack of public test sets, except for ARC, where we evaluate the models on the test set.
+We set the number of few-shots examples to be five and randomly sample them from the training set of each dataset. We report the few-shot results averaged over five random seeds. Note that feeding inputs to the models still follows the same protocol introduced in \autoref{sec:pos_acceptability}.
+
+
+% \input{tables/pos/prompt_templates}
+
+\section{Evaluated Datasets}
+\label{sec:pos_evaluated_datasets}
+
+\input{tables/pos/dataset_details}
+
+We use BLiMP \citep{warstadt-etal-2020-BLiMP-benchmark} for the grammatical acceptability experiments in \autoref{sec:pos_acceptability} as it is typically employed in a inference-only setting and does not require additional training. For \autoref{sec:pos_finetuning}, we take three tasks from the standard language understanding benchmark GLUE \citep{Wang2018:GLUE} which is often used for finetuning language models: MRPC, RTE, and COLA. In addition to these three tasks, we use four other datasets, COPA, PIQA, WinoGrande, and ARC, on which the OPT family have previously demonstrated good performance \cite{Zhang2022:OPT}. \autoref{tab:dataset_detail} shows the statistics of all datasets, and the following provides a brief description of them:
+
+\begin{itemize}
+    \item \textbf{BLiMP} \citep{warstadt-etal-2020-BLiMP-benchmark}
+    is a challenge set designed to measures the model's ability to distinguish between acceptable and unacceptable English sentences. This benchmark consists of synthetic examples created based on expert-crafted grammars, where each instance comes with two versions: one acceptable and one unacceptable.
+    \item \textbf{COPA} \citep{Gordon2012:COPA} is an open-domain commonsense causal reasoning task, where the model is given a premise and must correctly identify its cause or effect. COPA consists of short hand-crafted sentences and is provided as a multi-choice task.
+    \item  \textbf{PIQA} \citep{Bisk2020:PIQA} is a physical commonsense benchmark dataset, challenging language models' idea of the physical world. Given a physical goal, a model must choose the most plausible solution between two choices. This benchmark is used in the multi-choice format.
+    \item \textbf{WinoGrande} \citep{Sakaguchi2020:WINOGRANDE} is a commonsense reasoning benchmark based on the Winograd Schema Challenge (WSC) \citep{Levesque2011:WSC} with increased hardness and scale. The dataset is provided as a pronoun resolution problem, where the model must recover an ambiguous pronoun in a given context.
+
+    \item \textbf{ARC} \citep{Clark2018:ARC}  is collected from grade-school-level science questions commonly asked in exams. This question-answering dataset is provided in a multi-choice QA format suitable for evaluating pretrained language models. We use the "\texttt{easy}" subset of this benchmark.
+
+    \item \textbf{MRPC} \citep{Dolan2005:MRPC} is a paraphrase identification dataset collected from online news websites and has become a standard benchmark in the NLP community. We follow the previous works and treat the data as a text classification task.
+    \item \textbf{RTE} \citep{Dagan2005:RTE} is one of original subtasks in the GLUE benchmark and comprises textual entailment challenges. We follow the standard format and use Natural Language Inference (NLI) protocol for this dataset.
+
+    \item \textbf{CoLA} \citep{warstadt2018:CoLA} is a linguistic acceptability dataset, where each example is an English sentence annotated with a binary label showing whether it is a grammatical sentence. This is a text classification dataset and we follow the standard protocol and report Matthews correlation coefficient \citep{Matthews1975:mcc}.
+
+\end{itemize}
+
+\subsection{Grammatical acceptability}
+% BLiMP
+% all 67 subsets.
+% how score calculated.
+% how to construct the input.
+% increase phase shift k in 10 intervals.
+We use all 67 subsets (a total of 67K data instances) of BLiMP \cite{warstadt-etal-2020-BLiMP-benchmark}. A model achieves a score of 1 if it successfully assigns a lower perplexity to the grammatical version of each example. We report the average score across the entire dataset for starting positions that are shifted in the intervals of 10.
+The inputs are fed to the models in the format explained in \autoref{app:trigger_tokens}.
+Recall that perplexities are ill-defined in case of Masked Language Models. Thus, we follow the formulation of \citet{salazar2019masked} to compute a pseudo-perplexity for RoBERTa and BART.
+We adopt the Minicons \cite{misra2022minicons} library to compute the perplexities, which provides a unified interface for models hosted in HuggingFace \citep{huggingface}.
+
+
+
+
+\section{Results}
+\label{sec:pos_results}
+
+\subsection{Impact of phase shifts on grammatical acceptability}
+\label{sec:pos_acceptability}
+
+\input{figs/pos/acceptability}
+
+\input{figs/pos/perplexity_density}
+
+First, we investigate the impact of phase shifting on the model performance.
+We compute the perplexities of several publicly available models---RoBERTa \citep{Liu2019:RoBERTa}, BART \citep{Lewis2020:BART}, GPT2 \citep{Radford2019:GPT2} and OPT \citep{Zhang2022:OPT}---to evaluate the grammatical acceptability capabilities of the model, using the BLiMP \cite{warstadt-etal-2020-BLiMP-benchmark} benchmark.\footnote{We adopt the perplexity computation strategy for RoBERTa and BART from \citet{salazar2019masked}}
+%Concretely, we measure the models' perplexity on grammatically correct and incorrect sentence pairs, and measure the accuracy on the model's ability to output a lower perplexity on the grammatical sentences.
+We compute the task score by comparing grammatical and ungrammatical sentence perplexities, and applying the phase shift in increasing values of $k$ to the sentences and models (\autoref{fig:acceptability}).
+
+While computing the task scores and perplexities of the models, we observed that all of the models exhibit poor task performance on phase shifts.
+Due to the non-shiftable nature of the \texttt{[CLS]} token in masked language models (MLMs), we fixed the position of \texttt{[CLS]} token to start position during phase shifting.
+However, we observed a marked improvement in task performance when we use trigger tokens in the beginning of the sentence, typically the end-of-sentence (\texttt{[EOS]}) token in case of MLM models (RoBERTa, BART).
+An explanation for this ambiguity in results is that typically when models are pre-trained, multiple sentences are packed together in the context window by delimiting the start of each sentence with an \texttt{[EOS]} token.
+While this is not the case for GPT2, we also observed improved performance in some cases when we add a beginning of sentence (\texttt{[BOS]}) token to the sentence and add a special \texttt{[EOS]} token to delimit the start of a sentence. Thus, in all of our results, we opt with this configuration (adding an \texttt{[EOS]} token before the sentence) to ensure fairer evaluation for all model families.
+Concretely, the input to a model uses the following template:
+$$
+\texttt{[CLS]}\texttt{[EOS]} \texttt{<sentence>}
+$$
+In cases where a model does not have the \texttt{[CLS]} token, we instead use \texttt{[BOS]}.
+If none of those are available, we replace it with \texttt{[EOS]} (so a total of two \texttt{[EOS]}'s will be prepended).
+For phase shift $k$, we fix the position of \texttt{[CLS]} token to be the first available position in model's APE (refer to \autoref{tab:model_detail}) and we shift every position id by $k$.
+For example, given phase shift $k=100$, and first position id being 1, and sentence length of $n$, we have the following vector of position ids:
+$$
+\Vec{p} = [1, 100, 101, \dots, n+100]
+$$
+
+
+We observe that the task performance of all models, except for RoBERTa, drastically suffers from phase shifting. Autoregressive models in particular display worse results. This is likely due to a mismatch of position information learned due to the causal language modelling objective vs the position information provided to the model during phase shift \cite{haviv2022}. We also compare the perplexities of each sentence across different phase shifts and plot the frequency of sentences having the lowest perplexity in each $k$ (\autoref{fig:ppl_density_main}). We observe in GPT2 that more that 70\% of the sentences have their best perplexity in $k=0$, highlighting a severe zero-position bias. $\text{OPT}_{\text{350M}}$ has better sub-window sentence representation capacity than similarly sized GPT2, which is also evident from the acceptability results in \autoref{fig:acceptability}.
+
+
+% As found by \citet{haviv2022}, autoregressive models trained on causal LM objective can operate optimally even without any positional information, due to a latent inductive bias.
+% We conjecture that GPT2 performs worse as it is unable to reconcile with its internal position encodings vs the provided position encodings, similar to the findings by \citet{haviv2022}.
+% Overall, majority of the tested models display a general bias towards the standard left-most position, which highlights the shortcomings of sub-window sentence representation.
+
+
+% \section{Impact of position information on zero to few-shot settings}
+\subsection{Impact of phase shifts on in-context learning}
+\label{sec:pos_prompting}
+
+\input{figs/pos/prompt_aggregate}
+
+\input{figs/pos/prompt_density}
+
+% in-context learning = recent technique large LM
+% goal: measure its sensitivity to phase shift
+% detail: follow EltherAI eval harness
+% use tasks from OPT paper that had good performance
+% scaling of the models
+% result
+% analysis
+% - on avg. suffer
+% - not always the case
+% - scaling doest solve. bigger model perform is more harmed
+
+% \input{figs/glue_eval}
+
+More recently, zero-shot and few-shot inference, commonly referred to as in-context learning, have become a de facto standard in evaluating pretrained language models \citep{Brown2020:GPT3}.
+In this approach, the model's predictions are produced by conditioning it on certain prompts, such as instructions (zero-shot setting) or a few examples of input-output pairs (few-shot setup).
+In both cases, the model faces an extended input text, and we suspect it will be affected by deficiencies of APE.
+To evaluate this hypothesis, we employ an experimental setup similar to \autoref{sec:pos_acceptability}.
+Under zero-shot and five-shot inference regimes, we assess the model performance on standard NLP tasks when it is fed with inputs in increasing values of phase shifts.
+We choose OPT model family, because it is available in a wide range of sizes (125M to 30B parameters), allowing allows us to examine the behavior of APE at different scales.
+Moreover, our evaluations take into account four tasks reported in the original paper: Winogrande \citep{Sakaguchi2020:WINOGRANDE}, COPA \citep{Gordon2012:COPA}, PIQA \citep{Bisk2020:PIQA}, and ARC \citep{Clark2018:ARC} as well as two classification datasets from GLUE benchmark \citep{Wang2018:GLUE}: MRPC and RTE.
+%\footnote{In case of CoLA, we observed drastically worse result for prompting with OPT. Since it is an extreme outlier, we do not include it in \autoref{fig:prompt_ps_aggr}, but report it in Appendix.}
+We provide an aggregated view of the models' performance on all six accuracy-dominated benchmarks in \autoref{fig:prompt_ps_aggr}. The detailed plots for each task are in \autoref{sec:pos_further_eval_prompts}.
+
+
+%\paragraph{Unstable performance.}
+% often the performance suffer
+% periodic behaviour suggesting fitness to pre-training biases
+% not always harms. Sometime improves.
+In most tasks, the performance deteriorates when the model process inputs in any other phase shift than zero, especially in zero-shot inference.
+More importantly, the model's performance is not always adversely affected by phase shifts. In fact, \autoref{fig:prompt_best_ps} shows that non-zero starting positions result in the best accuracy for many prompts.
+% Although models tend to perform suboptimally with increasing $k$ values, the decline in accuracy is not entirely monotonic.
+% Instead, models show periodic behavior pointing to a potential position bias that might exist in the pretraining data since some phase shifts seem to be a better match despite having larger values.
+% Evaluating a model in a non-zero start position does not always harm the performance.
+%For some combinations of tasks and models, the best accuracy can be obtained with $k$ > 0.
+% For instance, OPT-30b achieves almost double the performance on zero-shot evaluation of MRPC when $k=300$ compared to zero phase shift. \autoref{fig:prompt_best_ps} shows many times non-zero start positions might are the best preferment ones.
+%\paragraph{Scaling behaviour}
+% erratic behaviour consistent in various model sizes
+This erratic performance is present in all model sizes, and scaling the number of parameters does not help.
+% pointing to data sparsity issue?
+Furthermore, one can see larger models are more affected by shifted starting position, which suggests that absolute positional embedding might need more data or training as the number of parameters increases.
+
+\subsection{Impact of phase-shifts on fine-tuning}
+\label{sec:pos_finetuning}
+
+Finally, we investigate the effect of phase shift in fine-tuning.
+We ask whether the models can generalize to out-of-phase sentences for a given task.
+We train RoBERTa, BART, GPT2 and OPT models on CoLA, RTE and MRPC tasks from the GLUE benchmark \citep{Wang2018:GLUE} and evaluate them on phase-shifts.
+We choose these three relatively small tasks in order to decrease the number of gradient updates to position embeddings during fine-tuning.
+We perform a cross-phase analysis by training and evaluating across different phase shifts ($k={0,100,200,300})$ for all models on the same set of datasets, and show the averaged performance.
+We observe for all models, the task performance drops during out-of-phase evaluation (non-diagonals in \autoref{fig:glue_phaseshift}).
+% This drop is more accentuated for BART, which is in-line with our grammatical acceptability results.
+
+\input{figs/pos/glue_heatmap}
+
+The drop in performance of evaluating out-of-phase sentences might just be simply attributed to overfitting on position information during fine-tuning.
+% Thus, we further ask the question on whether fine-tuning on different phase-shifted sentences also yield similar performance as in fine-tuning on the standard, zero position.
+However, we observe that for all tasks, training and evaluating on the same phase-shift is worse when $k \ne 0$ (diagonals in \autoref{fig:glue_phaseshift}).
+Out-of-phase training appears to be worst for CoLA, which suffers drastically when fine-tuning on different phase shifts.
+These results highlight a potential task data bias with respect to different positions.
+
+
+
+\section{Analysis}
+\label{sec:pos_analysis}
+
+\subsection{Further evaluation on Phase shifting with prompts}
+\label{sec:pos_further_eval_prompts}
+
+We displayed a holistic view of zero-shot and five-shot experiments in \autoref{fig:prompt_ps_aggr}, covering the accuracies averaged over all six datasets.
+%However, it should not be taken as an accurate measure or benchmark.
+In this section, we now report and analyze the result of each dataset individually. \autoref{fig:propmt_all_ds_part0} and \autoref{fig:propmt_all_ds_part1} showcase models' performance in zero-shot and five-shot configurations.
+The same pattern can be seen across all model sizes in COPA, WinoGrande, PIQA, ARC (Easy), and RTE. Concretely, the zero-shot abilities of the models sharply decrease as we increase the starting position.
+Moreover, five-shot inference, typically referred to as in-context learning, is also subject to decreased performance, ranging from -2\% to -40\%. However, the degradation is not as severe as with zero-shot setting.
+Only MRPC exhibits stable phase shift performance, but even in this case, larger models are still adversely affected. Due to the exceptionally poor performance of OPT family on CoLA, we exclude these results from our analysis (\autoref{fig:propmt_all_ds_part1}).
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figs/pos/v2_prompt_phase_shift_all_ds_part0.pdf}
+    \caption{Zero-shot and Few-shot performance of OPT family with various phase shifts for each individual dataset (Part 1)}
+    \label{fig:propmt_all_ds_part0}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figs/pos/v2_prompt_phase_shift_all_ds_part1.pdf}
+    \caption{Zero-shot and Few-shot performance of OPT family with various phase shifts for each individual dataset (Part 2)}
+    \label{fig:propmt_all_ds_part1}
+\end{figure*}
+
+
+
+The erratic behaviour observed in majority of evaluated datasets makes it evident that models struggle to encode the relative distances of words as their understanding of inputs heavily change with various phase shifts.
+It is important to note that our findings demonstrate models' unstable functioning as opposed to solely highlighting their failure. Indeed, \autoref{fig:prompt_best_ps} shows that one can extract better and improved accuracies with non-zero starting positions.
+Namely, $\text{OPT}_{\text{30B}}$ has the best zero-shot performance on phase shift $k=300$ in the case of MRPC; the same pattern can also be observed in RTE five-shot for $\text{OPT}_{\text{13B}}$ on phase shift $k=300$.
+Another noteworthy observation is that the performance drop is often a \emph{non-monotonic} function of phase shifts. i.e., for some prompts, the model might be more accurate for $k=1000$ than for $k=0$.
+This observation suggests that some positional biases might be learned during pre-training and are well-captured by APE. So, increasing values of $k$ in some occasions lands the model attentions in a ``sweet spot'' in the processing window, such that the model benefits from some positional biases learned during pre-training.
+
+We observe the presence of erratic behavior across a fairly wide range of model sizes in the OPT family. Additionally, it can be seen that larger models are more prone to fail at encoding relative positions than their smaller counterparts.
+One possible explanation for this is that in order for the models to encode relative positional information, they need to view all combinations of words and sentences in every position. This coverage rarely occurs in natural data, resulting in data sparsity issues. Hence, models with a large number of parameters may require more data/training to learn the relative ordering of words.
+
+\subsection{Variation of best perplexity across phase shifts}
+\label{sec:pos_perplexity_phase}
+
+\begin{figure}[!ht]
+    \centering
+    \resizebox{0.8\linewidth}{!}{
+    \includegraphics[]{figs/pos/ppl_density_all.pdf}}
+    \caption{Distribution of sentences having the lowest perplexities for each phase shift}
+    \label{fig:ppl_density}
+\end{figure}
+
+In this section, we investigate the perplexity of individual sentences from the BLiMP dataset across each phase shift for each model. We plot the distribution of sentences achieving lowest perplexity in each phase shift for the range of models in \autoref{fig:ppl_density}. We observe several modes of phase shift for RoBERTa and BART models where they have the least perplexity on phase shifts other than the standard (zero position). In the case of GPT2 and OPT, the distribution is more skewed towards zero, indicating they almost always achieve the lowest perplexity in the zero position, i.e. when there is no phase shift.
+
+\subsection{Variation in attention patterns with phase shift}
+\label{sec:pos_attention_analysis}
+
+
+We further perform attention analysis on GPT2, RoBERTa and BART to visualize whether the model's attention pattern changes with phase shifts. Following the experimental protocol of \citet{raghu2021vision}, we first collect a summary of attention weights computed with token distances for each token-pair in a sentence. This summary metric is then further normalized for sentence length. The values of this metric show whether the attention is local (low values)---focused on small token distances---or global (high values)---i.e. focused on the whole sentence.
+
+We compute this attention summary metric on a sample of 5000 sentences drawn from the BLiMP dataset \cite{warstadt-etal-2020-BLiMP-benchmark}. We then plot the summary values per layer and sort according to the values for each attention head, as per \citet{raghu2021vision}. The idea is to discover whether this attention summary metric is drastically different under different phase shift conditions. %This analysis further highlights the importance of studying the relativity of APEs closely.
+
+We do observe drastic differences in attention patterns in all layers for GPT2 (\autoref{fig:globality_GPT2}) and GPT2-Medium (\autoref{fig:globality_GPT2-medium}). Comparing this with of RoBERTa (base) (\autoref{fig:globality_roberta-base}) and RoBERTa (large) (\autoref{fig:globality_roberta-large}), we can corroborate our findings from \autoref{sec:acceptability}---RoBERTa is much more robust to phase shifts. Consequently, BART (\autoref{fig:globality_bart-base} and \autoref{fig:globality_bart-large}) also displays differences in attention patterns, but they are not as drastic as GPT2.
+
+\begin{figure*}
+    \centering
+    \resizebox{0.8\linewidth}{!}{
+    \includegraphics[]{figs/pos/locality_GPT2_sentence_good.pdf}}
+    \caption{Attention globality distributions of GPT2 across different heads (sorted according to value) and averaged over all layers and 5000 data points. Blue curve stands for the no phase shift condition, and orange, green and red curves represent $k=100,200$ and $300$ respectively.}
+    \label{fig:globality_GPT2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \resizebox{0.7\linewidth}{!}{
+    \includegraphics[]{figs/pos/locality_GPT2-medium_sentence_good.pdf}}
+    \caption{Attention globality distributions of GPT2-Medium across different heads (sorted according to value) and averaged over all layers and 5000 data points. Blue curve stands for the no phase shift condition, and orange, green and red curves represent $k=100,200$ and $300$ respectively.}
+    \label{fig:globality_GPT2-medium}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \resizebox{\linewidth}{!}{
+    \includegraphics[width=\textwidth]{figs/pos/locality_roberta-base_sentence_good.pdf}}
+    \caption{Attention globality distributions of RoBERTa (base) across different heads (sorted according to value) and averaged over all layers and 5000 data points. Blue curve stands for the no phase shift condition, and orange, green and red curves represent $k=100,200$ and $300$ respectively.}
+    \label{fig:globality_roberta-base}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \resizebox{0.7\linewidth}{!}{
+    \includegraphics[]{figs/pos/locality_roberta-large_sentence_good.pdf}}
+    \caption{Attention globality distributions of RoBERTa (large) across different heads (sorted according to value) and averaged over all layers and 5000 data points. Blue curve stands for the no phase shift condition, and orange, green and red curves represent $k=100,200$ and $300$ respectively.}
+    \label{fig:globality_roberta-large}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \resizebox{\linewidth}{!}{
+    \includegraphics[width=\textwidth]{figs/pos/locality_facebook-bart-base_dec_sentence_good.pdf}}
+    \caption{Attention globality distributions of BART (base) across different heads (sorted according to value) and averaged over all layers and 5000 data points. Blue curve stands for the no phase shift condition, and orange, green and red curves represent $k=100,200$ and $300$ respectively.}
+    \label{fig:globality_bart-base}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \resizebox{0.8\linewidth}{!}{
+    \includegraphics[]{figs/pos/locality_facebook-bart-large_dec_sentence_good.pdf}}
+    \caption{Attention globality distributions of BART (large) across different heads (sorted according to value) and averaged over all layers and 5000 data points. Blue curve stands for the no phase shift condition, and orange, green and red curves represent $k=100,200$ and $300$ respectively.}
+    \label{fig:globality_bart-large}
+\end{figure*}
+
+
+
+\section{Related Work}
+\label{sec:pos_related_work}
+
+Positional encoding has been always an important part of the Transformer architecture, and since it original introduction different variants of it have been deployed by pretrained models (see \autoref{tab:models_pe} for a summary of positional encoding used by some of popular state-of-the-art models.)
+% Positional embeddings have been something of a cottage industry in NLP, enabling several works exploring the inner workings of the Transformer-class of models.
+
+Positional encodings have garnered a niche community over the past several years.
+\citet{wang-chen-2020-position} investigate whether position embeddings learn the meaning of positions and how do they affect the learnability for different downstream tasks.
+\citet{wang2021on} explore different positional encodings and establish monotonicity, translation and symmetry properties of different methods, including APEs.
+They also report that learned APE's demonstrate superior performance for text classification, further adding to the evidence APE's enable exploitation of positional biases.
+\citet{luo-etal-2021-positional} report that masked language model embeddings consists of positional artefacts which bias the model output.
+More related to our work, \citet{kiyono2021} train a Transformer model from scratch using shifted positional embeddings for machine translation, and observe improved performance in extrapolation and intrapolation setup.
+\citet{haviv2022} reports a surprising finding that autoregressive Transformer models trained without explicit positional information still perform on-par with their counterparts having access to positional information. This result is attributed to the causal attention structure induced by the autoregressive training only, as this effect is not observed with masked language models, as highlighted by both \citet{haviv2022} and \citet{sinha-etal-2021-masked}.
+\citet{ke2021} proposes a novel technique to de-correlate the position encodings and token embeddings, and achieve better downstream performance than baselines.
+\citet{ravishankar-etal-2021-multilingual} find relative positional encoding does not improve over APE in multi-lingual setting.
+
+On the other hand, multiple works have shown the advantage of explicit relative positional encoding for length extrapolation.
+\citet{csordas2021:devil} show Transformers equipped with variants of relative positional encoding \citep{dai-2019:transformerxl, shaw-etal-2018-self} significantly outperform their absolute counterparts when it comes to length generalization.
+In the same line of work, \citet{ontanon2022:compgen} also find that for numerous synthetic benchmarks, the best extrapolation performance can only be obtained by relative positional encoding.
+\citet{press2022train} take the experiments beyond synthetic datasets and show that APE's struggle in generalization to longer sequence of natural language.
+All of these amount to the evidence that points to APE's as one of the potential reasons Transformers are known to fail in length generalization and productivity \citep{pcfg,Lake2018:SCAN}.
+Although the benefits of using explicit relative positional bias is mentioned in various works, they typically come at the cost of slowing the training down: \citep{press2022train} report that training T5 (which uses a relative variant of positional encoding) is almost twice as slow as training a model with sinusoidal absolute embedding. Thus, the gained runtime efficiency allows longer training of the APE model, which in turn enables the further extrapolation capabilities.
+These works suggest that we have a lot left to explore about positional encoding and highlight the fact that the consequences of particular choices is still an open field of ongoing research.
+
+
 
 \section{Discussion}
-\label{sec:orgbc43cdd}
+\label{sec:pos_discussion}
+
+In this work, we investigate the abilities of APEs in encoding the relative positions of the tokens in an input. We observe that TLMs using APEs encode sentences differently based on the starting position of the sentence in the context window. This result has major implications in the way we perceive the sentence processing capabilities of TLMs.
+Specifically, we observe that the representation of the same sentence varies depending on where it is in the context window, such that it impacts zero shot, few shot and full shot task performance of sub-window sentences.
+Future work could leverage the start position in building robust and position-generalizable models. We hope our work can inform the community on the pitfalls of using APEs, and inspire development and adoption of alternative relative position embedding based approaches.
+
+
+
 \clearpage
 
 \chapter{Conclusion}

@@ -1,0 +1,50 @@
+\begin{table*}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{
+    l@{\hskip 0.5in}
+    c
+    c
+    c
+    c
+    c
+    c
+    c
+}
+\toprule 
+Model       &  Type & Pretraining Objective & Context Size & First Position & \# Layers & Hidden Size & \# Params    \\
+\midrule
+\multicolumn{8}{c}{RoBERTa family \citep{Liu2019:RoBERTa}} \\
+\midrule
+$\text{RoBERTa}_{\text{BASE}}$ & encoder-only & Masked Language Modeling & 514 & 2 & 12 & 768 & 123M \\
+$\text{RoBERTa}_{\text{LARGE}}$ & encoder-only& Masked Language Modeling & 514 & 2 & 24 & 1024 & 325M \\
+
+\midrule
+\multicolumn{8}{c}{BART family \citep{Lewis2020:BART}} \\
+\midrule
+
+$\text{BART}_{\text{BASE}}$ & encoder-decoder& Masked Language Modeling & 1024 & 2 &6 & 768 & 140M \\
+$\text{BART}_{\text{LARGE}}$ & encoder-decoder& Masked Language Modeling & 1024 & 2 &12& 1024 & 400M \\
+
+\midrule
+\multicolumn{8}{c}{GPT2 family \citep{Radford2019:GPT2}} \\
+\midrule
+
+$\text{GPT2}$ & decoder-only & Next Token Prediction &1024 & 0&  12 & 768 & 125M \\
+$\text{GPT2}_{\text{MEDIUM}}$ & decoder-only & Next Token Prediction & 1024 & 0 & 24 & 1024 & 345M \\
+
+\midrule
+\multicolumn{8}{c}{OPT family \citep{Zhang2022:OPT}} \\
+\midrule
+
+$\text{OPT}_{\text{125M}}$ & decoder-only & Next Token Prediction& 2048 & 2 & 12 & 768 & 125M \\
+$\text{OPT}_{\text{350M}}$ &decoder-only & Next Token Prediction& 2048  & 2 & 24& 1024& 350M \\
+$\text{OPT}_{\text{2.7M}}$ &decoder-only & Next Token Prediction& 2048 & 2 & 32 & 2560 & 2.7B \\
+$\text{OPT}_{\text{13B}}$ &decoder-only &Next Token Prediction&  2048 & 2 & 40 & 5120 & 13B \\
+$\text{OPT}_{\text{30B}}$ &decoder-only &Next Token Prediction&  2048 & 2 & 48 & 7168 & 30B \\
+
+\bottomrule
+\end{tabular}}
+\caption{Details of the models we used in this paper.}
+\label{tab:model_detail}
+\end{table*}

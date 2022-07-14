@@ -87,6 +87,7 @@ morestring=[b]'
 
 \newcommand{\xhdr}[1]{{\noindent\bfseries #1}.}
 \def\Snospace~{\S{}} % If i don't add this overleaf complains
+\renewcommand{\chapterautorefname}{\Snospace}
 \renewcommand{\sectionautorefname}{\Snospace}
 \renewcommand{\subsectionautorefname}{\Snospace}
 \newcommand\boldred[1]{\textcolor{red}{\textbf{#1}}}
@@ -2013,7 +2014,7 @@ We further perform attention analysis on GPT2, RoBERTa and BART to visualize whe
 
 We compute this attention summary metric on a sample of 5000 sentences drawn from the BLiMP dataset \cite{warstadt-etal-2020-BLiMP-benchmark}. We then plot the summary values per layer and sort according to the values for each attention head, as per \citet{raghu2021vision}. The idea is to discover whether this attention summary metric is drastically different under different phase shift conditions. %This analysis further highlights the importance of studying the relativity of APEs closely.
 
-We do observe drastic differences in attention patterns in all layers for GPT2 (\autoref{fig:globality_GPT2}) and GPT2-Medium (\autoref{fig:globality_GPT2-medium}). Comparing this with of RoBERTa (base) (\autoref{fig:globality_roberta-base}) and RoBERTa (large) (\autoref{fig:globality_roberta-large}), we can corroborate our findings from \autoref{sec:acceptability}---RoBERTa is much more robust to phase shifts. Consequently, BART (\autoref{fig:globality_bart-base} and \autoref{fig:globality_bart-large}) also displays differences in attention patterns, but they are not as drastic as GPT2.
+We do observe drastic differences in attention patterns in all layers for GPT2 (\autoref{fig:globality_GPT2}) and GPT2-Medium (\autoref{fig:globality_GPT2-medium}). Comparing this with of RoBERTa (base) (\autoref{fig:globality_roberta-base}) and RoBERTa (large) (\autoref{fig:globality_roberta-large}), we can corroborate our findings from \autoref{sec:pos_acceptability}---RoBERTa is much more robust to phase shifts. Consequently, BART (\autoref{fig:globality_bart-base} and \autoref{fig:globality_bart-large}) also displays differences in attention patterns, but they are not as drastic as GPT2.
 
 \begin{figure*}
     \centering
@@ -2094,9 +2095,22 @@ These works suggest that we have a lot left to explore about positional encoding
 \section{Discussion}
 \label{sec:pos_discussion}
 
-In this work, we investigate the abilities of APEs in encoding the relative positions of the tokens in an input. We observe that TLMs using APEs encode sentences differently based on the starting position of the sentence in the context window. This result has major implications in the way we perceive the sentence processing capabilities of TLMs.
+In this chapter, we investigate the abilities of APEs in encoding the relative positions of the tokens in an input. We observe that TLMs using APEs encode sentences differently based on the starting position of the sentence in the context window. To summarize our findings:
+
+\begin{itemize}
+  \item \textbf{Reduced sub-context window sentence processing capability of TLMs.} Majority of TLM's show worse perplexity scores when the position information is shifted, emulating a different start of sentence (\autoref{sec:pos_acceptability}).
+  \item \textbf{MLMs offer better sub-context sentence representations.} can have better in-context sentence representation.} Masked Language Models have much better ability to reconcile sentence representations from within a context window, compared to their autoregressive counterparts (\autoref{fig:acceptability}).
+  \item \textbf{MLM models have lower surprisal scores in sub-context positions.} Even so, Masked LM's also display large variations in perplexity, leading to wide fluctuations in the best starting position for a given sentence. This highlights different sub-window representation capability of MLMs, which can be leveraged further to develop more generalizable models.
+  \item \textbf{Systematicity issues for Autoregressive models in Prompting.} Autoregressive models remains highly susceptible to the shift in starting positions, possibly due to mismatch in their own, implicit position representation vs the provided one \citep{haviv2022}. This is evident with the wildly fluctuating and significantly worse results on prompting (\autoref{sec:pos_further_eval_prompts}).
+  \item \textbf{Poor out-of-context generalization in full fine-tuning.} Full finetuning with different class of models also highlights the over-dependence of models (both MLM and Autoregressive) on the starting position of a given sentence. Notably, models display poor \textit{out-of-phase} generalization, and present the best results when trained without any phase shift, highlighting a potential position-to-data bias (\autoref{sec:pos_finetuning}).
+  \item \textbf{Different sentence processing behavior in sub-context positions.} When provided with different starting positions, the models attention behaviors also drastically changes (\autoref{sec:pos_attention_analysis}), exhibiting systematicity issues in in-context sentence representation capability of large language models.
+\end{itemize}
+
+These results has major implications in the way we perceive the sentence processing capabilities of TLMs.
 Specifically, we observe that the representation of the same sentence varies depending on where it is in the context window, such that it impacts zero shot, few shot and full shot task performance of sub-window sentences.
-Future work could leverage the start position in building robust and position-generalizable models. We hope our work can inform the community on the pitfalls of using APEs, and inspire development and adoption of alternative relative position embedding based approaches.
+The results and analysis in this chapter also explains the erratic behavior of models towards different word order as observed in \autoref{sec:unli} and \autoref{sec:mlm}, in that APE's do not contain the necessary inductive bias to represent the relative position information of words in a sentence.
+Future work could leverage the start position in building robust and position-generalizable models.
+We hope our work can inform the community on the pitfalls of using APEs, and inspire development and adoption of alternative relative position embedding based approaches.
 
 
 

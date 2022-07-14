@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llllllllll}
+\toprule
+name & fine-tune-train & fine-tune-eval &            MNLI &            QNLI &             RTE &             CoLA &            MRPC &           SST-2 &             PAWS \\
+\midrule
+ \OR &        natural &       natural &  86.08 +/- 0.15 &  92.45 +/- 0.24 &  73.62 +/- 3.09 &  52.44 +/- 21.22 &  89.09 +/- 0.88 &  93.75 +/- 0.44 &   94.49 +/- 0.18 \\
+  &        natural &           shuffled &  68.11 +/- 0.52 &  81.08 +/- 0.38 &  56.72 +/- 3.29 &    4.77 +/- 1.82 &  75.94 +/- 1.01 &  80.78 +/- 0.37 &   62.22 +/- 0.09 \\
+  &            shuffled &       natural &  82.99 +/- 0.16 &  89.32 +/- 0.23 &   57.9 +/- 4.71 &      0.0 +/- 0.0 &  79.71 +/- 2.57 &   89.12 +/- 0.5 &  72.03 +/- 13.79 \\
+  &            shuffled &           shuffled &   79.96 +/- 0.1 &  87.51 +/- 0.09 &   59.07 +/- 3.2 &     1.4 +/- 2.17 &  79.17 +/- 0.35 &   86.11 +/- 0.5 &   65.15 +/- 0.48 \\ \midrule
+ \RI &        natural &       natural &  82.64 +/- 0.15 &  89.05 +/- 0.15 &  68.48 +/- 2.51 &   31.07 +/- 9.97 &  85.97 +/- 0.89 &  90.41 +/- 0.43 &   89.69 +/- 0.59 \\
+  &        natural &           shuffled &  76.67 +/- 0.34 &  87.21 +/- 0.17 &   65.8 +/- 6.11 &    23.06 +/- 5.3 &  81.84 +/- 0.43 &  83.94 +/- 0.33 &   62.86 +/- 0.19 \\
+  &            shuffled &       natural &   79.87 +/- 0.1 &  87.81 +/- 0.36 &  65.65 +/- 2.33 &  24.53 +/- 13.63 &  82.51 +/- 0.82 &  86.45 +/- 0.41 &   73.34 +/- 6.88 \\
+  &            shuffled &           shuffled &   79.75 +/- 0.0 &  88.21 +/- 0.24 &  64.88 +/- 6.32 &  22.43 +/- 10.79 &  82.65 +/- 0.42 &   86.25 +/- 0.4 &    63.15 +/- 2.2 \\ \midrule
+ \RC &        natural &       natural &  71.93 +/- 0.21 &  66.94 +/- 9.21 &   53.7 +/- 1.01 &    0.92 +/- 2.06 &  70.57 +/- 0.66 &   83.17 +/- 1.5 &   58.59 +/- 0.33 \\
+  &        natural &           shuffled &  62.27 +/- 0.57 &  63.13 +/- 7.13 &  52.42 +/- 2.77 &    0.09 +/- 0.21 &  70.56 +/- 0.33 &  79.41 +/- 0.63 &   56.91 +/- 0.16 \\
+  &            shuffled &       natural &   67.62 +/- 0.3 &  66.49 +/- 0.49 &  52.17 +/- 1.26 &      0.0 +/- 0.0 &  70.37 +/- 0.93 &  79.93 +/- 1.01 &   57.59 +/- 0.29 \\
+  &            shuffled &           shuffled &  67.02 +/- 0.33 &  66.24 +/- 0.33 &  53.44 +/- 0.53 &    0.08 +/- 0.18 &  70.28 +/- 0.62 &   80.05 +/- 0.4 &   57.38 +/- 0.16 \\
+\bottomrule
+\end{tabular}
+}
+\caption{Fine-tuning evaluation by varying different sources of word order (with mean and std dev). We vary the word order contained in the pre-trained model (\OR,\RI,\RC); in fine-tuning training set (natural and shuffled); and in fine-tuning evaluation (natural and shuffled). Here, \textit{shuffled} corresponds to unigram shuffling of words in the input. In case of fine-tune evaluation containing shuffled input, we evaluate on a sample of 100 unigram permutations for each data point in the dev set of the corresponding task. }
+\label{tab:full_eval}
+\end{table*}

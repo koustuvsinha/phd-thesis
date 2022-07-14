@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{l|rl|rl}
+\toprule
+Model & \multicolumn{2}{c|}{UD EWT} & \multicolumn{2}{c}{PTB} \\ %\hline
+ & MLP & Linear & MLP & Linear \\ \cline{2-5} 
+\OR & 89.63 +/- 0.60 & 84.35 +/- 0.78 & 93.96 +/- 0.63 & 88.35 +/- 1.00 \\
+\midrule
+\RI & 83.55 +/- 3.31 & 75.26 +/- 3.08 & 91.10 +/- 0.38 & 82.34 +/- 1.37 \\
+\RII & 88.57 +/- 0.68 & 82.05 +/- 1.10 & 93.27 +/- 0.26 & 86.88 +/- 0.87 \\
+\RIII & 88.69 +/- 1.09 & 82.37 +/- 1.26 & 93.46 +/- 0.29 & 87.12 +/- 0.72 \\
+\RIV & 88.66 +/- 0.76 & 82.58 +/- 1.04 & 93.49 +/- 0.33 & 87.30 +/- 0.79 \\\midrule
+\RC & 84.93 +/- 0.34 & 76.30 +/- 0.52 & 89.98 +/- 0.43 & 78.59 +/- 0.68 \\ \bottomrule
+\end{tabular}%%
+}
+\caption{Accuracy on the dependency arc labelling task (DAL) on two datasets (with mean and std dev), UD EWT and PTB, using the Pareto Probing framework \cite{pimentel-etal-2020-pareto}.}
+\label{tab:pareto_dep_label}
+\end{table}

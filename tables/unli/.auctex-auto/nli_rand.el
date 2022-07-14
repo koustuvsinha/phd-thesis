@@ -2,6 +2,6 @@
  "nli_rand"
  (lambda ()
    (LaTeX-add-labels
-    "table:main"))
+    "table:unli_main"))
  :latex)
 

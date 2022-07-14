@@ -1,0 +1,17 @@
+\begin{table}[]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lllllll}
+\toprule
+Model &           MRPC &            RTE &           PAWS &         SST-2 &           CoLA &           QNLI \\
+\midrule
+  \OR &  76.11 +/- 0.98 &  54.93 +/- 2.91 &  62.31 +/- 0.08 &  80.83 +/- 0.36 &   5.05 +/- 2.22 &  79.04 +/- 0.68 \\
+  \RI &  81.24 +/- 1.28 &  65.53 +/- 3.57 &   62.63 +/- 0.1 &  83.84 +/- 0.35 &  23.42 +/- 6.49 &  87.29 +/- 0.17 \\
+  \RII &   80.48 +/- 0.7 &  66.55 +/- 2.01 &  61.24 +/- 3.06 &  82.99 +/- 0.28 &   10.36 +/- 1.9 &  86.13 +/- 0.51 \\
+  \RIII &  79.51 +/- 0.92 &  64.95 +/- 2.99 &  62.27 +/- 0.09 &    83.0 +/- 0.2 &    9.0 +/- 5.15 &  84.68 +/- 1.23 \\
+  \RIV &  79.06 +/- 0.97 &  65.96 +/- 1.39 &  62.18 +/- 0.19 &  83.09 +/- 0.42 &   6.62 +/- 6.09 &  84.76 +/- 0.77 \\
+\bottomrule
+\end{tabular}}
+\caption{Evaluation of the fine-tuned models on unigram randomized version of dev set for a subset of tasks in GLUE and PAWS.}
+\label{tab:rand_eval}
+\end{table}

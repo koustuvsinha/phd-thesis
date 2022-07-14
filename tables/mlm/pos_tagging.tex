@@ -1,0 +1,19 @@
+\begin{table}[]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{l|rl|rl}
+\toprule
+Model & \multicolumn{2}{c|}{UD EWT} & \multicolumn{2}{c}{PTB} \\ \hline
+ & MLP & Linear & MLP & Linear \\ \cline{2-5} 
+\OR & 93.74 +/- 0.15 & 88.82 +/- 0.42 & 97.07 +/- 0.38 & 93.1 +/- 0.65 \\
+\midrule
+\RI & 88.60 +/- 3.43 & 80.76 +/- 3.38 & 95.33 +/- 0.37 & 87.83 +/- 1.86 \\
+\RII & 93.39 +/- 0.45 & 87.58 +/- 1.06 & 96.96 +/- 0.15 & 91.80 +/- 0.50 \\
+\RIII & 92.89 +/- 0.65 & 86.78 +/- 1.32 & 97.03 +/- 0.13 & 91.70 +/- 0.70 \\
+\RIV & 92.83 +/- 0.61 & 87.23 +/- 0.77 & 96.96 +/- 0.12 & 92.08 +/- 0.39 \\\midrule
+\RC & 89.10 +/- 0.21 & 79.75 +/- 0.5 & 94.12 +/- 0.01 & 84.15 +/- 0.51 \\ \bottomrule
+\end{tabular}%%
+}
+\caption{Accuracy on the part-of-speech labelling task (POS) on two datasets, UD EWT and PTB, using the Pareto Probing framework \cite{pimentel-etal-2020-information}.}
+\label{tab:pareto_pos_tag}
+\end{table}

@@ -1,0 +1,17 @@
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[]
+\centering
+\resizebox{0.7\linewidth}{!}{%
+\begin{tabular}{lrrr}
+\toprule
+ & BLEU-2 & BLEU-3 & BLEU-4 \\ \cline{2-4} 
+\RI & 0.493 +/- 0.12 & 0.177 +/- 0.16 & 0.040 +/- 0.11 \\
+\RII & 0.754 +/- 0.07 & 0.432 +/- 0.18 & 0.226 +/- 0.19 \\
+\RIII & 0.824 +/- 0.06 & 0.650 +/- 0.09 & 0.405 +/- 0.20 \\
+\RIV & 0.811 +/- 0.08 & 0.671 +/- 0.11 & 0.553 +/- 0.12 \\ \bottomrule
+\end{tabular}%
+}
+\caption{BLEU-2,3,4 scores (mean and std dev) on a sample of 1M sentences drawn from the corpus used to train \RI, \RII, \RIII and \RIV\ compared to \OR.}
+\label{tab:bleu_score}
+\end{table}

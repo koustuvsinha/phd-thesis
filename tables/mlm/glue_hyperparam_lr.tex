@@ -1,0 +1,46 @@
+\begin{table*}[t]
+  \centering
+  \resizebox{0.7\linewidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+        Model &   RTE &  MRPC &  SST-2 &  CoLA &   QQP &  QNLI &  MNLI &  PAWS \\
+\midrule
+        \OR & 2e-05 & 2e-05 &  1e-05 & 2e-05 & 1e-05 & 1e-05 & 1e-05 & 2e-05 \\
+         \RI & 2e-05 & 1e-05 &  1e-05 & 1e-05 & 3e-05 & 1e-05 & 2e-05 & 2e-05 \\
+         \RII & 2e-05 & 2e-05 &  1e-05 & 1e-05 & 2e-05 & 1e-05 & 1e-05 & 3e-05 \\
+         \RIII & 3e-05 & 1e-05 &  2e-05 & 2e-05 & 3e-05 & 1e-05 & 1e-05 & 2e-05 \\
+         \RIV & 3e-05 & 1e-05 &  2e-05 & 2e-05 & 2e-05 & 1e-05 & 1e-05 & 2e-05 \\
+         \RV & 1e-05 & 3e-05 &  2e-05 & 2e-05 & 3e-05 & 2e-05 & 3e-05 & 2e-05 \\
+ \RC & 2e-05 & 1e-05 &  3e-05 & 1e-05 & 3e-05 & 3e-05 & 3e-05 & 2e-05 \\
+\RU & 2e-05 & 1e-05 &  3e-05 & 2e-05 & 3e-05 & 3e-05 & 3e-05 & 1e-05 \\
+   \RT & 1e-05 & 1e-05 &  3e-05 & 1e-05 & 1e-05 & 1e-05 & 2e-05 & 1e-05 \\
+      \NP & 1e-05 & 3e-05 &  2e-05 & 1e-05 & 1e-05 & 1e-05 & 1e-05 & 1e-05 \\
+\bottomrule
+\end{tabular}}
+\caption{Fine-tuning hyperparam Learning rate of each model for each task in GLUE and PAWS}
+\label{table:glue_hyp_lr}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \resizebox{0.7\linewidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+        Model &  RTE &  MRPC &  SST-2 &  CoLA &  QQP &  QNLI &  MNLI &  PAWS \\
+\midrule
+        \OR &   16 &    16 &     32 &    16 &   16 &    32 &    32 &    16 \\
+         \RI &   32 &    32 &     16 &    32 &   32 &    16 &    32 &    16 \\
+         \RII &   32 &    16 &     32 &    16 &   32 &    32 &    16 &    32 \\
+         \RIII &   32 &    32 &     16 &    32 &   32 &    16 &    32 &    32 \\
+         \RIV &   32 &    16 &     32 &    16 &   32 &    32 &    32 &    32 \\
+        \RV &   32 &    16 &     16 &    32 &   32 &    16 &    16 &    16 \\
+ \RC &   16 &    16 &     16 &    16 &   32 &    16 &    16 &    32 \\
+\RU &   16 &    32 &     16 &    16 &   32 &    16 &    16 &    16 \\
+   \RT &   16 &    16 &     32 &    16 &   16 &    16 &    32 &    16 \\
+      \NP &   16 &    32 &     16 &    16 &   32 &    16 &    16 &    16 \\
+\bottomrule
+\end{tabular}
+}
+\caption{Finetuning hyperparam batch size of each model for each task in GLUE and PAWS}
+\label{table:glue_hyp_bs}
+\end{table*}

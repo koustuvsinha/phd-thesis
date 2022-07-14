@@ -1,0 +1,30 @@
+\begin{table*}
+  \centering
+  \resizebox{\linewidth}{!}{%
+\begin{tabular}{lllllll}
+\toprule
+Model &  \OR & \RC & \RI & \RII & \RIII & \RIV \\
+condition &                &                      &                   &                   &                   &                   \\
+\midrule
+AOR       &  89.98 (1.96) [29.16] &    50.0 (0.01) [0.0] &    60.17 (1.61) [1.7] &    66.61 (7.1) [3.87] &  63.57 (2.39) [2.45] &   61.26 (4.91) [1.16] \\
+AOR-T     &   77.4 (7.74) [13.84] &     50.0 (0.0) [0.0] &   78.88 (0.64) [0.15] &   52.17 (2.14) [0.43] &   48.85 (3.8) [0.25] &   57.06 (3.49) [0.55] \\
+APP       &  89.94 (4.16) [27.06] &  50.01 (0.02) [-0.0] &    70.34 (1.9) [0.68] &     53.61 (3.3) [0.2] &  53.03 (1.75) [0.79] &    60.6 (4.41) [0.91] \\
+ARC       &    85.06 (5.92) [1.2] &  50.05 (0.08) [-0.0] &   62.39 (1.91) [0.11] &   74.57 (5.99) [0.07] &  67.55 (3.84) [0.07] &   62.88 (3.45) [0.03] \\
+ASR       &  87.19 (3.58) [26.18] &    50.0 (0.0) [-0.0] &  78.55 (10.01) [1.91] &    81.73 (5.1) [2.91] &   62.8 (0.35) [1.38] &   67.23 (6.82) [1.48] \\
+IOR       &    89.83 (3.33) [0.4] &  50.55 (0.95) [-0.0] &   56.28 (2.66) [0.01] &   58.96 (4.28) [0.04] &   70.49 (2.2) [0.04] &   62.82 (8.51) [0.08] \\
+IOR-T     &    74.05 (8.26) [0.2] &  50.61 (1.05) [-0.0] &   52.63 (2.07) [0.01] &   57.35 (4.88) [0.01] &  61.85 (4.75) [0.01] &   55.16 (6.59) [0.03] \\
+ISC       &    85.87 (9.6) [5.27] &     50.0 (0.0) [0.0] &   67.85 (2.62) [0.07] &    82.66 (9.43) [0.0] &  77.69 (4.51) [0.31] &   68.65 (5.71) [0.06] \\
+LVC       &   93.0 (0.75) [26.58] &  49.92 (0.14) [-0.0] &    70.42 (6.79) [0.1] &    87.5 (7.26) [1.44] &  85.42 (3.84) [0.63] &   81.08 (5.13) [0.66] \\
+SCM       &    88.6 (3.49) [5.72] &    50.0 (0.0) [0.02] &   63.73 (7.94) [0.12] &   82.12 (0.92) [0.17] &  86.44 (3.67) [2.62] &   80.27 (2.46) [0.26] \\
+SRX       &    91.0 (6.07) [2.72] &     50.0 (0.0) [0.0] &    88.0 (10.11) [0.1] &  92.25 (10.27) [0.32] &  94.25 (5.02) [0.02] &     91.0 (6.5) [3.07] \\
+SVA       &  95.33 (7.23) [31.35] &    50.0 (0.0) [0.02] &    86.0 (5.29) [0.57] &  85.17 (12.87) [3.17] &  94.67 (5.25) [6.15] &  88.83 (9.57) [30.57] \\
+SVC       &  97.54 (1.58) [19.27] &    50.0 (0.0) [-0.0] &   83.58 (4.58) [0.84] &   83.71 (8.78) [1.17] &   93.29 (7.4) [6.39] &  81.04 (3.66) [11.07] \\
+\bottomrule
+\end{tabular}}
+\caption{\citet{marvin-linzen-2018-targeted} stimuli results in raw accuracy. Values in parenthesis reflect the standard deviation over different seeds of pre-training. Values in square brackets indicate the mean probability difference among correct and incorrect words. Abbreviations: Simple Verb Agreement (SVA), In a sentential complement (SCM), Short VP Coordination (SVC), Long VP Coordination (LVC), Across a prepositional phrase (APP), Across a subject relative clause (ASR), Across an object relative clause (AOR), Across an object relative (no \textit{that}) (AOR-T),
+    In an object relative clause (IOR),
+    In an object relative clause (no \textit{that}) (IOR-T),
+    Simple Reflexive (SRX), In a sentential complement (ISC),
+    Across a relative clause (ARC), Simple NPI (SNP).}
+\label{tab:marvin_full_balanced}
+\end{table*}

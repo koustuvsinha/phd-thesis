@@ -30,6 +30,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{adjustbox}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 % \usepackage{subfigure}
 % \usepackage[T1]{fontenc}
 % \usepackage[utf8]{inputenc}
@@ -89,6 +91,31 @@ morestring=[b]'
 \DeclareMathOperator*{\argminB}{argmin}
 
 \newcommand{\PermAcc}{Permutation Acceptance} % a macro
+
+% MLM Pretraining commands
+% Typography: Define our models here
+% Original model
+\newcommand{\OR}{$\mathcal{M}_{\texttt{N}}$}
+% Random n=1
+\newcommand{\RI}{$\mathcal{M}_{\texttt{1}}$}
+% Random n=2
+\newcommand{\RII}{$\mathcal{M}_{\texttt{2}}$}
+% Random n=3
+\newcommand{\RIII}{$\mathcal{M}_{\texttt{3}}$}
+% Random n=4
+\newcommand{\RIV}{$\mathcal{M}_{\texttt{4}}$}
+% Random Corpus
+\newcommand{\RC}{$\mathcal{M}_{\texttt{UG}}$}
+% Random Uniform
+\newcommand{\RU}{$\mathcal{M}_{\texttt{UF}}$}
+% Random initialization
+\newcommand{\RT}{$\mathcal{M}_{\texttt{RI}}$}
+% No positional embedding
+\newcommand{\NP}{$\mathcal{M}_{\texttt{NP}}$}
+% 512 word randomization
+\newcommand{\RV}{$\mathcal{M}_{\texttt{512}}$}
+
+
 
 \author{Koustuv Sinha}
 \date{}
@@ -1045,11 +1072,17 @@ Researchers in NLP have realized the importance of syntactic structure in neural
 Anecdotally, large generative language models like GPT-2 or -3 exhibit a seemingly humanlike ability to generate fluent and grammatical text \citep{goldberg2019assessing, wolf2019some}.
 However, the jury is still out as to whether transformers genuinely acquire syntax.
 
-\paragraph{Models appear to have acquired syntax.} When researchers have peeked inside Transformer LM's pretrained representations, familiar syntactic structure \citep{hewitt-manning-2019-structural,jawahar-etal-2019-bert, lin-etal-2019-open, warstadt-bowman-2020-can, wu-etal-2020-perturbed}, or a familiar order of linguistic operations \citep{jawahar-etal-2019-bert,  tenney-etal-2019-bert}, has appeared. There is also evidence, notably from agreement attraction phenomena \citep{linzen-etal-2016-assessing} that transformer-based models pretrained on LM do acquire some knowledge of natural language syntax \citep{gulordava-etal-2018-colorless, chrupala-alishahi-2019-correlating,  jawahar-etal-2019-bert, lin-etal-2019-open, manning-etal-2020-emergent,  hawkins-etal-2020-investigating, linzen-baroni-2021-syntactic}. Results from other phenomena \citep{warstadt-bowman-2020-can} such as NPI licensing  \citep{warstadt-etal-2019-investigating} lend additional support. The claim that LMs acquire some syntactic knowledge has been made not only for transformers, but also for convolutional neural nets \citep{bernardy-lappin-2017-using}, and RNNs \citep{gulordava-etal-2018-colorless, van-schijndel-linzen-2018-neural, wilcox-etal-2018-rnn, zhang-bowman-2018-language, prasad-etal-2019-using, ravfogel-etal-2019-studying}---although there are many caveats (e.g., \citealt{ravfogel-etal-2018-lstm, white-etal-2018-lexicosyntactic,  davis-van-schijndel-2020-recurrent, chaves-2020-dont, da-costa-chaves-2020-assessing, kodner-gupta-2020-overestimation}).
+\subsection{Models appear to have acquired syntax.}
 
-\paragraph{Models appear to struggle with syntax.} Several works have cast doubt on the extent to which NLI models in particular know syntax (although each work adopts a slightly different idea of what ``knowing syntax'' entails). For example, \cite{mccoy-etal-2019-right} argued that the knowledge acquired by models trained on NLI (for at least some popular datasets) is actually not as syntactically sophisticated as it might have initially seemed; some transformer models rely mainly on simpler, non-humanlike heuristics. In general, transformer LM performance has been found to be patchy and variable across linguistic phenomena \citep{dasgupta-etal-2018-evaluating, naik-etal-2018-stress, an-etal-2019-representation, ravichander-etal-2019-equate, jeretic-etal-2020-natural}. This is especially true for syntactic phenomena \citep{marvin-linzen-2018-targeted, hu-etal-2020-systematic, gauthier-etal-2020-syntaxgym, mccoy-etal-2020-berts, warstadt-etal-2020-blimp}, where transformers are, for some phenomena and settings, worse than RNNs \citep{van-schijndel-etal-2019-quantity}. From another angle, many have explored architectural approaches for increasing a network's sensitivity to syntactic structure \citep{chen-etal-2017-enhanced, Li-etal-2020-SANLI}. \cite{williams-etal-2018-latent} showed that learning jointly to perform NLI  and to parse resulted in parse trees that match no popular syntactic formalisms. Furthermore, models trained explicitly to differentiate acceptable sentences from unacceptable ones (i.e., one of the most common syntactic tests used by linguists) have, to date, come nowhere near human performance \citep{warstadt-etal-2019-neural}.
+When researchers have peeked inside Transformer LM's pretrained representations, familiar syntactic structure \citep{hewitt-manning-2019-structural,jawahar-etal-2019-bert, lin-etal-2019-open, warstadt-bowman-2020-can, wu-etal-2020-perturbed}, or a familiar order of linguistic operations \citep{jawahar-etal-2019-bert,  tenney-etal-2019-bert}, has appeared. There is also evidence, notably from agreement attraction phenomena \citep{linzen-etal-2016-assessing} that transformer-based models pretrained on LM do acquire some knowledge of natural language syntax \citep{gulordava-etal-2018-colorless, chrupala-alishahi-2019-correlating,  jawahar-etal-2019-bert, lin-etal-2019-open, manning-etal-2020-emergent,  hawkins-etal-2020-investigating, linzen-baroni-2021-syntactic}. Results from other phenomena \citep{warstadt-bowman-2020-can} such as NPI licensing  \citep{warstadt-etal-2019-investigating} lend additional support. The claim that LMs acquire some syntactic knowledge has been made not only for transformers, but also for convolutional neural nets \citep{bernardy-lappin-2017-using}, and RNNs \citep{gulordava-etal-2018-colorless, van-schijndel-linzen-2018-neural, wilcox-etal-2018-rnn, zhang-bowman-2018-language, prasad-etal-2019-using, ravfogel-etal-2019-studying}---although there are many caveats (e.g., \citealt{ravfogel-etal-2018-lstm, white-etal-2018-lexicosyntactic,  davis-van-schijndel-2020-recurrent, chaves-2020-dont, da-costa-chaves-2020-assessing, kodner-gupta-2020-overestimation}).
 
-\paragraph{Insensitivity to Perturbation.} Most relatedly, several concurrent works \citep{pham-etal-2020-out, alleman2021syntactic, gupta-etal-2021-bert, sinha2021masked,parthasarathi2021sometimes} investigated the effect of word order permutations on transformer NNs.  \cite{pham-etal-2020-out} is very nearly a proper subset of our work except for investigating additional tasks (i.e. from the GLUE benchmark of \citealt{wang-etal-2018-glue}) and performing a by-layer-analysis. \cite{gupta-etal-2021-bert} also relies on the GLUE benchmark, but additionally investigates other types of ``destructive'' perturbations. Our contribution differs from these works %, although our tentative Maximum Entropy solution parallels a similar one in \newcite{}
+\subsection{Models appear to struggle with syntax.}
+
+Several works have cast doubt on the extent to which NLI models in particular know syntax (although each work adopts a slightly different idea of what ``knowing syntax'' entails). For example, \cite{mccoy-etal-2019-right} argued that the knowledge acquired by models trained on NLI (for at least some popular datasets) is actually not as syntactically sophisticated as it might have initially seemed; some transformer models rely mainly on simpler, non-humanlike heuristics. In general, transformer LM performance has been found to be patchy and variable across linguistic phenomena \citep{dasgupta-etal-2018-evaluating, naik-etal-2018-stress, an-etal-2019-representation, ravichander-etal-2019-equate, jeretic-etal-2020-natural}. This is especially true for syntactic phenomena \citep{marvin-linzen-2018-targeted, hu-etal-2020-systematic, gauthier-etal-2020-syntaxgym, mccoy-etal-2020-berts, warstadt-etal-2020-blimp}, where transformers are, for some phenomena and settings, worse than RNNs \citep{van-schijndel-etal-2019-quantity}. From another angle, many have explored architectural approaches for increasing a network's sensitivity to syntactic structure \citep{chen-etal-2017-enhanced, Li-etal-2020-SANLI}. \cite{williams-etal-2018-latent} showed that learning jointly to perform NLI  and to parse resulted in parse trees that match no popular syntactic formalisms. Furthermore, models trained explicitly to differentiate acceptable sentences from unacceptable ones (i.e., one of the most common syntactic tests used by linguists) have, to date, come nowhere near human performance \citep{warstadt-etal-2019-neural}.
+
+\subsection{Insensitivity to Perturbation.}
+
+Most relatedly, several concurrent works \citep{pham-etal-2020-out, alleman2021syntactic, gupta-etal-2021-bert, sinha2021masked,parthasarathi2021sometimes} investigated the effect of word order permutations on transformer NNs.  \cite{pham-etal-2020-out} is very nearly a proper subset of our work except for investigating additional tasks (i.e. from the GLUE benchmark of \citealt{wang-etal-2018-glue}) and performing a by-layer-analysis. \cite{gupta-etal-2021-bert} also relies on the GLUE benchmark, but additionally investigates other types of ``destructive'' perturbations. Our contribution differs from these works %, although our tentative Maximum Entropy solution parallels a similar one in \newcite{}
 in that we additionally include the following: we (i) outline theoretically-informed predictions for how models \emph{should be expected} to react to permuted input (we outline a few options), (ii) show that permuting can ``flip'' an incorrect prediction to a correct one, (iii) show that the problem isn't specific to Transformers, (iv) show that the problem persists on out of domain data, (v) offer a suite of flexible metrics, and (vi) analyze \emph{why} models might be accepting permutations (BLEU and POS-tag neighborhood analysis). Finally, we replicate our findings in another language.
 % cite our two permutations papers & Yoon's student's in relation to our translation paper.
 While our work (and \citeauthor{pham-etal-2020-out,gupta-etal-2021-bert}) only permutes data during fine-tuning and/or evaluation,
@@ -1059,7 +1092,9 @@ In the context of generation, \cite{parthasarathi2021sometimes} crafted linguist
 
 % TODO: gururangan citation is double, check and remove
 
-\paragraph{NLI Models are very sensitive to words.} NLI models often over-attend to particular words to predict the correct answer \citep{gururangan-etal-2018-annotation, clark-etal-2019-bert}. \cite{wallace-etal-2019-universal} show that some short sequences of non-human-readable text can fool many NLU models, including NLI models trained on SNLI, into predicting a specific label. In fact, \cite{ettinger-2020-whatbertisnot} observed that for one of three test sets, BERT loses some accuracy in word-perturbed sentences, but that there exists a subset of examples for which BERT’s accuracy remains intact.
+\subsection{NLI Models are very sensitive to words.}
+
+NLI models often over-attend to particular words to predict the correct answer \citep{gururangan-etal-2018-annotation, clark-etal-2019-bert}. \cite{wallace-etal-2019-universal} show that some short sequences of non-human-readable text can fool many NLU models, including NLI models trained on SNLI, into predicting a specific label. In fact, \cite{ettinger-2020-whatbertisnot} observed that for one of three test sets, BERT loses some accuracy in word-perturbed sentences, but that there exists a subset of examples for which BERT’s accuracy remains intact.
 %This led \citeauthor{ettinger-2020-whatbertisnot} to speculate that ``some of BERT's success on these items may be attributable to simpler lexical or n-gram information''. Thus, it is reasonable to wonder how well NLI models will perform on permuted sentences where the model is able to view the same collection of words.
 If performance isn't affected (or if permutation helps, as we find it does in some cases), it suggests that these state-of-the-art models actually perform somewhat similarly to bag-of-words models \cite{blei-etal-2003-latent, mikolov2013efficient}.
 
@@ -1087,56 +1122,567 @@ In this chapter, we observe that state-of-the-art models do not rely on sentence
 % We also observe that reordering words can cause models to flip classification labels. % future work could additionally explore the relationship between permutation and deletion.
 Given these findings, and coupled with the observation that humans cannot perform UNLI at all well, the high rate of permutation acceptance that we observe leads us to conclude that current models do not yet ``know syntax'' in the fully systematic and humanlike way we would like them to. This study leads us to further investigate the training dynamics employed by these large language models. In the next chapter, we will investigate the training data dependency of one such model family in detail, to shed more light on the sentence processing pipelines employed by these models.
 
-
-% A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consider ``the details of human language, how it is learned, processed, and how it changes, rather than just chasing state-of-the-art numbers on a benchmark task.'' We expand upon this view, and suggest one particular future direction: we should train models not only to do well on clean test data, but also to not to overgeneralize to corrupted input. %perform natural language understanding in an humanlike way
-
-
-
 \section{Follow-up findings in the community}
-\label{sec:orgb976e8a}
+\label{sec:unli_followup}
+
 
 \clearpage
 \chapter{Probing syntax understanding through distributional hypothesis}
-\label{sec:orgcdbaaa6}
+\label{sec:mlm}
 
-Paper: \cite{sinha2021}
+The field of natural language processing (NLP) has become dominated by the pretrain-and-finetune paradigm, where we first obtain a good parametric \emph{prior} in order to subsequently model downstream tasks accurately.
+In particular, masked language model (MLM) pre-training, as epitomized by BERT \citep{devlin-etal-2019-bert}, has proven wildly successful, although the precise reason for this success has remained unclear.
+On one hand, we can view BERT as the newest in a long line of NLP techniques  \cite{deerwester1990indexing, landauer1997solution, collobert2008unified, mikolov2013, peters-etal-2018-deep} that exploit the well-known distributional hypothesis~\cite{harris1954distributional}.
+%\footnote{One might even argue that BERT is not actually all that different from earlier distributional models like word2vec~\cite{mikolov2013}, see \autoref{app:bert-is-word2vec}.}
+On the other hand, it has been claimed that BERT ``rediscovers the classical NLP pipeline''~\cite{tenney-etal-2019-bert}, suggesting that it has learned ``the types of syntactic and semantic abstractions traditionally believed necessary for language processing''
+rather than ``simply modeling complex co-occurrence statistics''~(ibid. p.1).
+
+In this chapter, we aim to uncover how much of MLM's success comes from learning simple distributional information, as opposed to grammatical abstractions \citep{tenney-etal-2019-bert,manning2020emergent}. Thus, in this chapter I discuss our work \citep{sinha-etal-2021-masked}, where we disentangle these two hypotheses by measuring the effect of removing word order information during pre-training:
+any sophisticated (English) NLP pipeline would presumably depend on the syntactic information conveyed by the order of words.
+We find that surprisingly most of MLM's high performance can in fact be explained by the ``distributional prior'' rather than its ability to replicate the classical NLP pipeline.
+
+Concretely, we pre-train MLMs~(RoBERTa, \citealt{liu2019b}) on various corpora with permuted word order while preserving some degree of distributional information, and examine their downstream performance.
+%In our main experiments, we pre-train models on
+%various permuted corpora , by randomly shuffling $n$-grams within the sentence (where $n \in \{1,2,3,4\}$).
+We also experiment with training MLMs without positional embeddings, making them entirely order agnostic,
+and with training on a corpus sampled from the source corpus's %uniform or
+unigram distribution%, removing both distributional and word order information
+. We then evaluate these ``permuted'' models in a wide range of settings and compare with regularly-pre-trained models.
+
+We demonstrate that pre-training on permuted data has surprisingly little effect on downstream task performance after fine-tuning (on non-shuffled training data).
+In our previous chapter we observed that MLMs are quite robust to permuting downstream test data (\autoref{sec:unli_results_accept}) and even do quite well using permuted ``unnatural'' downstream train data \cite{sinha2020b,gupta-etal-2021-bert}. In this chapter, we show that downstream performance for ``unnatural language pre-training'' is much closer to standard MLM pre-training than one might expect.
+
+In an effort to shed light on these findings, we experiment with various probing tasks. We verify via non-parametric probes that the permutations do in fact make the model worse at syntax-dependent tasks. However, just like on the downstream fine-tuning tasks, permuted models perform well on parametric syntactic probes, in some cases almost matching the unpermuted model's performance, which is quite surprising given how important word order is crosslinguistically (\citealt{greenberg1963some, dryer1992greenbergian, cinque1999adverbs}, i.a.).
+
+Our results can be interpreted in different ways.
+One could argue that our downstream and probing tasks are flawed, and that we need to examine models with examples that truly test strong generalization and compositionality.
+Alternatively, one could argue that prior works have overstated the dependence of human language understanding on word order, and that human language understanding depends less on the structure of the sentence and more on the structure of the \emph{world}, which can be inferred to a large extent from distributional information.
+This work is meant to deepen our understanding of MLM pre-training and, through this, move us closer to finding out what is actually required for adequately modelling natural language.
+
+
 
 \section{Technical Background}
-\label{sec:orgcfd03af}
-\section{Dataset construction and pre-training}
-\label{sec:orgc115e76}
-\section{Experiments}
-\label{sec:orgbbc65e2}
-\subsection{Downstream reasoning tasks}
-\label{sec:orge082779}
+\label{sec:mlm_bg}
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[width=.9\linewidth]{figs/unnat_pt/main_result_plot.pdf}
-% \caption{Downstream results on scrambled pre-training.}
-% \end{figure}
+\section{Experimental Setup}
+\label{sec:mlm_experimental_setup}
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[width=.9\linewidth]{figs/unnat_pt/finetune_rand.pdf}
-% \caption{GLUE and PAWS task dev set performance when finetuned on naturally and randomly ordered text, respectively, using pre-trained RoBERTa (base) models on different versions of BookWiki corpus.}
-% \end{figure}
 
-\subsection{Evaluating the effectiveness of probing syntax}
-\label{sec:org56442b4}
+\subsection{Sentence word order permutation}
+\label{sec:mlm_sentence_permutation}
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[width=.9\linewidth]{figs/unnat_pt/rda_mdl_ep_3.pdf}
-% \caption{Risannen Data Analysis.}
-% \end{figure}
+To investigate to what extent the performance of MLM pre-training is a consequence of distributional information, we construct a training corpus devoid of natural word order but preserving local distributional information. We construct word order-randomized versions of the BookWiki corpus (the Toronto Books Corpus, \citealt{zhu2015aligning}, plus English Wikipedia) from \citet{liu2019b}, following the setup described in \autoref{sec:unli_exp_setup}. %, where each sentence is stripped of its original word order.
+Concretely, given a sentence $S$ containing $N$ words, we permute the sentence using a seeded random function $\mathcal{F}_1$ such that no word can remain in its original position. In total, there exist $(N-1)!$ possible permutations of a given sentence. We randomly sample a single permutation per sentence, to keep the total dataset size similar to the original.
+
+We extend the permutation function $\mathcal{F}_1$ to a function $\mathcal{F}_n$ that preserves $n$-gram information. Specifically, given a sentence $S$ of length $N$ and $n$-gram value $n$, we sample a starting position $i$ for possible contiguous $n$-grams $\in \{0, N-n\}$ and convert the span $S[i,i+n]$ to a single token, to form $\hat{S}$, of length $\hat{N} = N - (n+1)$. We continue this process repeatedly (without using the previously created n-grams) until there exists no starting position for selecting a contiguous n-gram in $\hat{S}$. For example, given a sentence of length $N=6$, $\mathcal{F}_4$ will first convert one span of 4 tokens into a word, to have $\hat{S}$ consisting of three tokens (one conjoined token of 4 contiguous words, and two leftover words).
+Then, the resulting sentence $\hat{S}$ is permuted using $\mathcal{F}_1$. We train RoBERTa models on four permutation variants of BookWiki corpus, \RI, \RII, \RIII, \RIV\ for each $n$-gram value $ \in {\{1,2,3,4\}}$.
+
+We provide pseudo-code for $\mathcal{F}_i$ in Algorithm \autoref{algo:randomize}.
+Following the formulation in \autoref{sec:unli_exp_setup}, we do not explicitly control whether the permuted words maintain any of their original neighbors. Thus, a certain amount of extra n-grams are expected to co-occur, purely as a product of random shuffling. We quantify the amount of such shuffling on a sample of 1 million sentences drawn from the BookWiki random corpus, and present the BLEU-2, BLEU-3 and BLEU-4 scores in \autoref{tab:bleu_score}. We provide a sample snapshot of the generated data in \autoref{tab:sample_permutations}.
+
+\input{tables/mlm/corpus_bleu}
+
+\begin{algorithm}
+\small
+\caption{SentenceRandomizer}
+\begin{algorithmic}[1]
+
+\Procedure{$\mathcal{F}$}{$S,t,n$}       \Comment{Randomize a sentence $S$ with seed $t$ and n grams $n$}
+    \State $W$ = tokenize the words in $S$
+    \State Set the seed to $t$
+    \If{$n > 1$}
+        \While{True}
+        \State $K$ = Sample all possible starting points from $[0, |W| - n]$
+        \State Ignore the starting points in $K$ which overlap with conjoined tokens  \Comment{Conjoined tokens consists of joined unigrams}
+        \If{$|K| \geq 1$}
+        \State Sample one position $p \in K$
+        \State $g$ = Extract the n-gram $W[p:p+n]$
+        \State Delete $W[p+1:p+n]$
+        \State $W[p]$ = Convert $g$ to a conjoined token
+        \Else
+        \State Break from While loop
+        \EndIf
+        \EndWhile
+    \EndIf
+    \While{True}
+        \State $\hat{W}$ = randomly shuffle tokens in $W$
+        \State $r = \sum(\hat{W}[i] = W[i])$ \Comment{Count number of positions where the token remains in its original position}
+        \If{$r = 0$}
+            Break out of While loop
+        \EndIf
+    \EndWhile
+    \State $\hat{S}$ = join the tokens in $\hat{W}$
+    \State Return $\hat{S}$
+\EndProcedure
+
+\end{algorithmic}
+\label{algo:randomize}
+\end{algorithm}
+
+
+
+\subsection{Corpus word order bootstrap resample}
+
+The above permutations preserve higher order distributional information by keeping words from the same sentence together. However, we need a baseline to understand how a model would perform without such co-occurrence information.
+We construct a baseline, \RC{}, that captures word/subword information, without access to co-occurrence statistics.
+To construct \RC, we sample unigrams from BookWiki according to their frequencies, while also treating named entities as unigrams. We leverage Spacy~\citep{spacy}\footnote{\href{https://spacy.io/}{https://spacy.io/}} to extract unigrams and named entities from the corpus, and construct \RC\ by drawing words from this set according to their frequency.
+This allows us to construct \RC\ such that it has exactly the same size as BookWiki but without any distributional (i.e. co-occurrence) information beyond the unigram frequency distribution. Our hypothesis is that any model pre-trained on this data will perform poorly, but it should provide a baseline for the limits on learning language of the inductive bias of the model in isolation.
+
+\subsection{Further baselines}
+
+To investigate what happens if a model has absolutely no notion of word order, we also experiment with pre-training RoBERTa on the original corpus without positional embeddings.
+Concretely, we modify the RoBERTa architecture to remove the positional embeddings from the computation graph, and then proceed to pre-train on the natural order BookWiki corpus.
+We denote this model \NP.
+Finally, we consider a randomly initialized RoBERTa model \RT\, to observe the extent we can learn from each task with only the model's base inductive bias.
+
+\section{Evaluated Models \& Tasks}
+\label{sec:mlm_evaluated_models}
+
+We use the RoBERTa (base) \cite{liu2019b} MLM architecture, due to its relative computational efficiency and good downstream task performance. We expect that other variants of MLMs would provide similar insights, given their similar characteristics.
+
+In all of our experiments, we use the original 16GB BookWiki corpus.\footnote{We release the pre-trained RoBERTa models used in our experiments through the FairSeq repository:  \href{https://github.com/pytorch/fairseq/tree/master/examples/shuffled_word_order}{https://github.com/pytorch/fairseq/tree/master/examples /shuffled\_word\_order}.} We denote the model trained on the original, un-modified BookWiki corpus as \OR{} (for ``natural''). We use two types of word order randomization methods: permuting words at the sentence level, and resampling words at the corpus level.
+
+
+\subsection{Pre-training details}
+
+Each model $\in \{$\OR, \RI, \RII, \RIII, \RIV, \RC, \NP$\}$ is a RoBERTa-base model (12 layers, hidden size of 768, 12 attention heads, 125M parameters), trained for 100k updates using 8k batch-size, 20k warmup steps, and 0.0006 peak learning rate. These are identical hyperparameters to \cite{liu2019b}, except for the number of warmup steps which we changed to 20k for improved training stability. Each model was trained using 64 GPUs for up to 72 hours each. We train three seeds for each data configuration. We use FairSeq~\cite{ott2019fairseq} for the pre-training and fine-tuning experiments.
+We use the Wiki 103 validation and test set to validate and test the array of pre-trained models, as validation on this small dataset is quick, effective, and reproducible for comparison among publicly available datasets (\autoref{fig:mlm_perplexity}). We observe that perplexity monotonically increases from \OR, through \RIV--\RI, to \RC, and finally \NP.
+
+
+\begin{figure}[t]
+    \centering
+    \resizebox{0.48\textwidth}{!}{
+        \includegraphics{figs/mlm/perplexity.pdf}}
+    \caption{Perplexity of various models on Wiki 103 valid and test sets.}
+    \label{fig:mlm_perplexity}
+\end{figure}
+
+
+\subsection{Fine-tuning tasks}
+
+We evaluate downstream performance using the General Language Understanding and Evaluation (GLUE) benchmark, the Paraphrase Adversaries from Word Scrambling (PAWS) dataset, and various parametric and non-parametric tasks (see \autoref{sec:probing_results}).
+
+\xhdr{GLUE} %We use the GLUE \cite{wang2018glue} benchmark tasks to inspect the reliance of word order learning during pre-training. This
+The GLUE \cite{wang-etal-2018-glue} benchmark is a collection of 9 datasets for evaluating natural language understanding systems, of which we use Corpus of Linguistic Acceptability \cite[CoLA,][]{cola_warstadt2019neural}, Stanford Sentiment Treebank \cite[SST,][]{sst2_socher2013recursive}, Microsoft Research Paragraph Corpus \cite[MRPC,][]{mrpc_dolan2005automatically}, Quora Question Pairs (QQP)\footnote{\href{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}}, Multi-Genre NLI \cite[MNLI,][]{williams-etal-2018-broad}, Question NLI \cite[QNLI,][]{rajpurkar-etal-2016-squad, qnli_2_demszky2018transforming}, Recognizing Textual Entailment \cite[RTE,][]{rte1_dagan2005pascal, rte2_haim2006second, rte3_giampiccolo2007third, rte5_bentivogli2009fifth}.
+\citet{pham2020} show the word order insensitivity of several GLUE tasks (QQP, SST-2), evaluated on public regularly pre-trained checkpoints.
+
+\xhdr{PAWS} The PAWS task \cite{zhang-etal-2019-paws} consists of predicting whether a given pair of sentences are paraphrases. This dataset contains both paraphrase and non-paraphrase pairs with high lexical overlap, which are generated by controlled word swapping and back translation. Since even a small word swap and perturbation can drastically modify the meaning of the sentence, we hypothesize the randomized pre-trained models will struggle to attain a high performance on PAWS.
+
+\xhdr{Fine-tuning details} We use the same fine-tuning methodology used by \citet{liu2019b}, where we run hyperparameter search over the learning rates $\{1 \times 10^{-5}, 2 \times 10^{-5}, 3 \times 10^{-5}\}$ and batch sizes $\{16, 32\}$ for each model.
+For the best hyperparam configurations of each model, we fine-tune with 5 different seeds and report the mean and standard deviation for each setting. % (\autoref{table:glue_mean}).
+\NP\ is fine-tuned without positional embeddings, matching the way it was pre-trained.
+
+\section{Results}
+\label{sec:mlm_results}
+
+\subsection{Downstream task results}
+\label{sec:mlm_downstream_results}
+
+
+In this section, we present the downstream task performance of the models defined in \autoref{sec:mlm_experimental_setup}. For evaluation, we report Matthews correlation for CoLA and accuracy for all other tasks.
+
+\subsubsection{Word order permuted pre-training}
+\label{sec:mlm_glue_results}
+
+\input{tables/mlm/glue_with_std}
+
+\begin{figure*}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \includegraphics{figs/mlm/finetune_rand.pdf}}
+    \caption{GLUE \& PAWS task dev performance when finetuned on naturally (blue) and randomly ordered (orange) text, respectively, using pre-trained RoBERTa (base) models trained on different versions of BookWiki corpus.}
+    \label{fig:mlm_word_order_glue}
+\end{figure*}
+
+In our first set of experiments, we finetune the pre-trained models
+%\OR, \RI, \RII, \RIII, \RIV\ and \RC\
+on the GLUE and PAWS tasks.
+We report the results in \autoref{table:glue_mean}.\footnote{The \OR\ results are not directly comparable with that of publicly released \texttt{roberta-base} model by \citet{liu2019b}, as that uses the significantly larger 160GB corpus, and is trained for 500K updates. For computational reasons, we restrict our experiments to the 16GB BookWiki corpus and 100K updates, mirroring the RoBERTa ablations.}
+First, we observe that the model without access to distributional or word order information, \RC\ (unigram) performs much worse than \OR\ overall:
+\RC\ is $18$ points worse than \OR\ on average across the accuracy-based tasks in \autoref{table:glue_mean} and has essentially no correlation with human judgments on CoLA. \RC\, \NP\ and \RT\ perform comparably on most of the tasks, while achieving surprisingly high scores in QQP and SST-2. However, all three models perform significantly worse on GLUE and PAWS, compared to \OR\ (\autoref{table:glue_mean}, bottom half).
+\RC\ reaches up to $71.9$ on MNLI - possibly due to the fact that \RC\ has access to (bags of) words and some phrases (from NER) is beneficial for MNLI. For the majority of tasks, the difference between \NP\ and \RT\ is small - a pure bag of words model performs comparably to a randomly initialized model.
+
+Next, we observe a significant improvement on all tasks when we give models access to sentence-level distributional information during pre-training.
+\RI, the model pre-trained on completely shuffled sentences, is on average only $3.3$ points lower than \OR\ on the accuracy-based tasks,
+and within $0.3$ points of \OR\ on QQP.
+Even on PAWS, which was designed to require knowledge of word order, \RI\ is within $5$ points of \OR.
+Randomizing $n$-grams instead of words during pre-training results in a (mostly) smooth increase on these tasks: \RIV, the model pre-trained on shuffled $4$-grams, trails \OR\ by only $1.3$ points on average, and even comes within $0.2$ points of \OR\ on PAWS.
+%Compared to \citet{pham2020} results, our observations on the gap between \OR and shuffled pre-train models to be much closer than their observations.
+We observe a somewhat different pattern on CoLA, where \RII\ does almost as well as \OR\ and outperforms \RIII\ and \RIV, though we also observe very high variance across random seeds for this task.
+Crucially, we observe that \RI\ outperforms \NP\ by a large margin. This shows that positional embeddings are critical for learning, even when the word orders themselves are not natural. Recall, \NP\ is fed natural sentences as \OR\, while not having the ability to learn positional embeddings. To further quantify the effect of positional embeddings, we also investigated the effect of shuffling the entire context window, to keep the co-occurrence information same as \NP\ in \autoref{sec:mlm_ablations}. We observed this model to be worse than \RI\, but significantly better than \NP\, to support the claim about the importance of positional embeddings while training.
+
+Overall, these results confirm our hypothesis that RoBERTa's strong performance on downstream tasks can be explained for a large part by the distributional prior.
+
+\subsubsection{Word order permuted fine-tuning}
+
+There are two possible explanations for the results in \autoref{sec:mlm_glue_results}: either the tasks do not need word order information to be solved, or any necessary word order information can be acquired during fine-tuning.
+To examine this question, we permute the word order during fine-tuning as well.
+%A natural question arises following the results from the previous section: does pre-training capture most of the word order information, or does finetuning on the downstream task contribute more to a model's knowledge of word order? To disentangle the cause and effect, we use our set of models to finetune on a randomized version of the downstream tasks.
+%TODO: Do this at the sentence level or be MUCH more explicit that this is NOT at the sentence level:
+Concretely, for each task, we construct a unigram order-randomized version of each example in the fine-tuning training set using $\mathcal{F}_1$. We then fine-tune our pre-trained models on this shuffled data and evaluate task performance. For all experiments, we evaluate and perform early stopping on the original, natural word order dev set, in order to conduct a fair evaluation on the exact same optimization setup for all models.
+%
+
+Our results in \autoref{fig:mlm_word_order_glue} provide some evidence for both hypotheses.
+%provide some evidence for both hypotheses, but primarily show that shuffled models \emph{are} learning to use word order-related information during fine-tuning.
+On QQP and QNLI, accuracy decreases only slightly for models fine-tuned on shuffled data. %, suggesting that word order is not very important for these tasks.
+Models can also achieve above $80\%$ accuracy on MNLI, SST-2, and MRPC when fine-tuned on shuffled data,
+suggesting that purely lexical information is quite useful on its own.
+% \footnote{
+% This finding is compatible with the observation of \citet{gupta-etal-2021-bert} and \citet{sinha2020b} who train on a randomized training corpus for MRPC, QQP, SST-2 and MNLI.}
+
+On the other hand, for all datasets besides QQP and QNLI, we see noticeable drops in accuracy when fine-tuning on shuffled data and testing on normal order, both for \OR\ and for shuffled models \RI\ through \RIV.
+This suggests both that word order information is useful for these tasks, and that shuffled models must be learning to use word order information during fine-tuning.\footnote{We perform additional experiments on how the model representations change during fine-tuning for shuffled training using Risannen Data Analysis in \autoref{sec:mlm_rda_analysis}.}
+Having word order during fine-tuning is especially important for achieving high accuracy on CoLA, RTE (cf. \citealt{pham2020}), as well as PAWS,
+suggesting that these tasks are the most word order reliant. Recent research \cite{yu-ettinger-2021-interplay} raised some questions about potential artefacts inflating performance on PAWS: their swapping-distance cue of appears consistent both with our finding of high PAWS performance for n-gram shuffled models in \autoref{table:glue_mean}, and with our PAWS results in \autoref{fig:mlm_word_order_glue}, which suggests that PAWS performance does in fact rely to some extent on natural word order  at the fine-tuning stage.
+
+Finally, for CoLA, MRPC, and RTE, performance is higher after fine-tuning on shuffled data for \RI\ than \OR.
+We hypothesize that \OR\ represents shuffled and non-shuffled sentences very differently, resulting in a domain mismatch problem when fine-tuning on shuffled data but evaluating on non-shuffled data.\footnote{We further study the domain mismatch problem by evaluating on shuffled data \textit{after} fine-tuning on the shuffled data for models in \autoref{app:rand_eval}. We observe that models improves their scores on evaluation on shuffled data when the training data source is changed from natural to shuffled - highlighting domain match effect.} Since \RI\ never learns to be sensitive to word order during pre-training or fine-tuning, it does not suffer from that issue. Our results in this section also highlights the issues with these datasets, concurrent to the findings that many GLUE tasks does not need sophisticated linguistic knowledge to solve, as models typically tend to exploit the statistical artefacts and spurious correlations during fine-tuning (cf. \citealt{gururangan-etal-2018-annotation, poliak-etal-2018-hypothesis,tsuchiya-2018-performance,mccoy-etal-2019-right}). However, our results overwhelmingly support the fact that word order does not matter during pre-training, if the model has the opportunity to learn the necessary information about word order during fine-tuning.
+
+\subsection{Probing results}
+\label{sec:mlm_probing_results}
+
+%Downstream tasks paint only a partial picture of the information contained in the pre-trained representation.
+To investigate how much syntactic information is contained in the MLM representations, we evaluate several probing tasks on our trained models. We consider two classes of probes: \textit{parametric} probes, which make use of learnable parameters, and \textit{non-parametric} probes, which directly examine the language model's predictions.
+
+\subsubsection{Parametric Probing}
+\label{sec:mlm_param_probing}
+
+To probe our models for syntactic, semantic and other linguistic properties, we investigate dependency parsing using Pareto probing~\cite{pimentel-etal-2020-pareto} and the probing tasks from \cite{conneau-etal-2018-cram} in SentEval~\cite{conneau-kiela-2018-senteval}.
+
+\citet{pimentel-etal-2020-pareto} proposed a framework based on Pareto optimality to probe for syntactic information in contextual representations. They suggest that an optimal probe should balance optimal performance on the probing task with the complexity of the probe. Following their setup, we use the ``difficult'' probe: dependency parsing (DEP). We also investigate the ``easy'' probes, dependency arc labeling (DAL) and POS tag prediction (POS), results are reported \autoref{sec:mlm_pareto_probes}.
+We probe with Linear and MLP probes, and inspect the task accuracy in terms of Unlabeled Attachment Score (UAS).
+The dependency parsing probe used in \citet{pimentel-etal-2020-pareto} builds on the Biaffine Dependency Parser~\citep{dozat2016deep}, but with simple MLPs on top of the Transformer representations.%
+%the complexity of the probe reduced by using only simple MLPs on top of the Transformer representations.
+%removing the LSTM layer to restrict access to context. This probe consists of two identical MLPs - one to process the heads of the dependencies, and another to process the tails. The final biaffine transformation is simply a learned mapping function among output of the MLPs which is normalized to obtain the probabilities.
+\footnote{We experimented with a much stronger, state-of-the-art Second order Tree CRF Neural Dependency Parser \cite{zhang-etal-2020-efficient}, but did not observe any difference in UAS with different pre-trained models (see \autoref{sec:mlm_sota_dep})}
+
+\xhdr{Training setup} Similar to the setup by \citet{pimentel-etal-2020-pareto}, we run 50 random hyperparameter searches on both MLP and Linear probes by uniformly sampling from the number of layers (0-5), dropout (0-0.5), log-uniform hidden size $[2^{5}, 2^{10}]$. We triple this experiment size by evaluating on three pre-trained models of different seeds for each model configuration.
+We consider \citeauthor{pimentel-etal-2020-pareto}'s English dataset, derived from Universal Dependencies EWT (UD EWT) \cite{bies2012english, silveira2014gold} which contains 12,543 training sentences.
+%Since \citet{pimentel-etal-2020-pareto} explored multi-lingual corpora, they only experimented with a single English dataset, derived from Universal Dependencies EWT (UD EWT) \cite{bies2012english, silveira2014gold} containing 12,543 training sentences.
+Additionally, we experiment on the Penn Treebank dataset (PTB), which contains 39,832 training sentences.\footnote{PTB data \citep{kitaev-etal-2019-multilingual} is used from \href{https://github.com/nikitakit/self-attentive-parser/tree/master/data}{github.com/nikitakit/self-attentive-parser/tree/master/data}.}
+%Since \citet{pimentel-etal-2020-pareto} explored multi-lingual corpora, they only experimented with a single English dataset, derived from Universal Dependencies EWT (UD EWT) \cite{bies2012english, silveira2014gold} containing 12,543 training sentences. Additionally, we experiment on the Penn Treebank dataset (PTB), which contains 39,832 training sentences.\footnote{PTB data \citep{kitaev-etal-2019-multilingual} is used from \href{https://github.com/nikitakit/self-attentive-parser/tree/master/data}{github.com/nikitakit/self-attentive-parser/tree/master/data}.}
+We report the mean test accuracy over three seeds for the best dev set accuracy for each task.\footnote{\citet{pimentel-etal-2020-pareto} propose computing the \textit{Pareto Hypervolume} over all hyperparameters in each task. We did not observe a significant difference in the hypervolumes for the models, as reported in \autoref{app:pareto_probes}.}
+
+\input{tables/mlm/pareto}
+
+\input{tables/mlm/senteval}
+
+\xhdr{Results} We observe that
+the UAS scores follow a similar linear trend as the fine-tuning results in that \RI $\approx$ \RC < \RII < \RIII < \RIV < \OR\ (\autoref{tab:pareto_dependency}).
+Surprisingly, \RC\ probing scores seem to be somewhat better than \RI\ (though with large overlap in their standard deviations), even though \RC\ cannot learn information related to either word order or co-occurrence patterns.
+The performance gap appears to be task- and probe specific.
+%The gap in UAS between \RI and \OR\ for UD EWT is higher than that of the counterpart in PTB ($11.15$ vs. $7.56$). This trend is also mildly reflected in the case of the Linear probe ($10.02$ vs. $9.27$ UD EWT).
+We observe a low performance gap in several scenarios, the lowest being between \OR\ vs. \RIII/\RIV, for PTB using the both MLP and Linear probes.
+%These results are an indicator of possible deficiencies in the method of testing representations for syntactic information.
+
+\subsubsection{SentEval Probes}
+
+We also investigate the suite of 10 probing tasks~\cite{conneau-etal-2018-cram} available in the SentEval toolkit~\cite{conneau-kiela-2018-senteval}. This suite contains a range of semantic, syntactic and surface level tasks. \citet{jawahar2019a} utilize this set of probing tasks to arrive at the conclusion that %that BERT-based models naturally learn syntax -
+``\textit{BERT embeds a rich hierarchy of linguistic signals: surface information at the bottom, syntactic information in the middle, semantic information at the top}''. We re-examine this hypothesis by using the same probing method and comparing against models trained with random word order.
+
+\xhdr{Training setup} We run the probes on the final layer of each of our pre-trained models for three seeds, while keeping the encoder frozen. % It is important to note that SentEval probe evaluates on frozen encoder representations.
+SentEval %obtains the sentence representations from the model under investigation, and then
+trains %linear and two-layer MLP
+probes on top of fixed representations individually for each task. We follow the recommended setup and run grid search over the following hyperparams: number of hidden layer dimensions ($[0,50,100,200]$), dropout ($[0, 0.1, 0.2]$), 4 epochs, 64 batch size.
+%For all hyperparameters,
+We select the best performance based on the dev set, and report the test set accuracy.
+
+\xhdr{Results} We provide the results in \autoref{table:senteval}. The \OR\ pre-trained model scores better than the unnatural word order models for only one out of five semantic tasks and in none of the lexical tasks. However, \OR\ does score higher for two out of three syntactic tasks. Even for these two syntactic tasks, the gap among \RC\ and \OR\ is much higher than \RI\ and \OR. These results show that while natural word order is useful for at least some probing tasks, the distributional prior of randomized models alone is enough to achieve a reasonably high accuracy on syntax sensitive probing.
+
+\subsubsection{Non-Parametric Probing}
+\label{sec:non_param_probe}
+
+
+How to probe effectively with parametric probes is a matter of much recent debate~\citep{hall-maudslay-etal-2020-tale, belinkov2021probing}. From our results so far, it is unclear whether parametric probing meaningfully distinguishes models trained with corrupted word order from those trained with normal orders. Thus, we also investigate non-parametric probes~\cite{linzen-etal-2016-assessing,marvin-linzen-2018-targeted,gulordava2018} using the formulation of \citet{goldberga} and \citet{wolf2019}.% Since these probes do not contain any learnable parameters, they are called ``non-parametric''.
+
+We consider a set of non-parametric probes that use a range of sentences varying in their linguistic properties. For each, the objective is for a pre-trained model to provide higher probability to a grammatically correct word than to an incorrect one.
+Since both the correct and incorrect options occupy the same sentential position, we call them ``focus words''. \citet{linzen-etal-2016-assessing} use sentences from Wikipedia containing present-tense verbs, and compare the probability assigned by the encoder to plural vs. singular forms of the verb; they focus on sentences containing at least one noun between the verb and its subject, known as ``agreement attractors.'' \citet{gulordava2018} instead replace focus words with random substitutes from the same part-of-speech and inflection. Finally, \citet{marvin-linzen-2018-targeted} construct minimal pairs of grammatical and ungrammatical sentences, and compare the model's probability for the words that differ.
+
+\xhdr{Setup} In our experiments, we mask the focus words in the stimuli and compute the probability of the correct and incorrect token respectively.
+To handle Byte-Pair Encoding (BPE), we use the WordPiece \cite{wu2016googles} tokens prepended with a space. %, as used in RoBERTa to compute the probability of a correct focus word and an incorrect focus word. D: this says the same thing as the first clause of this sentence, removed it
+We observe that the \citet{linzen-etal-2016-assessing} and \citet{gulordava2018} datasets are skewed towards singular focus words, which could disproportionately help weaker models that just happen to assign more probability mass to singular focus words. To counter this, we balance these datasets to have an equal number of singular and plural focus words by upsampling, and report the aggregated and balanced results in \autoref{tab:non_param_comb} (see \autoref{sec:mlm_non_par_probes} for more detailed results). We verify our experiments by using three pre-trained models with different seeds for each model configuration.
+
+
+\xhdr{Results}
+We observe for the \citet{linzen-etal-2016-assessing} and \citet{marvin-linzen-2018-targeted} datasets that the gap between the \OR\ and randomization models is relatively large.
+The \citet{gulordava2018} dataset shows a smaller gap between \OR\ and the randomization models. While some randomization models (e.g., \RII, \RIII, and \RIV) performed quite similarly to \OR\ according to the parametric probes, they all are markedly worse than \OR\ according to the non-parametric ones. This suggests that non-parametric probes identify certain syntax-related modeling failures
+that parametric ones do not.
+
+\input{tables/mlm/non_param_combined}
+
+\section{Analysis}
+\label{sec:mlm_analysis}
+
+
+\subsection{Word-order pre-training ablations}
+\label{sec:mlm_ablations}
+
+\input{tables/mlm/glue_ablations}
+
+\begin{figure}[t]
+    \centering
+    \resizebox{0.7\textwidth}{!}{
+        \includegraphics{figs/mlm/main_result_plot.pdf}}
+    \caption{GLUE results on various model ablations using BookWiki corpus.}
+    \label{fig:mlm_all_glue_plot}
+\end{figure}
+
+We also train further model ablations with low to high distributional priors. Following the construction of the corpus bootstrap resample, we train a model where words are drawn uniformly from BookWiki corpus, thus destroying the natural frequency distribution (\RU). We further study an ablation for a high distributional prior, \RV, where we shuffle words (unigram) in a buffer created with joining multiple sentences such that maximum token length of the buffer is 512. This ablation---which is similar to the paragraph word shuffle condition in \cite{gauthier-levy-2019-linking}---will allow us to study the effect of unigram shuffling in a window larger than the one for \RI. Buffer size is chosen to be 512 because BERT/RoBERTa is typically trained with that maximum sequence length.
+
+We observe dev set results on the GLUE benchmark of these ablations, along with baselines \RC, \RT\ and \NP\ and random shuffles in \autoref{table:glue_ablations} and \autoref{fig:mlm_all_glue_plot}. We observe that \RV\ exhibits worse overall scores than \RI, however it is still significantly better than \NP\ or \RC\ baselines. We observe that destroying the natural frequency distribution of words (\RU) yields comparable or slightly better results compared to random corpus model \RC. This result shows that merely replicating the natural distribution of words without any context is not useful for the model to learn. These results indicate that at least some form of distributional prior is required for MLM-based models to learn a good downstream representation.
+
+\input{tables/mlm/seed_diff}
+
+One might argue that the superior results displayed by the unnatural models is due to the ability of RoBERTa to ``reconstruct'' the natural word order from shuffled sentences. The data generation algorithm, $\mathcal{F}_{i}$ requires a seed $t$ for every sentence. In our experiments, we had set the same seed for every sentence in the corpus to ensure reproducibility. However, it could be problematic if the sentences of the same length are permuted with the same seed, which could be easier for the model to ``reconstruct'' the natural word order to learn the necessary syntax. We tested this hypothesis by constructing a new corpus with different seeds for every sentence in every shard in the corpus (1/5th of BookWiki corpus is typically referred to as a \textit{shard} for computational purposes), to build the model \RI$^{*}$. We observe that there is minimal difference in the raw numbers among \RI\ and \RI$^{*}$ for most of the tasks (\autoref{table:glue_recon}) (with the exception of CoLA which performs similar to \RII\, possibly due to a difference in initialization). This result consequently proves that even with same seed, it is difficult for the model to just reconstruct the unnatural sentences during pre-training.
+
+\subsection{Measuring Relative difference}
+\label{sec:mlm_rd}
+
+In this section, we further measure the difference in downstream task performance reported in \autoref{sec:mlm_glue_results} using as a metric the \textit{relative difference}. Let us denote the downstream task performance as $\mathcal{A}(\mathcal{T} | D)$, where $\mathcal{T}$ is the task and $D$ is the pre-trained model. We primarily aim to evaluate the relative performance gap, i.e. how much the performance differs between our natural and unnatural models. Thus, we define the \textit{Relative Difference} ($\Delta_{\{D\}}(\mathcal{T})$):
+
+\begin{equation}
+ \Delta_{\{D\}}(\mathcal{T}) =  \frac{\mathcal{A}(\mathcal{T} | OR) - \mathcal{A}(\mathcal{T} | D))}{\mathcal{A}(\mathcal{T} | OR) - \mathcal{A}(\mathcal{T} | \emptyset)},
+\end{equation}
+
+where $\mathcal{A}(\mathcal{T} | \emptyset)$ is the random performance on the task $\mathcal{T}$ ($0.33$ for MNLI, $0$ for CoLA, and $0.5$ for rest)
+$\Delta_{\{D\}}(\mathcal{T}) \rightarrow 0$ when the performance of a pre-trained model reaches that of the pre-trained model trained with natural word order.
+
+We observe the relative difference on the tasks in \autoref{tab:glue_delta}. CoLA has the largest $\Delta_{\{D\}}(\mathcal{T})$ among all tasks, suggesting the expected high word order reliance. $\Delta_{\{D\}}(\mathcal{T})$ is lowest for QQP. %, which falls on the opposite end of the spectrum.
+
+\input{tables/mlm/glue_delta}
+
+\subsection{Fine-tuning with randomized data}
+\label{sec:mlm_rand_eval}
+
+\input{tables/mlm/eval_full}
+
+%TODO: rewrite this
+
+We perform additional experiments using the fine-tuned models from \autoref{sec:mlm_glue_results}. Specifically, we construct unigram randomized train and test sets (denoted as \textit{shuffled}) of a subset of tasks to evaluate whether models fine-tuned on natural or unnatural task data (having natural or unnatural pre-training prior) are able to understand unnatural data during testing. In the previous chapter (\autoref{sec:unli_results_accept}), we observed for MNLI there exists at least one permutation for many examples which can be predicted correctly by the model. However, we also observed that every sentence can have many permutations which cannot be predicted correctly as well (\autoref{sec:unli_discussion}). Similarly in this section we construct 100 permutations for each example in the dev set for each task to capture the overall accuracy.
+
+Concretely, we use \OR, \RI\ and \RC\ as our pre-trained representations (trained with natural, unigram sentence shuffle and corpus shuffle data respectively) and evaluate the effect of training and evaluation on natural and unnatural data in \autoref{tab:full_eval}.
+We observe that all models perform poorly on the \textit{shuffled} test set, compared to natural evaluation. However, interestingly, models have a slight advantage with a unigram randomized prior (\RI), with CoLA having the biggest performance gain.  PAWS task suffers the biggest drop in performance (from 94.49 to 62.22) but the lowest gain in \RI, confirming our conclusion from \autoref{sec:mlm_glue_results} that most of the word order information necessary for PAWS is learned from the task itself.
+
+Furthermore, training on shuffled data surprisingly leads to high performance on natural data for \OR\ in case of several tasks, the effect being weakest in case of CoLA and PAWS. This suggests that for tasks other than CoLA and PAWS, spurious correlations are leveraged by the models during fine-tuning (cf. \citealt{gururangan-etal-2018-annotation, poliak-etal-2018-hypothesis,tsuchiya-2018-performance}). We also observe evidence of \textit{domain matching}, where models improve their performance on evaluation on shuffled data when the training data source is changed from natural to shuffled (for \OR, MNLI shuffled evaluation improves from 68.11 to 79.96 just by changing the training corpus from natural to shuffled). We observe this behavior consistently for all tasks with all pre-trained representations.
+
+\subsection{Dependency parsing using Second order Tree CRF Neural Dependency Parser}
+\label{sec:mlm_sota_dep}
+
+\input{tables/mlm/supar}
+
+We also conduct extensive experiments with Second Order Tree CRF Neural Dependency parser from \citet{zhang-etal-2020-efficient}, using their provided codebase.\footnote{\href{https://github.com/yzhangcs/parser}{https://github.com/yzhangcs/parser}} We report the results on UD EWT and PTB corpus in \autoref{tab:dependency_supar}. Strangely enough, we find the gap to be even smaller across the different randomization models, even for some cases the performance on $R_1$ improves over $OR$. We suspect this result is due to two reasons: \textbf{(a)} Due to the presence of the complex Biaffine Dependency parser consisting of multiple LSTMs and individual MLP heads for each dependency arc (left and right), the majority of learning of the task is done by the parser itself; \textbf{(b)} \citet{zhang-etal-2020-efficient} downsample the BERT representation to 100 dimensions which is then combined with the learned LSTM representations, thereby minimizing the impact of the pre-trained representations. Our hypothesis is confirmed by the published results of \citet{zhang-etal-2020-efficient} on the Github repository, which shows a minimal gap between models with or without BERT.
+
+\subsection{Perplexity analysis}
+
+\begin{figure}[t]
+    \centering
+    \resizebox{0.5\textwidth}{!}{
+        \includegraphics{figs/mlm/bpplm.pdf}}
+    \caption{BPPL scores per model per test scenario.}
+    \label{fig:bpplm}
+\end{figure}
+
+We measure perplexity of various pre-trained randomization models on text that is randomized using the same function $\mathcal{F}$. Conventional language models compute the perplexity of a sentence $S$ by using past tokens ($S_{<t} = (w_1, w_2, \ldots, w_{t-1})$) and the application of chain rule ($\sum_{t=1}^{|S|} \log P_{\textit{LM}}(w_t | S_{t-1})$). However, this formulation is not defined for MLM, as a word is predicted using the entire sentence as a context.  Following \citet{salazar2020a}, we measure \textit{Pseudo-Perplexity}, i.e., given a sentence $S$, we compute the log-probability of the missing word in $S$ by iteratively masking out the specific word, and computing the average log-probability per word in $S$:
+
+\begin{equation}
+    \texttt{PLL}(S) = \frac{1}{|S|} \sum_{w \in S} \log P_{\texttt{MLM}} (w | S_{\setminus w}; \theta)
+\end{equation}
+
+We bootstrap the \texttt{PLL} score of a test corpus $T$ by drawing 100 samples five times with replacement. We also similarly compute the bootstrap perplexity  following \citeauthor{salazar2020a}:
+
+\begin{equation}
+    \texttt{BPLL}_{T} = \text{exp}( - \frac{1}{N} \sum_{S \in W} \texttt{PLL}(S)),
+\end{equation}
+
+where $W$ is the combined bootstrap sample containing $N$ sentences drawn with replacement from $T$. We compute this score on 6 pre-trained models, over four randomization schemes on the bootstrapped sample $W$ (i.e., we use the same n-gram randomization function $\mathcal{F}_i$). Thus, we obtain a 5x6 matrix of $\texttt{BPLL}$ scores, which we plot in \autoref{fig:bpplm}.
+
+We observe that the pre-trained model \OR\ has the lowest perplexity on the sentences with natural word order. Pre-trained models with random word order exhibit significantly higher perplexity than the normal word order sentences (top row). With the exception of \RI, the models pre-trained on randomized data (\RII, \RIII\ and \RIV) all display the lowest perplexity for their respective $n=2,3,4$ randomizations. %The unigram pre-trained model is a notable exception, which does not yield the lowest perplexity for $n=1$ randomization.
+These results indicate that the models  retain and detect the specific word order for which they were trained.
+
+\subsection{The usefulness of word order}
+\label{sec:mlm_rda_analysis}
+
+\begin{figure*}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \includegraphics{figs/mlm/rda_mdl_ep_3.pdf}}
+    \caption{Rissanen Data Analysis \cite{perez2021} on the GLUE benchmark and PAWS datasets. The lower minimum description length (MDL, measured in kilobits), the better the learning ability of the model.}
+    \label{fig:mlm_rda}
+\end{figure*}
+
+
+The results in \autoref{sec:mlm_glue_results} suggest that, with proper fine-tuning, an unnaturally trained model can reach a level of performance comparable to that of a naturally pre-trained model. However, we want to understand whether natural word order pre-training offers any advantage during the early stages of fine-tuning. Towards that end, we turn to compute the Minimum Description Length \cite[MDL; ][]{rissanen1984universal}. MDL is designed to characterize the complexity of data as the length of the shortest program required to generate it. Thus, the length of the minimum description (in bits) should provide a fair estimate of how much word order is useful for fine-tuning in a few-shot setting. Specifically, we leverage the Rissanen Data Analysis (RDA) framework from \citet{perez2021} to evaluate the MDL of pre-trained models on our set of downstream tasks. Under mild assumptions, if a pre-trained model $\theta_1$ is useful for solving a particular task $T$ over $\theta_2$, then the MDL in bits obtained by using $\theta_1$ should be shorter than $\theta_2$.
+We follow the experimental setup of \citeauthor{perez2021} to compute the MDL on several tasks using $\theta$ = \{\OR,\RI,\RII,\RIII,\RIV\}, over three seeds and on three epochs of training. Concretely, RDA involves sampling 9 blocks of data from the dataset at random, where the size of each block is increased monotonically, training on 8 blocks while evaluating the model's loss (or \textit{codelength}) on the ninth. The minimum number of data samples in the smallest block is set at 64, while the largest number of data samples used in the last block is 10,000.
+
+We observe that the value of MDL is consistently lowest for naturally pre-trained data (\autoref{fig:mlm_rda}). For purportedly word order reliant datasets such as RTE, CoLA and PAWS, the gap between the MDL scores among the natural and unnatural models is high. PAWS, specifically, has the largest advantage in the beginning of optimization, however with more fine-tuning, the model re-learns correct word order (\autoref{sec:mlm_glue_results}). The present analyses, when taken in conjunction with our main results in \autoref{sec:mlm_glue_results}, suggest that fine-tuning on large training datasets with complex classifiers in the pursuit of state-of-the-art results has mostly nullified the impact of word order in the pre-trained representations. Few shot \cite{bansal-etal-2020-learning} and few sample \cite{zhang2021a} learning and evaluation could potentially require more word order signal, thereby encouraging the model to leverage its own learned syntax better.
+
+\subsection{At what point do models learn word order during pre-training?}
+% KS: I kind of moved this to appendix as I think the reasoning/ explanation needs to be fleshed out more.
+
+Results from \autoref{sec:mlm_glue_results} beg the question: when, if at all, during pre-training does a model learn the natural word order? We aim to answer that question by comparing downstream task performance of RoBERTa base on intermediate checkpoints with that of the random word order pretrained models. The idea is to find the point during pre-training on natural corpus at which the model exceeds the task performance of the random pre-training model.
+
+
+\begin{figure}[t]
+    \centering
+    \resizebox{0.7\textwidth}{!}{
+        \includegraphics{figs/mlm/glue_progression.pdf}}
+    \caption{Comparison among GLUE task performance from different steps in pre-training of RoBERTa on BookWiki Corpus.}
+    \label{fig:mlm_glue_progression}
+\end{figure}
+
+Performance on all tasks (\autoref{fig:mlm_glue_progression}) increases rapidly during the first 20-25 epochs of pre-training. For some tasks, the word order information only helps after 30-50 pre-training epochs.
+
+\subsection{More results from Syntactic Probes}
+\label{sec:mlm_pareto_probes}
+
+\input{tables/mlm/pos_tagging}
+
+\input{tables/mlm/dep_label}
+
+\input{tables/mlm/pareto_hypervolume}
+
+%As suggested in \citet{pimentel-etal-2020-pareto}, w
+We computed the Pareto Hypervolume on the dependency parsing task \citep{pimentel-etal-2020-pareto}. The Pareto Hypervolume is computed as the Area Under Curve (AUC) score over all hyperparameter runs, where the models are arranged based on their complexity. We observe minimal differences in the Pareto Hypervolumes (\autoref{tab:pareto_hypervolume}) among \OR\ and the randomization models for both datasets.
+
+We also investigated two ``easy'' tasks, Part-of-Speech tagging (POS) and Dependency Arc Labeling (DAL) from the Pareto Probing framework.
+For POS (\autoref{tab:pareto_pos_tag}) and DAL (\autoref{tab:pareto_dep_label}), since these tasks are simpler than DEP, the gap between \OR\ and unnaturally pre-trained models reduces even more drastically. The gap between \OR\ and \RI\ reduces to just 3.5 points on average for PTB in both POS and DAL.
+
+\subsection{Non parametric probes}
+\label{sec:mlm_non_par_probes}
+
+\begin{figure}[h]
+    \centering
+    \resizebox{0.8\linewidth}{!}{
+        \includegraphics{figs/mlm/non_param_marv_diff.pdf}}
+    \caption{The difference in word probabilities for stimuli in \citet{marvin-linzen-2018-targeted}: Simple Verb Agreement (SVA), In a sentential complement (SCM), Short VP Coordination (SVC), Long VP Coordination (LVC), Across a prepositional phrase (APP), Across a subject relative clause (ASR), Across an object relative clause (AOR), Across an object relative (no \textit{that}) (AOR-T),
+    In an object relative clause (IOR),
+    In an object relative clause (no \textit{that}) (IOR-T),
+    Simple Reflexive (SRX), In a sentential complement (ISC),
+    Across a relative clause (ARC), Simple NPI (SNP). }
+    \label{fig:mlm_marv_diff}
+\end{figure}
+
+
+\xhdr{Probability difference} In the original formulation \citep{goldberga, wolf2019}, the effectiveness of each stimulus is determined by the accuracy metric, computed as the number of times the probability of the correct focus word is greater than that of the incorrect word ($P(\textrm{good}) > P(\textrm{bad})$). We observed that this metric might not be reliable per se, since the probabilities may themselves be extremely low for all tokens, even when focus word probability decreases drastically from \OR\ to \RC.
+Thus, we also report the mean difference of probabilities, $(\frac{1}{N}\sum_{i}^N P(\textrm{good}_i) - P(\textrm{bad}_i))$, scaled up by a factor of 100 for ease of observation, in \autoref{fig:gul_diff}, \autoref{fig:linzen_diff} and \autoref{fig:marv_diff}.
+We observe the highest difference between probabilities of the correct and incorrect focus words for the model pretrained on the natural word order (\OR). Moreover, with each step from \RI\ to \RIV, the difference between probablities of correct and incorrect focus words increases, albeit marginally, showing that pre-trained models with fewer n-gram words perturbed capture more word order information. \RC, the model with the distributional prior ablated, performs the worst, as expected.
+
+\input{tables/mlm/linzen_balanced}
+
+\input{tables/mlm/gulordava_balanced}
+
+\xhdr{Accuracy comparison}
+We provide the accuracy as measured by \citet{goldberga, wolf2019} on the probing stimuli in \autoref{tab:linzen_full_balanced}, \autoref{tab:gul_full_balanced} and \autoref{tab:marvin_full_balanced}. We also highlight the difference in probability ($P(\textrm{good}) - P(\textrm{bad})$) in the table to provide a more accurate picture. All experiments were conducted on three pre-trained seeds for each model in our set of models. However, the low token probabilities in \RC\ tend to present unreliable scores. For example, in the case of \citet{gulordava2018} stimuli, unnatural models provide better scores compared to the natural model. We also observe for the \citet{linzen-etal-2016-assessing} stimuli that the results on model condition 4 (number of attractors) are surprisingly high for \RC\, whereas the individual token probabilities are lowest. We believe these inconsistencies stem from extremely low token probabilities themselves.  %\citet{gulordava2018} typically test on ``\textit{Colorless green ideas}" words, where the probability of a random word with the same POS tag is evaluated for the correct position.
+
+\begin{figure}[]
+    \centering
+    \resizebox{0.7\linewidth}{!}{
+        \includegraphics{figs/mlm/non_param_lgd_diff.pdf}}
+    \caption{\citet{linzen-etal-2016-assessing}}
+    \label{fig:mlm_linzen_diff}
+\end{figure}
+
+
+\begin{figure}[h]
+    \centering
+    \resizebox{0.7\linewidth}{!}{
+        \includegraphics{figs/mlm/non_param_gul_diff.pdf}}
+    \caption{\citet{gulordava2018}}
+    \label{fig:mlm_gul_diff}
+\end{figure}
+
+\xhdr{Balancing datasets on inflection by upsampling}
+The stimuli datasets of \citet{linzen-etal-2016-assessing} and \citet{gulordava2018} turned out to be heavily skewed towards words where singular was the correct inflection (as opposed to plural). This dataset imbalance caused the weak models (such as \RC) to have surprisingly high scores - the weak models were consistently providing higher probability for the singular inflection (\autoref{tab:linzen_full_unbalanced}). We upsample for both datasets, balancing the frequency of correct singular and plural inflections. We compute the upsampling number to the next multiple of 100 of the count of original singular inflections. For example, in condition 4 of \citet{linzen-etal-2016-assessing} dataset, we upsample both S and P to 300 rows each. This type of balancing via upsampling largely alleviated the inconsistencies we observed, and might prove to be useful when evaluating other models on these datasets in future.
+
+\input{tables/mlm/marvin_linzen_balanced}
+
+\input{tables/mlm/linzen}
+
+% \input{tables/glue}
+
+\input{tables/mlm/sample_permutations}
+
+\input{tables/mlm/glue_hyperparam_lr}
+
+
 
 \section{Related Work}
-\label{sec:org0d2da32}
+\label{sec:mlm_related_work}
+
+
+\subsection{Sensitivity to word order in NLU}
+
+Information order has been a topic of research in computational linguistics since \cite{barzilay-lee-2004-catching} introduced the task of ranking sentence orders
+%text-ordering task: algorithm has to select a maximally coherent sentence order from a set of candidate permutations
+as an evaluation for language generation quality, an approach which was subsequently also used to evaluate readability and dialogue coherence \citep{barzilay-lapata-2008-modeling, laban-etal-2021-transformer}.
+
+More recently, several research groups have investigated information order for words rather than sentences as an evaluation of model humanlikeness. %\citet{sinha2020b}, \citet{pham2020}, and \citet{gupta-etal-2021-bert}.
+\citet{sinha2020b} investigate the task of natural language inference (NLI) and find high accuracy on permuted examples for different Transformer and pre-Transformer era models, across English and Chinese datasets \cite{hu-etal-2020-ocnli}.
+\citet{gupta-etal-2021-bert} use targeted permutations on RoBERTa-based models and show word order insensitivity across natural language inference (MNLI), paraphrase detection (QQP) and sentiment analysis tasks (SST-2).
+%RoBERTa has been found to assign high confidence to targeted permutations, even with drastic changes in word order.
+\citet{pham2020} show insensitivity on a larger set of tasks, including the entire GLUE benchmark, and find that certain tasks in GLUE, such as CoLA and RTE are more sensitive to permutations than others.
+\cite{ettinger-2020-whatbertisnot} recently observed that BERT accuracy decreases for some word order perturbed examples, but not for others.
+In all these prior works, models were given access to normal word order at (pre-)training time, but not at fine-tuning or test time. It was not clear whether the model acquires enough information about word order during the fine-tuning step, or whether it is ingrained in the pre-trained model.
+% This could mean that models' achieve high accuracy on test datasets because the information about word order learned from standard pre-training outweighs what is learned from fine-tuning on permuted data.
+In this work, we take these investigations a step further: we show that the word order information needed for downstream tasks does not need to be provided to the model during pre-training. Since models can learn whatever word order information they do need largely from fine-tuning alone, this likely suggests that our downstream tasks don't actually require much complex word order information in the first place (cf.,\ \citealt{glavas-vulic-2021-supervised}).
+% and show that training on word order permuted sentences only degrades test set accuracy somewhat - some important word order information can be learned solely from normal-order fine-tuning (cf.\ \citealt{howard-ruder-2018-universal}).
+
+\subsection{Randomization ablations}
+
+Random controls have been explored in a variety of prior work.
+\citet{wietingkiela2019} show that random sentence encoders are surprisingly powerful baselines.  \citet{gauthier-levy-2019-linking} use random sentence reordering to label some tasks as ``syntax-light'' making them more easily decodeable from images of the brain.
+\citet{shen2020a} show that entire layers of MLM transformers can be randomly initialized and kept frozen throughout training without detrimental effect and that those layers perform better on some probing tasks than their frozen counterparts.
+Models have been found to be surprisingly robust to randomizing or cutting syntactic tree structures they were hoped to rely on~\cite{scheible2013cutting,williams2018latent}, and randomly permuting attention weights often induces only minimal changes in output \cite{jain-wallace-2019-attention}. In computer vision, it is well known that certain architectures constitute good ``deep image priors'' for fine-tuning~\cite{ulyanov2018deep} or pruning~\cite{frankle2020training}, and that even randomly wired networks can perform well at image recognition~\cite{xie2019exploring}. Here, we explore randomizing the data, rather than the model, to assess whether certain claims about which phenomena the model has learned are established in fact.
+
+% Commenting this section out as per suggestion by Dieuwke
+
+\subsection{Synthetic pre-training}
+
+\citet{kataoka2021} found that pre-training on synthetically generated fractals for image classification is a very strong prior for subsequent fine-tuning on real image data. In language modeling, \citet{papadimitriou-jurafsky-2020-learning} train LSTMs \citep{hochreiter1997long} on non-linguistic data with latent structure such as MIDI music or Java code provides better test performance on downstream tasks than a randomly initialized model. They observe that even when there is no vocabulary overlap among source and target languages, LSTM language models leverage the latent hierarchical structure of the input to obtain better performance than a random, Zipfian corpus of the same vocabulary.
+
+
+\subsection{On the utility of probing tasks}
+
+Many recent papers provide compelling evidence that BERT contains a surprising amount of syntax, semantics, and world knowledge \cite{giulianelli-etal-2018-hood,rogers-etal-2020-primer,lakretz-etal-2019-emergence,jumelet-etal-2019-analysing,jumelet-etal-2021-language}. Many of these works involve diagnostic classifiers \cite{hupkes2018visualisation} or \textit{parametric} probes, i.e.\ a function atop learned representations that is optimized to find linguistic information. How well the probe learns a given signal can be seen as a proxy for linguistic knowledge encoded in the representations. % \citep{hupkes2018visualisation}
+However, the community is divided on many aspects of probing \citep{belinkov2021probing} including how complex probes should be.
+Many prefer \textit{simple} linear probes over the complex ones \cite{alain2016understanding, hewitt2019structural, hall-maudslay-etal-2020-tale}. However, complex probes with strong representational capacity are able to extract the most information from representations \citep{voita-titov-2020-information, pimentel-etal-2020-information, hall-maudslay-etal-2020-tale}.
+% On the one hand, proponents of \textit{simple} linear probes argue that having explicit, focused classifiers should provide better signal as the function itself is too weak on its own \cite{alain2016understanding, hewitt2019structural, hall-maudslay-etal-2020-tale}. On the other hand, proponents of \textit{complex} probes claim that having strong representational capacity of the probe is actually helpful for extracting the most information from a representation \cite{pimentel2020}. There are also strong calls from the community to use information theoretic approaches instead of accuracy \citep{voita-titov-2020-information, pimentel2020}, as well  harder \textit{tasks} for probing \cite{hall-maudslay-etal-2020-tale, pimentel-etal-2020-pareto}.
+In this chapter, we follow \citet{pimentel-etal-2020-pareto} and use \textit{both} simple (linear) and complex (non-linear) models, as well as ``complex'' tasks (dependency parsing).
+As an alternative to parametric probes,  stimulus-based \textit{non-parametric} probing \cite{linzen-etal-2016-assessing, jumelet-hupkes-2018-language, marvin-linzen-2018-targeted, gulordava-etal-2018-colorless, warstadt-etal-2019-investigating, warstadt-etal-2020-blimp-benchmark, warstadt-etal-2020-learning, ettinger-2020-whatbertisnot,lakretz2021mechanisms} has been used to show that even without a learned probe, BERT can predict syntactic properties with high confidence~\cite{goldberga, wolf2019}.
+%Stimulus-based probing is also sometimes called \textit{non-parametric}, since no additional parameters need to be learned to probe with this method.
+We use this class of non-parametric probes to investigate RoBERTa's ability to learn word order during pre-training.
+
+
+
 \section{Discussion}
-\label{sec:org2941af9}
+\label{sec:mlm_discussion}
+
+The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, many linguistic constructs are undefined. % (e.g.\ dependency or constituency parses would no longer be syntactic trees, what would sentences be but mere lists of words).
+Our fine-tuning results in \autoref{sec:mlm_glue_results} and parametric probing results in \autoref{sec:mlm_param_probing}, however, suggests that MLMs do not need to rely much on word order to achieve high accuracy, bringing into question previous claims that they learn a ``classical NLP pipeline.''
+
+The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, most linguistic constructs are undefined (e.g.\ dependency or constituency parses would no longer be syntactic trees, what would sentences be but mere lists of words).
+
+One might ask, though, whether an NLP pipeline would really need natural word order at all: can transformers not simply learn what the correct word order is from unordered text?
+First, the lower non-parametric probing accuracies of the randomized models indicate that they are not able to accurately reconstruct the original word order (see also \autoref{sec:mlm_ablations}).
+But even if models were able to ``unshuffle'' the words under our unnatural pre-training set up, they would only be doing so based on distributional information.
+Models would then abductively learn only the most likely word order. %---as evidenced by the effectiveness of the distributional prior alone in achieving good enough fine-tuning and probing performance, high perplexity for randomized models on the original data, and our non-parametric probing results. % showing that these models cannot recover word order nearly as well.
+While models might infer a distribution over possible orders and use that information to structure their representations \citep{papadimitriou-etal-2021-deep}, syntax is not about \emph{possible} or even  \emph{the most likely} orders: it is about the \emph{actual} order. That is, even if one concludes in the end that Transformers are able to perform word order reconstruction based on distributional information, and recover almost all downstream performance based solely on that, we ought to be a lot more careful when making claims about what our evaluation datasets are telling us.
+
+Thus, our results seem to suggest that we may need to revisit what we mean by ``linguistic structure,'' and perhaps subsequently acknowledge that we may not need human-like linguistic abilities for most NLP tasks. Or, our results can be interpreted as evidence that we need to develop more challenging and more comprehensive evaluations%
+%(cf. \citealt{bowman2021will})
+, if we genuinely want to measure linguistic abilities, however those are defined, in NLP models.
+
+% There are many interesting and potentially exciting avenues for future work that we could not explore due to limitation of space. An interesting question revolves around whether this phenomenon is more pronounced for English than for other languages. It is natural to wonder whether more word-order flexible or morphologically-rich languages would suffer from the same problem. Using the methods discussed in this work, we could imagine devising a way to determine the degree of order-dependence for tasks across languages. Another possible extension pertains to other tasks, including extractive question answering (QA) or sequence tagging, for which we can also to determine whether word order information is acquired downstream or during pre-training.
+
+To summarize, in this chapter, we revisited the hypothesis that masked language modelling's impressive performance can be explained in part by its ability to learn classical NLP pipelines. We investigated targeted pre-training on sentences with various degrees of randomization in their word order, and observed overwhelmingly that MLM's success is most likely not due to its ability to discover syntactic and semantic mechanisms necessary for a traditional language processing pipeline during pre-training. Instead, our experiments suggest that MLM's success can largely be explained by it having learned higher-order distributional statistics that make for a useful prior for subsequent fine-tuning. These results should hopefully encourage the development of better, more challenging tasks that require sophisticated reasoning, and harder probes to narrow down what exact linguistic information is present in the representations learned by our models.
+%
+
+
 \section{Follow-up findings in the community}
-\label{sec:orgde3bd47}
+\label{sec:mlm_followup}
+
+
+
 \clearpage
 \chapter{Measuring systematic generalization by exploiting absolute positions}
 \label{sec:orga46bf45}
@@ -1159,6 +1705,7 @@ Paper: \cite{sinha2021}
 \section{Discussion}
 \label{sec:orgbc43cdd}
 \clearpage
+
 \chapter{Conclusion}
 \label{sec:org8fd280e}
 \section{Summary}
@@ -1167,6 +1714,10 @@ Paper: \cite{sinha2021}
 \label{sec:org217d56a}
 \section{Future Work}
 \label{sec:org9de237c}
+
+A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consider ``the details of human language, how it is learned, processed, and how it changes, rather than just chasing state-of-the-art numbers on a benchmark task.'' We expand upon this view, and suggest one particular future direction: we should train models not only to do well on clean test data, but also to not to overgeneralize to corrupted input. %perform natural language understanding in an humanlike way
+
+
 
 \clearpage
 

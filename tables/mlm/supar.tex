@@ -1,0 +1,19 @@
+\begin{table}[]
+\centering
+\resizebox{0.7\linewidth}{!}{%
+\begin{tabular}{l|rl|ll}
+\toprule
+Model & \multicolumn{2}{c|}{UD EWT} & \multicolumn{2}{c}{PTB} \\ \hline
+ & UAS & LAS & UAS & LAS \\ \cline{2-5} 
+\OR &  90.92\% &  87.87\% & 95.42\% &  93.75\%  \\\midrule
+\RI & 91.18\% &  88.19\% & 95.90\% &  94.35\% \\
+\RII & 91.11\% &  88.12\% & 95.74\% &  94.16\% \\
+\RIII & 91.05\% &  87.94\% & 95.73\% &  94.14\% \\
+\RIV & 90.88\% &  87.78\% & 95.77\% &  94.16\% \\\midrule
+\RC & 90.47\% &  87.42\% & 95.81\% &  94.28\% \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Unlabeled Attachment Score (UAS) on Dependency parsing task on two datasets, UD EWT and PTB, using the Second order Tree CRF Neural Dependency Parser \cite{zhang-etal-2020-efficient}}
+\label{tab:dependency_supar}
+\end{table}

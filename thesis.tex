@@ -70,6 +70,10 @@ morestring=[b]'
 \let\mathexp=\exp %redefine \exp to \mathexp cuz gb4e package redefines \exp
 \usepackage{gb4e}
 \noautomath
+
+\usepackage{tikz}
+\usepackage{mathdots}
+% \usepackage{yhmath}
 % Note: requires shell-escape
 % \usepackage{minted}
 % \usemintedstyle{tango}
@@ -175,21 +179,204 @@ In this thesis I discuss my work on understanding systematicity in pre-trained l
 \chapter{Background}
 \label{sec:orgaa03e11}
 
-\section{Early methods for text representation}
-\label{sec:org7176877}
-\section{Neural Inductive bias of text representation}
-\label{sec:org2479903}
-\subsection{Feed Forward Neural Networks}
-\label{sec:orgc5c64b1}
-\subsection{Recurrent Neural Networks}
-\label{sec:org081fc19}
-\subsection{Transformer Models}
-\label{sec:orgce0ee81}
 
-\gls{llm} are the state-of-the-art in language models, which are based on \gls{tlm}.
-\section{Pre-training and the advent of Large Language Models}
-\label{sec:org754bcf3}
-Success of pre-training and scale
+\section{Early methods for text representation}
+\label{sec:bg_early_methods}
+
+Natural Language is the primary medium to conduct reasoning, and correspondingly, most use cases of natural language processing involve reasoning in some form. The process of reasoning has been widely studied throughout the history of mankind, from Aristotle's \textit{Prior Analytics}. During 19th and 20th centuries, theoreticians such as Boole and Fredge transformed reasoning into a rigorous mathematical science \cite{van2008brief}. Historically, natural language meaning and logical inference have been studied under the notion of \textit{formal semantics} \cite{van1995language}, where the natural language meaning is represented in a symbolic compositional structure and sentences are reduced to a logical formula \cite{MacCartney2009-sz}. In this notion, the grammatical syntax of a sentence along with the semantic interpretations are represented as a combination of expressions in some higher order logic. Formal semantic representations of language are extremely powerful and expressive as they can be fed to automatic theorem provers to perform various natural language processing tasks. However, designing such sophisticated theorem proving systems introduces a major challenge: the rules associated with the formal grammar have to be provided \textit{a priori}, or learned. But learning such combinatorially expressive rules is hard and computationally expensive.
+
+\subsection{Formal semantics and logical representations of natural language}
+\label{sec:bg_formal_semantics}
+
+Formal semantics provides a powerful way to represent natural language in some form of higher order \textit{logic}. Logic is usually represented in various formulas such as Propositional Logic, Predicate Logic, and Higher order Logic \cite{kowalski1979logic}. Each of these form of formulas are built on top of the other, which result in gradually more and more expressive powers of the reasoning logic.
+For instance, the central component of propositional or first-order logic is represented by a set of if-then \textit{rules}, or clauses. A clause is a rule of the form:
+
+\begin{equation}
+    \alpha \leftarrow \alpha_1, ... , \alpha_m
+\end{equation}
+
+where, $\alpha$ is referred as an atom, and the left-hand side (LHS) of the above equation is known as \textit{head} and the right-hand side (RHS) is referred as \textit{body}. The rules are composed by chaining through the \textit{and} relation ($\land$).
+
+Formal semantics offers a mechanism to encode natural language by the usage of a collection of sound \textit{rules} or clauses, using which all possible combinations (conjuction and disjunction) of the formula can be derived using in first-order predicate calculus \cite{hofstadter1980godel}.
+This field in formal semantics is known as \textit{deductive logic}. In the early 1970's, Colmeraurer and \citet{kowalski1979logic} were instrumental in development of a logic based programming language called Prolog. Prolog performs restricted first-order logical resolution using lazy backward-chaining (refer Section \ref{sec:logic_ilp}). Using Prolog, one can specify a set of rules such that it can verify or deduce any given logical formulae.
+
+However, deductive logic requires a pre-defined set of \textit{rules} governing natural language, which is an untractable problem. Therefore, formal semantics also provides a mechanism to \textit{learn} the rules from the data, using \textit{inductive reasoning}. This kind of learning method belongs to the field of Inductive Logic Programming (ILP) \cite{dvzeroski2009relational}. In this line of approach, one starts with a background knowledge or Knowledge Base (KB) of predicates, and then learns rules or clauses from the given data. KB are often highly incomplete \cite{min2013distant}, and thus ILP can be used to induce rules and infer missing facts by reasoning over the existing relations and predicates. ILP systems can be broadly classified into \textit{forward-chaining} and \textit{backward-chaining} systems. Forward-chaining, also known as \textit{top-down} approaches use \textit{generate-and-test}: they generate clauses from a language definition, and test the generated programs against the positive and negative examples. Backward chaining or \textit{bottom-up} approaches start by examining features of the examples, extract specific clauses from those examples, and then generalize from those specific clauses.
+
+Formal semantics represent sentences in logical form which can be fed to an automated theorem prover to perform textual inference, question answering, machine translation and a host of other tasks.
+These systems are highly interpretable, as the rule deduction or inductive decisions are backed by formal proofs in the form of built clauses. However, the sophistication of such semantic models comes at a cost: the complex set of rules allowing for logical interpretation of text must either be provided or learned \textit{a-priori}. For language, this boils down to maintaining an inventory of semantic relations \cite{MacCartney2009-sz} which is built by domain experts and thus incorporates bias and which also cannot be exhaustive.
+
+Natural language itself is symbolic and discrete, however the discrete symbols evoke different interpretations based on the context. Thus, symbolic methods are unable to handle noisy, erroneous, ambiguous or polysemous nature of text data. Language is compositional, but the way in which words (discrete symbols) are composed (combined) to form meanings is practically infinite. In the next section, we therefore discuss a class of models which account for this ambiguity in data through the use of vectors and differentiable functions.
+
+\subsection{N-gram Language Models}
+\label{sec:bg_ngram_lang}
+
+Natural language is highly \textit{ambiguous} (syntactic ambiguity, word sense ambiguity, semantic ambiguity) and \textit{contextual}, i.e., it has multiple interpretations based on usage.
+Hence, to account for the flexibility of natural language use, \textit{probabilistic} models of natural language reasoning were built, which attempt to learn the associated rules of reasoning through empirical data.  This led to the era of \textit{statistical relational learning} \citep{glickman2005web, hanprobqa, Domingos2006-zm} which modelled the uncertainty of reasoning by starting with a \textit{prior} belief and updating it to a \textit{posterior} belief based on the \textit{evidence} of the data.
+One such popular probabilistic model to represent natural language is an n-gram language model. In its core, n-gram language model are a family of Markov models that estimate the probability of a word given a fixed window of prior words. These estimations can be computed by counting the probability of occurrence of such words, using the maximum likelihood estimate. For example, the probability of a sentence $S$ containing $n$ words can be decomposed based on the Markov assumption that the probability of a word only depends on the previous words as follows.
+
+\begin{equation}
+  P(w_{1}, w_{2}, \ldots, w_{n}) = \prod_{i=1}^{n}P(w_{i}|w_{<i})
+\end{equation}
+
+In n-gram language models, the assumption is relaxed (independence assumption) such that a word can only depend on the probability of $n$ previous words. Thus, for a bi-gram model, the probability of a word only depends on the previous word, and thus can be computed by counting the bi-grams in the corpus involving the word divided by all possible bi-grams.
+
+\begin{equation}
+  P(w_{1}, w_{2}, \ldots, w_{n}) = \prod_{i=2}^{n}P(w_{i}|w_{i-1})
+\end{equation}
+
+Using the probabilistic interpretation, natural language sequences can be modelled by learning the probability estimates from a large corpora. The probability estimate (or likelihood, after application of log) is evaluated as a measure for the models reasoning abilities, such that syntactically and semantically well-formed sentences are expected to estimate a higher likelihood.
+
+\subsection{Distributional semantics using vector representations}
+\label{sec:bg_distributional_semantics}
+
+The n-gram language modelling approach still uses distinct symbols and a count-based approach.
+Better generalization can be obtained in natural language reasoning by operating on embedded vector representations of discrete symbols, in which vector similarity can be interpreted as semantic similarity \citep{joos1950description,harris-1954-distributional,firth1957synopsis}. Distributional semantics, thus, capture the vector representations of symbols, such as words, to compose a meaning representation of a sentence in context of other words. These methods are also called sub-symbolic methods as they operate on the vector representations of the symbols themselves \citep{neelakantan2015compositional}.
+
+For instance, in vector semantics a word is not represented as a discrete token as in formal semantics, but is represented as a point in high dimensional space, or a vector embedding. These embeddings can be either \textit{sparse} or \textit{dense}. Sparse embeddings of words are usually computed from a given corpora, which capture the co-occurrence counts of neighbors of the given word in the document, using term-frequency \citep{luhn1957statistical}, inverse document frequency \citep{jones1972statistical} (tf-idf) and pointwise positive mutual information (PPMI) \citep{fano1949transmission} measures. Dense vectors represent a word in the order of high dimensions, and are typically computed using the Word2Vec algorithm, such as skip-gram, which trains a logistic regression classifier to compute the likelihood of two words to occur nearby in the corpora. Another method, Glove \citep{pennington2014glove} is also used to represent dense vectors for words, which is based on learning a global word co-occurrence probabilities. The use of vectors enables us to compute \textit{similarity} between two words, sentences or documents, by computing the dot product between the vector representations. This similarity metric is further used to train the vector representations of words using the Word2vec \citep{mikolov2013efficient} or Glove \citep{pennington2014glove} algorithms, using efficient optimization algorithms such as stochastic gradient descent (SGD), allowing learning from large training corpora. These features highlights the strength of vector representations to model the ambiguity in language.
+
+
+
+\section{Neural Inductive bias of text representation}
+\label{sec:bg_neural_nets}
+
+Neural Networks are a class of biologically inspired connectionist models which operates on continuous vector representations and thus they are also more robust to noise and ambiguity of natural language \citep{wang2016machine,goodfellow2016deep}. Neural networks offer significant representational capacity to learn rich vector representations of words, sentences and documents, and also does not require feature engineering.
+Due to its representational strength, most modern natural language understanding (NLU) models have thus built on top of neural models having distributional vector representation of the lexical items.
+In its simplest form, a feed-forward neural network consists of fully-connected networks in multiple layers, where each layer consists of an affine combination of vectors and non-linear activation function (tanh, sigmoid or rectified linear units) \citep{rosenblatt1958perceptron,rumelhart1985learning,hinton2006fast,bengio2006greedy}.
+Further improvements were made to handle the polysemous and context-dependent nature of words by using contextual embeddings through leveraging the sequences of sentences, typically using Recurrent (Long Short-Term Memory (LSTM) \citep{hochreiter1997long}, Gated Recurrent Units (GRU) \citep{cho2014learning}) or Convolutional models (CNN) \citep{kim2014convolutional}. Models based on Long Short Term Memory (LSTM) became the de-facto standard in NLU, as they can effectively capture the contextual information with locality bias present in natural language. However, its performance is often affected by the long-term dependency problem in several NLU tasks.
+Recently, the field of NLP has witnessed a paradigm shift in research with the advent of Transformers \citep{vaswani-etal-2017-attention}. Being a fully-connected multi-head self-attention model, Transformers can directly model the dependency between any two words in a sequence, thus proving to be more powerful and suitable to model long range dependencies of natural language. However, Transformers come with massively increased model parameters, thus requiring significantly large corpus to train and resulting in overfitting on small and medium sized datasets \citep{radford2018improving}.
+
+
+\subsection{Feed Forward Neural Networks}
+\label{sec:bg_ffn}
+
+A Feed-Forward Neural Network (FNN) consists of a collection of neurons which are connected to other neurons via synapses or weights. A FNN is further modelled into layers represented as input, hidden or output vectors and weights connecting input and hidden layers, and hidden and output layers. There can also be weights connecting hidden and hidden layers when the number of hidden layers is more than one. A simple formulation of an FNN can be given as:
+
+\begin{equation}
+    f^{(i)} = g(W_ix + b_i)
+\end{equation}
+
+Activation for a node $i$ in any layer $l$, $f_l^{(i)}$, is computed as a function of the weights connecting that node from the previous layer and the input from previous layer. Every hidden and output layer has a non-linear function to project the activations, $g$, which are usually \textit{sigmoid}, \textit{tanh}, \textit{rectilinear} or\textit{ softmax} functions. Learning happens by estimating the gradients for the weights using backpropagation \citep{rumelhart1986learning} and updating using stochastic gradient descent with a learning rate, $\epsilon$, that reflects the magnitude of descent in the direction of the gradient.
+
+\begin{figure}[h]%
+    \centering
+    \subfloat[FNN]{\resizebox{3cm}{!}{\input{figs/background/fnn.tikz}} }%
+    \qquad
+    \subfloat[RNN ]{\resizebox{8cm}{!}{\input{figs/background/rnn.tikz}} }%
+    \caption{A Feed Forward Network (FFN) and a Recurrent Neural Network (RNN)}%
+    \label{fig:bg_fnn_rnn}%
+  \end{figure}
+
+
+\subsection{Recurrent Neural Networks and LSTMs}
+\label{sec:bg_rnn_lstm}
+
+RNN employ a feedback connection by repeatedly applying FNN (Figure \ref{fig:bg_fnn_rnn}). The addition of the feedback loops to the hidden units of an MLP can be thought of forming a hidden state of the network $h(x)$, corresponding to the vector of activations (value after the non-linearity) of the hidden neurons, that evolves over time as we present inputs to the network. The hidden state is updated at each time step according to some function $f$:
+
+\begin{equation}
+    h_t = f(h_{t-1}, x_t)
+\end{equation}{}
+
+RNNs are learned by computing gradients through time, which is also known as Back Propagation Through Time (BPTT) \citep{rumelhart1986learning}.
+
+While repeatedly applying the FNNs to create an RNN, the architecture faces a critical ``vanishing and exploding gradient" problem \citep{hochreiter2001gradient}, i.e., the gradients either become too insignificant or too big while backpropagating through multiple non-linear layers. To overcome this problem, Long Short-Term Memory \citep{hochreiter1997long} was proposed which consists of a specific gating architecture to overcome the problem to a great extent. The standard LSTM architecture is described in Figure \ref{fig:bg_lstm}.
+
+\begin{figure}
+  \centering
+  \resizebox{10cm}{!}{\input{figs/background/lstm.tikz}}
+  \caption{Block diagram of LSTM cell.}
+  \label{fig:bg_lstm}
+\end{figure}
+
+Given an input sequence, LSTM can also be run in both directions to get two final representations $\overrightarrow{y_t}$ in the forward direction and $\overleftarrow{y_t}$ in the backward direction. This class of modified LSTM is known as Bidirectional LSTM and it has been used as a standard feature extractor in various natural language processing tasks \cite{Rocktaschel2015-rr, wang2016machine, serban2016building}. In language modelling \& machine translation tasks \citep{serban2016building, serban2017hierarchical, bahdanau2014neural}, BiLSTM is used to construct an \textit{encoded} representation of the input text, conditioned on which the next word in the output text is \textit{decoded}. For textual entailment tasks \citep{bowman2015large}, two individual sentence representations of the hypothesis and premise are calculated using BiLSTM, and the entailment is predicted over the concatenated representation \citep{Rocktaschel2015-rr}. For QA tasks, the natural language question is encoded through a BiLSTM and the sentence representation is used in downstream reasoning \citep{wang2016machine}. Given the gated memory structure of LSTM and bidirectional read, they provide a powerful mechanism to convert text into a fixed vector representation which captures various syntactic and semantic features of natural language \citep{conneau2018cram}.
+
+
+\subsection{Transformer Models}
+\label{sec:bg_transformers}
+
+In contrast to RNNs and LSTMs, Transformer \citep{vaswani2017} architectures eliminate the need of recurrent connections and instead use fully connected self-attention layers. Attention mechanisms \citep{bahdanau2014} were previously developed to improve RNNs and LSTMs to allow the model to condition on longer contexts than what the default recurrence provides. Transformer architecture leverages this attention mechanism to attend on the same input (hence the name ``self-attention'') in multiple layers, this allowing the model to bypass the need of recurrence and directly utilize the information from any context.
+
+\subsubsection{Self-attention}
+
+Transformer architecture maps an input sequence ($x_{1}, x_{2}, \ldots, x_{n}$) to an output sequence ($y_{1}, y_{2}, \ldots, y_{n}$) of the same length, hence being a transductive model. Self-attention consists of computing vector similarities, using the dot product, between a pair of inputs:
+
+\begin{equation}
+  \text{score}(x_{i},x_{j}) = x_{i}.x_{j}
+\end{equation}
+
+This dot product yields scalar values in $\mathcal{R}$. Attention from each input to any other input is computed as the softmax over the dot product value in order to capture the proportional probability of similarity between tokens. This attention value is then multiplied by the inputs to compute the output at a sequence element. Every input is restricted to attend to all inputs beyond its position, thereby mimicing the canonical language modeling setup (although Markov assumptions no longer hold here due to the linear combination).
+
+\begin{equation}
+  \alpha_{i,j} = \frac{\text{exp}(\text{score}(x_{i},x_{j}))}{\sum_{k=1}^{i}\text{exp}(\text{score}(x_{i},x_{k}))}
+\end{equation}
+
+\begin{equation}
+  y_{i} = \sum_{j \le i}\alpha_{i,j}x_{j}
+\end{equation}
+
+Using this basic formulation, Transformers first map the inputs into three distinct vectors, \textit{query} ($q$), \textit{key} ($k$) and \textit{value} ($v$). When computing the attention from the current input to a preceding input, the model chooses to compute the score between the query mapping of the current input against the key mapping of the preceding input. This score is then using to linearly combine the value mappings of preceding inputs to compute the output for the current token. In practice, this score can become unbounded and lead to numerical issues. Therefore, the score is normalized by dividing with the square root of the dimensionality of the query and key vectors.
+
+\begin{equation}
+  q_{i} = \theta_{q}x_{i}, k_{i} = \theta_{k}x_{i}, v_{i} = \theta_{v}x_{i}
+\end{equation}
+
+\begin{equation}
+  \text{score}(x_{i},x_{j}) = \frac{q_{i}.k_{j}}{\sqrt{d_{k}}}
+\end{equation}
+
+\begin{equation}
+  y_{i} = \sum_{j \le i}\alpha_{i,j}v_{j}
+\end{equation}
+
+This attention mechanism is now stacked in two dimensions. First, the same attention mechanism is applied multiple times using unique set of weights. This is known as \textit{multi-head} attention, to emulate multiple heads (or weights) being utilized to compute unique sets of attentions for the same current and preceding input pair. The resulting attention mechanism is referred to as an \textit{attention-layer}.
+Second, the attention layers can be stacked on top of each other to emulate a multi-layer neural network. Typically, a feedforward layer, layer normalizations \citep{ba2016layer} and residual connections are applied after one attention layer to convert it to a \textit{transformer block}, which is then stacked vertically in multiple layers (\autoref{fig:bg_transformer}).
+
+\begin{figure}
+  \centering
+  \resizebox{0.4\textwidth}{!}{\includegraphics{figs/background/transformer_arch.png}}
+  \caption{Transformer encoder block as described in \citet{vaswani2017}.}
+  \label{fig:bg_transformer}
+\end{figure}
+
+\subsubsection{Position embeddings}
+\label{sec:bg_position_embeddings}
+
+One drawback of the vanilla Transformer architecture is that word order cannot be represented, as due to linear combination of attention scores the individual inputs can be re-arranged to get the exact same output. Thus, position information is fed to the model by representing the position of each token using a feature vector. \citet{vaswani2017} use absolute word position information as a feature vector, which is derived from an alternating sine and cosine functions:
+
+\begin{equation}
+  \begin{aligned}
+	\text{PE}(pos, 2i) &= \text{sin}(pos / 10000^{2i / d}) \\
+    \text{PE}(pos, 2i+1) &= \text{cos}(pos / 10000^{2i / d})
+  \end{aligned}
+\end{equation}
+
+\noindent $\text{PE}$ is the position embedding matrix of size $m \times d$, where $m$ is the total number of positions supported by the model, and $d$ is the dimensionality of the positional embedding. $d$ is kept as same as the embedding dimensionality of the input $x_{i}$ such that the input representation is updated with the positional features by element-wise sum \textit{before} applying the self-attention mechanism.
+
+\begin{equation}
+  x_{i} = x_{i} + \text{PE}[i]
+\end{equation}
+
+Subsequently, an unique learned position feature is used to define the absolute position encoding \citep{devlin2018bert}. Instead of using a fixed function, the model can use a learned positional matrix $\theta_{PE} \in \mathcal{R}^{m \times d}$ of the same dimension (commonly referred to as learned positional embedding), where the features are learned by backpropagation during training.
+
+While absolute position encodings, especially learned position embeddings are still used by many variants of the Transformer models, it lacks the capacity to model relative position distances between tokens \footnote{In Chapter \ref{sec:pos}, we investigate in detail several shortcomings of the learned position embedding scheme}. Thus, relative positional encodings were proposed \citep{shaw-etal-2018-self} which directly encode the relative distance between the words. Specifically, instead of maintaining a large embedding matrix ($\theta_{PE}$), a smaller embedding matrix is now maintained based on a window size $r$, and dynamically compute the position encoding of a token based on the relative distances between the current token and its neighbors within the window of size $r$.
+Please refer to \citet{wang2021on,dufter2021position} for a comprehensive overview of different position encoding strategies.
+
+\section{Large Language Models and Pre-training}
+\label{sec:bg_pretraining}
+
+With increasing number of model parameters, the requirement to train on large datasets became inevitable - as otherwise it is not possible to fully train the model parameters. However, it is challenging to collect/design NLU tasks of such scale due to extremely expensive annotation costs. In contrast, it is relatively easy to obtain large-scale unlabeled corpora, typically through scraping the internet \cite{raffel2019exploring} or collecting all literary works \cite{zhu2015aligning}. Thus came the idea of \textit{pre-training}, where this huge, unlabeled data is first leveraged to learn a good representation, and then the resulting model used for NLU tasks. The large, unlabeled data can be leveraged to learn useful word embeddings either using pairwise ranking \cite{collobert2008unified}, or through the use of shallow architectures \cite{mikolov2013efficient}, or by computing global word-word co-occurence statistics \cite{pennington2014glove}. However, these pre-trained word embeddings are still context-independent, and requires learning context-dependent parameters from scratch on an NLU task. Thus, efforts have been made to pre-train the entire model parameters instead of generating word embeddings by training in a Language Modeling objective (predicting the probability of a word to appear after a sequence of words), using bidirectional LSTM based architectures \cite{peters2018deep}. These models are then used to fine-tune on downstream NLU tasks such as text classification \cite{howard2018universal}.
+
+More recently, Transformer-based architectures became widely popular with the introduction of BERT \cite{devlin2018bert}. BERT is fundamentally a stack of Transformer layers, having multiple self-attention heads. To learn its massive amount of parameters, BERT is pre-trained on unlabeled corpora using two self-supervised objectives: masked language modeling (MLM, predicting the probability of randomly masked input tokens) and next sentence prediction (predicting if two sentences are adjacent to each other). BERT significantly improved the state-of-the art in many NLU tasks - ranging from text classication, question answering, natural language inference, machine translation, summarizatio, to name a few \cite{qiu2020}.
+
+\subsection{Analysis and interpretability of NLU models}
+
+The sheer performance of pre-trained Transformer-based models following BERT created a watershed moment in NLU, as these models outperform previous LSTM-based models by a large extent. Due to this success, interest peaked in the community to investigate the inner workings of this largely black box model \cite{rogers2020}. The investigation is primarily done using the tool of \textit{probing}, which is learning a function on top of pre-trained representations to perform targeted assesment of linguistic information \cite{hupkes2018visualisation}. How well this probe learns a given signal can be seen as a proxy for linguistic knowledge encoded in the representations. Using these probes, it has been shown BERT representations contain adequate syntactic \cite{hewitt-manning-2019-structural,jawahar-etal-2019-bert}, semantic \cite{tenney-etal-2019-bert,ettinger2020}, and world knowledge \cite{petroni2019language, rogers2020}.
+
+\subsection{Brittleness issues in NLU models}
+
+Despite the large performance gain and representations containing the necessary linguistic information to process natural language, state-of-the-art NLU models are often subject to scrutiny due to their unsystematic behaviors on specifically crafted test suites. NLU models are repeatedly shown to be brittle when subject to adversarial attacks \cite{jia2016,jin2020bert} to the input sentence forms \cite{kaushik2018much}. NLU models tend to exploit the statistical irregularities and annotation artefacts \cite{gururangan2018a,poliak-etal-2018-hypothesis,tsuchiya-2018-performance} of a given datasets, resulting in failure cases on carefully crafted examples \cite{naik-etal-2018-stress,mccoy2019}.
+NLU models are also subjected to tests of systematic generalization in context of semantic parsing in novel compositions \cite{lake2017generalization}, shuffled argument structure in natural language inference \cite{dasgupta-etal-2018-evaluating}, etc. On these tests, typically the NLU models fail to behave in the expected ways, unless trained with the same objective as the test sets.
+
+
 \section{Systematicity and Generalization}
 \label{sec:orgb799e4e}
 \subsection{Definitions}
@@ -709,11 +896,12 @@ Our work inspired the community to explore the limits of reasoning capabilities 
 
 Our work also inspired the development of datasets and benchmarks to explore systematicity in language reasoning.
 \cite{goodwin-etal-2020-probing} develop a dataset grounded in first order logic to inspect the systematicity of \acrshort{nlu} models in the domain of natural language inference, and find state-of-the-art \acrshort{nlu} models do not generalize systematically despite projecting overall high performance.
+\cite{minervini2020learning} develop neuro-symbolic methods to solve the base version of the CLUTRR dataset, and observe models having exposure to the symbolic rules offer much better results in systematic generalization.
 \cite{tian-etal-2021-diagnosing} also construct a diagnostic dataset in natural language inference which is grounded in first order logic. They also discover weaknesses of popular Transformer model variants on reasoning on natural logic, especially in the similar flavor of generalization tests proposed in our work.
 \cite{yanaka-etal-2021-sygns} develop datasets to test whether Transformer models can parse sentences involving novel combinations of logical expressions, such as quantifiers and negation. They find that Transformers can only generalize to unseen combinations of quantifiers, negations and modifiers in sentences having similar surface forms as in the training data, but not to unseen surface forms. Their result further validates our conclusions that poor generalization often stems from limited encoding of the surface forms of text.
 Leveraging the findings from our work, \cite{tamari-etal-2022-dyna} develop a synthetic data generation framework to repurpose the bAbI dataset \citep{weston2015towards}, and find compositional generalization is still a hard problem for Transformer models to solve.
 \cite{fei-etal-2022-cqg} develop a similar framework following our work to generate multi-hop questions that contain key entities in multi-hop reasoning chains to ensure the complexity and quality of the task.
-\cite{Ontan2022LogicInferenceAN} develop a sequence-to-sequence dataset grounded on a subset of first-order logic, similar to CLUTRR, to perform logical inference on questions.
+% \cite{Ontan2022LogicInferenceAN} develop a sequence-to-sequence dataset grounded on a subset of first-order logic, similar to CLUTRR, to perform logical inference on questions.
 
 
 \clearpage
@@ -2145,7 +2333,7 @@ A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consid
 \clearpage
 
 \bibliographystyle{plainnat}
-\bibliography{bibfiles/unli,bibfiles/clutrr,bibfiles/pos_enc,bibfiles/unnat_pt,bibfiles/anthology,bibfiles/followup}
+\bibliography{bibfiles/unli,bibfiles/clutrr,bibfiles/pos_enc,bibfiles/unnat_pt,bibfiles/anthology,bibfiles/followup,bibfiles/background}
 
 
 \printglossaries

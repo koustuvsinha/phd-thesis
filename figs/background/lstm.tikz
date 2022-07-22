@@ -1,0 +1,96 @@
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,377); %set diagram left start at 0, and has height of 377
+
+\draw    (167, 81) circle [x radius= 25, y radius= 25]  ;
+\draw    (167, 151) circle [x radius= 25, y radius= 25]  ;
+\draw    (168, 222) circle [x radius= 25, y radius= 25]  ;
+\draw    (168, 292) circle [x radius= 25, y radius= 25]  ;
+\draw    (269, 81) circle [x radius= 25, y radius= 25]  ;
+\draw    (367, 81) circle [x radius= 25, y radius= 25]  ;
+\draw    (503, 80) circle [x radius= 25, y radius= 25]  ;
+\draw [line width=2.25]    (72.5,64) -- (142,81) ;
+\draw [shift={(142,81)}, rotate = 193.74] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (71.5,117) -- (145,92) ;
+\draw [shift={(145,92)}, rotate = 521.21] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (72.5,131) -- (142,148) ;
+\draw [shift={(142,148)}, rotate = 193.74] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (71.5,184) -- (145,159) ;
+\draw [shift={(145,159)}, rotate = 521.21] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (72.5,201) -- (142,218) ;
+\draw [shift={(142,218)}, rotate = 193.74] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (71.5,254) -- (145,229) ;
+\draw [shift={(145,229)}, rotate = 521.21] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (73.5,272) -- (143,289) ;
+\draw [shift={(143,289)}, rotate = 193.74] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (72.5,325) -- (146,300) ;
+\draw [shift={(146,300)}, rotate = 521.21] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (192,81) -- (244,81) ;
+\draw [shift={(244,81)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (192,151) -- (253.5,99) ;
+\draw [shift={(253.5,99)}, rotate = 499.78] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw    (365.5, 167) circle [x radius= 25, y radius= 25]  ;
+\draw [line width=2.25]    (193,222) -- (338.5,176) ;
+\draw [shift={(338.5,176)}, rotate = 522.46] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (365.5,142) -- (367,106) ;
+\draw [shift={(367,106)}, rotate = 452.39] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (392,81) .. controls (451.5,78) and (464.5,176) .. (390.5,167) ;
+\draw [shift={(390.5,167)}, rotate = 365.44] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (294,81) -- (342,81) ;
+\draw [shift={(342,81)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (392,81) -- (478,80) ;
+\draw [shift={(478,80)}, rotate = 539.3299999999999] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (528,80) -- (571,79.5) ;
+\draw [shift={(571,79.5)}, rotate = 539.3299999999999] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw [line width=2.25]    (193,292) .. controls (233,262) and (505.5,229) .. (503,105) ;
+\draw [shift={(503,105)}, rotate = 450.11] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=2.25]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- (8.93,-4.29)    ;
+
+\draw    (155,85) .. controls (183.5,58) and (149.5,111) .. (180.5,83) ;
+
+
+\draw    (156,154) .. controls (184.5,127) and (150.5,180) .. (181.5,152) ;
+
+
+\draw    (157,225) .. controls (185.5,198) and (151.5,251) .. (182.5,223) ;
+
+
+\draw    (157,295) .. controls (185.5,268) and (151.5,321) .. (182.5,293) ;
+
+
+\draw   (359,83.5) -- (375.5,83.5)(367.25,76) -- (367.25,91) ;
+\draw [rotate around= { 44.59: (365.25, 169.5)
+    }]  (357,169.5) -- (373.5,169.5)(365.25,162) -- (365.25,177) ;
+\draw [rotate around= { 44.59: (268.25, 82.5)
+    }]  (260,82.5) -- (276.5,82.5)(268.25,75) -- (268.25,90) ;
+\draw [rotate around= { 44.59: (503.25, 81.5)
+    }]  (495,81.5) -- (511.5,81.5)(503.25,74) -- (503.25,89) ;
+
+\draw (558,63) node  [align=left] {output};
+\draw (37,85) node  [align=left] {input};
+\draw (223,174) node  [align=left] {input gate};
+\draw (231,242) node  [align=left] {forget gate};
+\draw (228,318) node  [align=left] {output gate};
+\draw (345,129) node  [align=left] {state};
+\draw (444,131) node  [align=left] {self loop};
+
+
+\end{tikzpicture}

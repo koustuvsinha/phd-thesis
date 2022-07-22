@@ -1,0 +1,5 @@
+#+title: Notes
+
+* Paper readings
+** TODO (cite:jurafsky2022) Speech and Language Processing - Jan 22
+** TODO (cite:wang2021b) On Position Embeddings In BERT

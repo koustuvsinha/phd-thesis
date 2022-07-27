@@ -319,6 +319,86 @@
   publisher       = {MIT Press}
 }
 
+@misc{carlini2021,
+  title           = {Extracting {{Training Data}} from {{Large Language
+                  Models}}},
+  author          = {Carlini, Nicholas and Tramer, Florian and Wallace, Eric and
+                  Jagielski, Matthew and {Herbert-Voss}, Ariel and Lee,
+                  Katherine and Roberts, Adam and Brown, Tom and Song, Dawn and
+                  Erlingsson, Ulfar and Oprea, Alina and Raffel, Colin},
+  year            = 2021,
+  month           = jun,
+  number          = {arXiv:2012.07805},
+  eprint          = {2012.07805},
+  eprinttype      = {arxiv},
+  primaryclass    = {cs},
+  institution     = {{arXiv}},
+  doi             = {10.48550/arXiv.2012.07805},
+  abstract        = {It has become common to publish large (billion parameter)
+                  language models that have been trained on private datasets.
+                  This paper demonstrates that in such settings, an adversary
+                  can perform a training data extraction attack to recover
+                  individual training examples by querying the language model.
+                  We demonstrate our attack on GPT-2, a language model trained
+                  on scrapes of the public Internet, and are able to extract
+                  hundreds of verbatim text sequences from the model's training
+                  data. These extracted examples include (public) personally
+                  identifiable information (names, phone numbers, and email
+                  addresses), IRC conversations, code, and 128-bit UUIDs. Our
+                  attack is possible even though each of the above sequences are
+                  included in just one document in the training data. We
+                  comprehensively evaluate our extraction attack to understand
+                  the factors that contribute to its success. Worryingly, we
+                  find that larger models are more vulnerable than smaller
+                  models. We conclude by drawing lessons and discussing possible
+                  safeguards for training large language models.},
+  archiveprefix   = {arXiv},
+  keywords        = {Computer Science - Computation and Language,Computer
+                  Science - Cryptography and Security,Computer Science - Machine
+                  Learning},
+  file            = {/Volumes/GoogleDrive-116026449368462742082/My
+                  Drive/Paperpile/Zotero/Systematic Generalization/Carlini et
+                  al_2021_Extracting Training Data from Large Language
+                  Models.pdf}
+}
+
+@article{carlini2022a,
+  title           = {Quantifying {{Memorization Across Neural Language Models}}},
+  author          = {Carlini, Nicholas and Ippolito, Daphne and Jagielski,
+                  Matthew and Lee, Katherine and Tramer, Florian and Zhang,
+                  Chiyuan},
+  year            = 2022,
+  month           = feb,
+  journal         = {arXiv:2202.07646 [cs]},
+  eprint          = {2202.07646},
+  eprinttype      = {arxiv},
+  primaryclass    = {cs},
+  abstract        = {Large language models (LMs) have been shown to memorize
+                  parts of their training data, and when prompted appropriately,
+                  they will emit the memorized training data verbatim. This is
+                  undesirable because memorization violates privacy (exposing
+                  user data), degrades utility (repeated easy-to-memorize text
+                  is often low quality), and hurts fairness (some texts are
+                  memorized over others). We describe three log-linear
+                  relationships that quantify the degree to which LMs emit
+                  memorized training data. Memorization significantly grows as
+                  we increase (1) the capacity of a model, (2) the number of
+                  times an example has been duplicated, and (3) the number of
+                  tokens of context used to prompt the model. Surprisingly, we
+                  find the situation becomes complicated when generalizing these
+                  results across model families. On the whole, we find that
+                  memorization in LMs is more prevalent than previously believed
+                  and will likely get worse as models continues to scale, at
+                  least without active mitigations.},
+  archiveprefix   = {arXiv},
+  keywords        = {Computer Science - Computation and Language,Computer
+                  Science - Machine Learning},
+  file            = {/Volumes/GoogleDrive-116026449368462742082/My
+                  Drive/Paperpile/Zotero/Systematic Generalization/Carlini et
+                  al_2022_Quantifying Memorization Across Neural Language
+                  Models.pdf}
+}
+
 @article{chandra1985horn,
   title           = {Horn clause queries and generalizations},
   author          = {Chandra, Ashok K and Harel, David},
@@ -355,6 +435,15 @@
                   David},
   journal         = {arXiv preprint arXiv:1610.08431},
   year            = 2016
+}
+
+@article{clark2020electra,
+  title           = {Electra: Pre-training text encoders as discriminators
+                  rather than generators},
+  author          = {Clark, Kevin and Luong, Minh-Thang and Le, Quoc V and
+                  Manning, Christopher D},
+  journal         = {arXiv preprint arXiv:2003.10555},
+  year            = 2020
 }
 
 @misc{conneau2018cram,
@@ -400,12 +489,37 @@
   year            = 2016
 }
 
+@inproceedings{de2019commitmentbank,
+  title           = {The commitmentbank: Investigating projection in naturally
+                  occurring discourse},
+  author          = {De Marneffe, Marie-Catherine and Simons, Mandy and
+                  Tonhauser, Judith},
+  booktitle       = {proceedings of Sinn und Bedeutung},
+  volume          = 23,
+  number          = 2,
+  pages           = {107--124},
+  year            = 2019
+}
+
 @book{dowty2012introduction,
   title           = {Introduction to Montague semantics},
   author          = {Dowty, David R and Wall, Robert and Peters, Stanley},
   volume          = 11,
   year            = 2012,
   publisher       = {Springer Science \& Business Media}
+}
+
+@misc{dufter2021position,
+  doi             = {10.48550/ARXIV.2102.11090},
+  url             = {https://arxiv.org/abs/2102.11090},
+  author          = {Dufter, Philipp and Schmitt, Martin and Schütze, Hinrich},
+  keywords        = {Computation and Language (cs.CL), Artificial Intelligence
+                  (cs.AI), FOS: Computer and information sciences, FOS: Computer
+                  and information sciences},
+  title           = {Position Information in Transformers: An Overview},
+  publisher       = {arXiv},
+  year            = 2021,
+  copyright       = {arXiv.org perpetual, non-exclusive license}
 }
 
 @inproceedings{duvenaud2015convolutional,
@@ -596,17 +710,12 @@
   publisher       = {Vintage Books New York}
 }
 
-@misc{dufter2021position,
-  doi             = {10.48550/ARXIV.2102.11090},
-  url             = {https://arxiv.org/abs/2102.11090},
-  author          = {Dufter, Philipp and Schmitt, Martin and Schütze, Hinrich},
-  keywords        = {Computation and Language (cs.CL), Artificial Intelligence
-                  (cs.AI), FOS: Computer and information sciences, FOS: Computer
-                  and information sciences},
-  title           = {Position Information in Transformers: An Overview},
-  publisher       = {arXiv},
-  year            = 2021,
-  copyright       = {arXiv.org perpetual, non-exclusive license}
+@article{howard2018universal,
+  title           = {Universal language model fine-tuning for text
+                  classification},
+  author          = {Howard, Jeremy and Ruder, Sebastian},
+  journal         = {arXiv preprint arXiv:1801.06146},
+  year            = 2018
 }
 
 @article{jones1972statistical,
@@ -636,6 +745,15 @@
   booktitle       = {Advances in neural information processing systems},
   pages           = {190--198},
   year            = 2015
+}
+
+@article{kaplan2020scaling,
+  title           = {Scaling laws for neural language models},
+  author          = {Kaplan, Jared and McCandlish, Sam and Henighan, Tom and
+                  Brown, Tom B and Chess, Benjamin and Child, Rewon and Gray,
+                  Scott and Radford, Alec and Wu, Jeffrey and Amodei, Dario},
+  journal         = {arXiv preprint arXiv:2001.08361},
+  year            = 2020
 }
 
 @article{katz1987estimation,
@@ -677,6 +795,15 @@
   volume          = 7,
   year            = 1979,
   publisher       = {Ediciones D{\'\i}az de Santos}
+}
+
+@article{lan2019albert,
+  title           = {Albert: A lite bert for self-supervised learning of
+                  language representations},
+  author          = {Lan, Zhenzhong and Chen, Mingda and Goodman, Sebastian and
+                  Gimpel, Kevin and Sharma, Piyush and Soricut, Radu},
+  journal         = {arXiv preprint arXiv:1909.11942},
+  year            = 2019
 }
 
 @inproceedings{lao2011random,
@@ -738,6 +865,20 @@
                   Xiao-Dan and Wei, Si and Hu, Yu},
   journal         = {CoRR, abs/1611.04146},
   year            = 2016
+}
+
+@article{liu2020multilingual,
+  title           = {Multilingual denoising pre-training for neural machine
+                  translation},
+  author          = {Liu, Yinhan and Gu, Jiatao and Goyal, Naman and Li, Xian
+                  and Edunov, Sergey and Ghazvininejad, Marjan and Lewis, Mike
+                  and Zettlemoyer, Luke},
+  journal         = {Transactions of the Association for Computational
+                  Linguistics},
+  volume          = 8,
+  pages           = {726--742},
+  year            = 2020,
+  publisher       = {MIT Press}
 }
 
 @inproceedings{lowe2015ubuntu,
@@ -809,6 +950,15 @@
   pages           = {133--139},
   year            = 2002,
   organization    = {Association for Computational Linguistics}
+}
+
+@article{mccann2018natural,
+  title           = {The natural language decathlon: Multitask learning as
+                  question answering},
+  author          = {McCann, Bryan and Keskar, Nitish Shirish and Xiong, Caiming
+                  and Socher, Richard},
+  journal         = {arXiv preprint arXiv:1806.08730},
+  year            = 2018
 }
 
 @inproceedings{mikolov2013distributed,
@@ -915,6 +1065,16 @@
   year            = 2015
 }
 
+@inproceedings{pennington2014glove,
+  title           = {Glove: Global vectors for word representation},
+  author          = {Pennington, Jeffrey and Socher, Richard and Manning,
+                  Christopher D},
+  booktitle       = {Proceedings of the 2014 conference on empirical methods in
+                  natural language processing (EMNLP)},
+  pages           = {1532--1543},
+  year            = 2014
+}
+
 @article{quinlan1986induction,
   title           = {Induction of decision trees},
   author          = {Quinlan, J. Ross},
@@ -924,6 +1084,16 @@
   pages           = {81--106},
   year            = 1986,
   publisher       = {Springer}
+}
+
+@article{raffel2019exploring,
+  title           = {Exploring the limits of transfer learning with a unified
+                  text-to-text transformer},
+  author          = {Raffel, Colin and Shazeer, Noam and Roberts, Adam and Lee,
+                  Katherine and Narang, Sharan and Matena, Michael and Zhou,
+                  Yanqi and Li, Wei and Liu, Peter J},
+  journal         = {arXiv preprint arXiv:1910.10683},
+  year            = 2019
 }
 
 @article{rajpurkar2016squad,
@@ -944,6 +1114,17 @@
                   Natural Language Processing},
   pages           = {193--203},
   year            = 2013
+}
+
+@inproceedings{roemmele2011choice,
+  title           = {Choice of Plausible Alternatives: An Evaluation of
+                  Commonsense Causal Reasoning.},
+  author          = {Roemmele, Melissa and Bejan, Cosmin Adrian and Gordon,
+                  Andrew S},
+  booktitle       = {AAAI spring symposium: logical formalizations of
+                  commonsense reasoning},
+  pages           = {90--95},
+  year            = 2011
 }
 
 @article{rosenblatt1958perceptron,
@@ -1179,4 +1360,101 @@
   pages           = {25--26},
   year            = 2007,
   organization    = {Association for Computational Linguistics}
+}
+
+@article{zhang2018record,
+  title           = {Record: Bridging the gap between human and machine
+                  commonsense reading comprehension},
+  author          = {Zhang, Sheng and Liu, Xiaodong and Liu, Jingjing and Gao,
+                  Jianfeng and Duh, Kevin and Van Durme, Benjamin},
+  journal         = {arXiv preprint arXiv:1810.12885},
+  year            = 2018
+}
+
+@inproceedings{lake2018generalization,
+  title={Generalization without systematicity: On the compositional skills of sequence-to-sequence recurrent networks},
+  author={Lake, Brenden and Baroni, Marco},
+  booktitle={International conference on machine learning},
+  pages={2873--2882},
+  year={2018},
+  organization={PMLR}
+}
+
+@article{hupkes2020,
+  title = {Compositionality {{Decomposed}}: {{How}} Do {{Neural Networks Generalise}}?},
+  shorttitle = {Compositionality {{Decomposed}}},
+  author = {Hupkes, Dieuwke and Dankers, Verna and Mul, Mathijs and Bruni, Elia},
+  year = {2020},
+  month = apr,
+  journal = {jair},
+  volume = {67},
+  pages = {757--795},
+  issn = {1076-9757},
+  doi = {10.1613/jair.1.11674},
+  abstract = {Despite a multitude of empirical studies, little consensus exists on whether neural networks are able to generalise compositionally, a controversy that, in part, stems from a lack of agreement about what it means for a neural model to be compositional. As a response to this controversy, we present a set of tests that provide a bridge between, on the one hand, the vast amount of linguistic and philosophical theory about compositionality of language and, on the other, the successful neural models of language. We collect different interpretations of compositionality and translate them into five theoretically grounded tests for models that are formulated on a task-independent level. In particular, we provide tests to investigate (i) if models systematically recombine known parts and rules (ii) if models can extend their predictions beyond the length they have seen in the training data (iii) if models' composition operations are local or global (iv) if models' predictions are robust to synonym substitutions and (v) if models favour rules or exceptions during training. To demonstrate the usefulness of this evaluation paradigm, we instantiate these five tests on a highly compositional data set which we dub PCFG SET and apply the resulting tests to three popular sequence-to-sequence models: a recurrent, a convolution-based and a transformer model. We provide an in-depth analysis of the results, which uncover the strengths and weaknesses of these three architectures and point to potential areas of improvement.},
+  langid = {english},
+  file = {/Users/koustuvs/Google Drive/My Drive/Paperpile/Zotero/NLI Generalization/Hupkes et al. - 2020 - Compositionality Decomposed How do Neural Network.pdf}
+}
+
+@article{szabo2012case,
+  title={The case for compositionality},
+  author={Szab{\'o}, Zoltan},
+  journal={The Oxford handbook of compositionality},
+  volume={64},
+  pages={80},
+  year={2012},
+  publisher={Oxford University Press Oxford}
+}
+
+@book{kratzer1998semantics,
+  title={Semantics in generative grammar},
+  author={Kratzer, Angelika and Heim, Irene},
+  volume={1185},
+  year={1998},
+  publisher={Blackwell Oxford}
+}
+
+@article{bahdanau2018systematic,
+  title={Systematic generalization: what is required and can it be learned?},
+  author={Bahdanau, Dzmitry and Murty, Shikhar and Noukhovitch, Michael and Nguyen, Thien Huu and de Vries, Harm and Courville, Aaron},
+  journal={arXiv preprint arXiv:1811.12889},
+  year={2018}
+}
+
+@incollection{smolensky1991constituent,
+  title={The constituent structure of connectionist mental states: A reply to Fodor and Pylyshyn},
+  author={Smolensky, Paul},
+  booktitle={Connectionism and the philosophy of mind},
+  pages={281--308},
+  year={1991},
+  publisher={Springer}
+}
+
+@article{marcus1998rethinking,
+  title={Rethinking eliminative connectionism},
+  author={Marcus, Gary F},
+  journal={Cognitive psychology},
+  volume={37},
+  number={3},
+  pages={243--282},
+  year={1998},
+  publisher={Elsevier}
+}
+
+@article{herbelot2020how,
+ author = {Herbelot, Aurelie},
+ title = {How to Stop Worrying About Compositionality},
+ journal = {The Gradient},
+ year = {2020},
+ howpublished = {\url{https://thegradient.pub/how-to-stop-worrying-about-compositionality-2 } },
+}
+
+@article{pullum2010recursion,
+  title={Recursion and the infinitude claim},
+  author={Pullum, Geoffrey K and Scholz, Barbara C and others},
+  journal={Recursion in human language},
+  volume={104},
+  pages={113--38},
+  year={2010},
+  publisher={Berlin: Mouton de Gruyter}
 }

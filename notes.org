@@ -3,3 +3,10 @@
 * Paper readings
 ** TODO (cite:jurafsky2022) Speech and Language Processing - Jan 22
 ** TODO (cite:wang2021b) On Position Embeddings In BERT
+** TODO (cite:ravishankar2021) The Impact of Positional Encodings on Multilingual Compression
+** TODO (cite:phuong22_formal_algor_trans) Formal algorithms for transformers
+** TODO (cite:kiela2021) Dynabench: Rethinking Benchmarking in NLP
+** TODO (cite:carlini2022a) Quantifying Memorization Across Neural Language Models
+** TODO (cite:carlini2021) Extracting Training Data from Large Language Models
+** TODO (cite:hupkes2020) Compositionality Decomposed: How do Neural Networks Generalise?
+** TODO (cite:lake2018) Generalization without systematicity: On the compositional skills of sequence-to-sequence recurrent networks

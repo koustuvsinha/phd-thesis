@@ -5,6 +5,24 @@
   year            = 2020
 }
 
+@article{Cloutre2021DemystifyingNL,
+  title           = {Demystifying Neural Language Models' Insensitivity to
+                  Word-Order},
+  author          = {Louis Clou{\^a}tre and Prasanna Parthasarathi and Amal
+                  Zouaq and Sarath Chandar},
+  journal         = {ArXiv},
+  year            = 2021,
+  volume          = {abs/2107.13955}
+}
+
+@inproceedings{Malkin2021StudyingWO,
+  title           = {Studying word order through iterative shuffling},
+  author          = {Nikolay Malkin and Sameera Lanka and Pranav Goel and
+                  Nebojsa Jojic},
+  booktitle       = {EMNLP},
+  year            = 2021
+}
+
 @article{Ontan2022LogicInferenceAN,
   title           = {LogicInference: A New Dataset for Teaching Logical
                   Inference to seq2seq Models},
@@ -15,6 +33,24 @@
   volume          = {abs/2203.15099}
 }
 
+@inproceedings{Perez2021RissanenDA,
+  title           = {Rissanen Data Analysis: Examining Dataset Characteristics
+                  via Description Length},
+  author          = {Ethan Perez and Douwe Kiela and Kyunghyun Cho},
+  booktitle       = {ICML},
+  year            = 2021
+}
+
+@article{Tejankar2021AFO,
+  title           = {A Fistful of Words: Learning Transferable Visual Models
+                  from Bag-of-Words Supervision},
+  author          = {Ajinkya Tejankar and Bichen Wu and Saining Xie and Madian
+                  Khabsa and Hamed Pirsiavash and Hamed Firooz},
+  journal         = {ArXiv},
+  year            = 2021,
+  volume          = {abs/2112.13884}
+}
+
 @article{Zhang2022OnTP,
   title           = {On the Paradox of Learning to Reason from Data},
   author          = {Honghua Zhang and Liunian Harold Li and Tao Meng and
@@ -22,6 +58,38 @@
   journal         = {ArXiv},
   year            = 2022,
   volume          = {abs/2205.11502}
+}
+
+@inproceedings{clouatre-etal-2022-local,
+  title           = "Local Structure Matters Most: Perturbation Study in {NLU}",
+  author          = "Clouatre, Louis and Parthasarathi, Prasanna and Zouaq, Amal
+                  and Chandar, Sarath",
+  booktitle       = "Findings of the Association for Computational Linguistics:
+                  ACL 2022",
+  month           = may,
+  year            = 2022,
+  address         = "Dublin, Ireland",
+  publisher       = "Association for Computational Linguistics",
+  url             = "https://aclanthology.org/2022.findings-acl.293",
+  doi             = "10.18653/v1/2022.findings-acl.293",
+  pages           = "3712--3731",
+  abstract        = "Recent research analyzing the sensitivity of natural
+                  language understanding models to word-order perturbations has
+                  shown that neural models are surprisingly insensitive to the
+                  order of words.In this paper, we investigate this phenomenon
+                  by developing order-altering perturbations on the order of
+                  words, subwords, and characters to analyze their effect on
+                  neural models{'} performance on language understanding
+                  tasks.We experiment with measuring the impact of perturbations
+                  to the local neighborhood of characters and global position of
+                  characters in the perturbed texts and observe that
+                  perturbation functions found in prior literature only affect
+                  the global ordering while the local ordering remains
+                  relatively unperturbed.We empirically show that neural models,
+                  invariant of their inductive biases, pretraining scheme, or
+                  the choice of tokenization, mostly rely on the local structure
+                  of text to build understanding and make limited use of the
+                  global structure.",
 }
 
 @inproceedings{fei-etal-2022-cqg,
@@ -97,6 +165,37 @@
                   setting of natural language inference (NLI). We provide
                   evidence that current state-of-the-art NLU systems do not
                   generalize systematically, despite overall high performance.",
+}
+
+@inproceedings{hessel-schofield-2021-effective,
+  title           = "How effective is {BERT} without word ordering? Implications
+                  for language understanding and data privacy",
+  author          = "Hessel, Jack and Schofield, Alexandra",
+  booktitle       = "Proceedings of the 59th Annual Meeting of the Association
+                  for Computational Linguistics and the 11th International Joint
+                  Conference on Natural Language Processing (Volume 2: Short
+                  Papers)",
+  month           = aug,
+  year            = 2021,
+  address         = "Online",
+  publisher       = "Association for Computational Linguistics",
+  url             = "https://aclanthology.org/2021.acl-short.27",
+  doi             = "10.18653/v1/2021.acl-short.27",
+  pages           = "204--211",
+  abstract        = "Ordered word sequences contain the rich structures that
+                  define language. However, it{'}s often not clear if or how
+                  modern pretrained language models utilize these structures. We
+                  show that the token representations and self-attention
+                  activations within BERT are surprisingly resilient to
+                  shuffling the order of input tokens, and that for several GLUE
+                  language understanding tasks, shuffling only minimally
+                  degrades performance, e.g., by 4{\%} for QNLI. While bleak
+                  from the perspective of language understanding, our results
+                  have positive implications for cases where copyright or ethics
+                  necessitates the consideration of bag-of-words data (vs. full
+                  documents). We simulate such a scenario for three sensitive
+                  classification tasks, demonstrating minimal performance
+                  degradation vs. releasing full language sequences.",
 }
 
 @inproceedings{minervini2020learning,
@@ -195,27 +294,6 @@
   publisher       = "Association for Computational Linguistics",
   url             = "https://aclanthology.org/2022.naacl-main.167",
   pages           = "2300--2344",
-  abstract        = "Recently, a boom of papers has shown extraordinary progress
-                  in zero-shot and few-shot learning with various prompt-based
-                  models. It is commonly argued that prompts help models to
-                  learn faster in the same way that humans learn faster when
-                  provided with task instructions expressed in natural language.
-                  In this study, we experiment with over 30 prompts manually
-                  written for natural language inference (NLI). We find that
-                  models can learn just as fast with many prompts that are
-                  intentionally irrelevant or even pathologically misleading as
-                  they do with instructively {``}good{''} prompts. Further, such
-                  patterns hold even for models as large as 175 billion
-                  parameters (Brown et al., 2020) as well as the recently
-                  proposed instruction-tuned models which are trained on
-                  hundreds of prompts (Sanh et al., 2021). That is,
-                  instruction-tuned models often produce good predictions with
-                  irrelevant and misleading prompts even at zero shots. In sum,
-                  notwithstanding prompt-based models{'} impressive improvement,
-                  we find evidence of serious limitations that question the
-                  degree to which such improvement is derived from models
-                  understanding task instructions in ways analogous to humans{'}
-                  use of task instructions.",
 }
 
 @article{weston2015towardsai,

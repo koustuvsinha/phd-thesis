@@ -10,3 +10,7 @@
 ** TODO (cite:carlini2021) Extracting Training Data from Large Language Models
 ** TODO (cite:hupkes2020) Compositionality Decomposed: How do Neural Networks Generalise?
 ** TODO (cite:lake2018) Generalization without systematicity: On the compositional skills of sequence-to-sequence recurrent networks
+* Pending
+** TODO write the technical background section of the MLM paper
+** TODO write the followup findings of the UNLI paper
+** TODO write the followup findings of the MLM paper

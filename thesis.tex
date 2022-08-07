@@ -42,7 +42,25 @@
 \usepackage{blindtext}
 \usepackage{amsfonts}
 \usepackage{amsthm}
-\usepackage[table,xcdraw]{xcolor}
+\usepackage[table,xcdraw,dvipsnames]{xcolor}
+
+% Color codes from http://latexcolor.com/
+\definecolor{brandeisblue}{rgb}{0.0, 0.44, 1.0}
+\definecolor{malachite}{rgb}{0.04, 0.85, 0.32}
+\definecolor{outrageousorange}{rgb}{1.0, 0.43, 0.29}
+
+\newcommand\myshade{100}
+\colorlet{mylinkcolor}{outrageousorange}
+\colorlet{mycitecolor}{brandeisblue}
+\colorlet{myurlcolor}{malachite}
+
+\hypersetup{
+  linkcolor  = mylinkcolor!\myshade!black,
+  citecolor  = mycitecolor!\myshade!black,
+  urlcolor   = myurlcolor!\myshade!black,
+  colorlinks = true,
+}
+
 \usepackage{rotating}
 \usepackage{listings}
 \definecolor{NiceBlue}{RGB}{11, 102, 163}
@@ -66,7 +84,6 @@ morestring=[b]'
 \newcommand{\eeq}{\end{equation}}
 \usepackage{palatino}           % Less abusive fonts
 \usepackage{macros/palatcm}
-\usepackage{hyperref}
 \let\mathexp=\exp %redefine \exp to \mathexp cuz gb4e package redefines \exp
 \usepackage{gb4e}
 \noautomath
@@ -129,10 +146,11 @@ morestring=[b]'
 
 \author{Koustuv Sinha}
 \date{}
+% TODO: think of the title and then mail Tim for his materials
 \title{PhD Thesis}
 \hypersetup{
  pdfauthor={Koustuv Sinha},
- pdftitle={PhD Thesis},
+ pdftitle={Systematic evaluation of neural language understanding models},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 28.1 (Org mode 9.6)}, 
@@ -170,9 +188,19 @@ morestring=[b]'
 \chapter{Introduction}
 \label{sec:orgeb32902}
 
-\textbf{\textbf{Central Theme of the thesis}} : Understanding systematicity in pre-trained language models through semantic and syntactic generalization.
+% \textbf{\textbf{Central Theme of the thesis}} : Understanding systematicity in pre-trained language models through semantic and syntactic generalization.
 
-In this thesis I discuss my work on understanding systematicity in pre-trained language models.
+A principled focus in computer science research is to develop models which mimic such human-like reasoning. Towards that objective, one of the key goals is to develop models which understand and reason on natural language. Language allows humans to express and comprehend a vast variety of novel thoughts and ideas. It serves as a medium to convey higher-order reasoning and comprehension.
+
+To foster research in developing such state-of-the-art natural language understanding (\acrshort{nlu}) models, several datasets and tasks on reasoning and reading comprehension have been proposed in recent literature. These include tasks such as question answering (QA), natural language inference (NLI), commonsense reasoning to name a few.
+
+Over the last decade, several advancements have been made to develop such models, the most successful ones till date involve deep neural models, especially Transformers \citep{vaswani-etal-2017-attention}, a class of multi-head self-attention models. Since its introduction in 2017, Transformer-based models have achieved impressive results on numerous benchmarks and datasets, with BERT \citep{devlin2018bert} being one of the most popular instantiation of the same. Using a technique known as ``pre-training'', Transformer-based models are first trained to replicate massive corpus of text. Through this kind of unsupervised training, the models learn and tune their millions and billions of parameters, and using which they solve NLU datasets with surprising, near-human efficiency \citep{devlin2018bert,liu-et-al-2019-roberta,lewis-etal-2020-bart}.
+
+While Transformer-based models excel in these datasets, it is less clear why do they work so well. Due to the sheer amount of overparameterization, direct inspection of the inner workings of these models are limited. Thus, various research have been conducted by using auxilliary tasks and probing functions to understand the reasoning processes employed by these models \citep{rogers2020}. It has been claimed in the literature that BERT embeddings contain syntactic information about a given sentence, to the extent that the model may internally perform several natural language processing pipeline steps, involving parts-of-speech tagging, entity recognition etc \citep{tenney-etal-2019-bert}. BERT has also been credited to acquire some level syntactic \citep{hewitt-manning-2019-structural,jawahar-etal-2019-bert}, semantic \citep{ettinger2020}, and world knowledge \citep{petroni2019language, rogers2020}. All of these results indicate to the fact that purely pre-training with massive overparameterized models and large corpora might just be the perfect roadmap to achieve ``human-like'' reasoning capabilities.
+
+On the other hand, there have been growing concerns regarding the ability of these NLU models to understand language in a ``systematic'' and robust way. The phenomenon of \textit{systematicity}, widely studied in the cognitive sciences \citep{gentner1986systematicity}, refers to the fact that lexical units such as words make consistent contributions to the meaning of the sentences in which they appear \citep{fodor1988connectionism}. As an illustration, they provide an example that all English speakers who understand the sentence ``John loves the girl'' should also understand the phrase ``the girl loves John''. In case of NLU tasks, this accounts to model being consistent in understanding novel compositions of existing, learned words or phrases. However, there is growing evidence in literature which highlight the brittleness of NLU systems to such adversarial examples \citep{jia2016,jin2020bert}. More so, there is strong evidence that state-of-the-art NLU models tend to exploit statistical artifacts in datasets, rather than exhibiting true reasoning and generalization capabilities \citep{gururangan2018a,poliak-etal-2018-hypothesis,tsuchiya-2018-performance,naik-etal-2018-stress,mccoy2019}.
+
+In view of the positive and negative evidences towards Transformers acquiring ``human-like'' natural language understanding capacity, it is very important that we take a step back and carefully examine the reasoning processes of the NLU models in the view of systematicity and robustness. Since these NLU models are now being deployed in production and decision making systems, it is even more prudent to test the models towards systematic understanding in order to avoid catastrophic scenarios.
 
 \clearpage
 
@@ -195,10 +223,10 @@ For instance, the central component of propositional or first-order logic is rep
     \alpha \leftarrow \alpha_1, ... , \alpha_m
 \end{equation}
 
-where, $\alpha$ is referred as an atom, and the left-hand side (LHS) of the above equation is known as \textit{head} and the right-hand side (RHS) is referred as \textit{body}. The rules are composed by chaining through the \textit{and} relation ($\land$).
+\noindent where, $\alpha$ is referred as an atom, and the left-hand side (LHS) of the above equation is known as \textit{head} and the right-hand side (RHS) is referred as \textit{body}. The rules are composed by chaining through the \textit{and} relation ($\land$).
 
 Formal semantics offers a mechanism to encode natural language by the usage of a collection of sound \textit{rules} or clauses, using which all possible combinations (conjuction and disjunction) of the formula can be derived using in first-order predicate calculus \cite{hofstadter1980godel}.
-This field in formal semantics is known as \textit{deductive logic}. In the early 1970's, Colmeraurer and \citet{kowalski1979logic} were instrumental in development of a logic based programming language called Prolog. Prolog performs restricted first-order logical resolution using lazy backward-chaining (refer Section \ref{sec:logic_ilp}). Using Prolog, one can specify a set of rules such that it can verify or deduce any given logical formulae.
+This field in formal semantics is known as \textit{deductive logic}. In the early 1970's, Colmeraurer and \citet{kowalski1979logic} were instrumental in development of a logic based programming language called Prolog. Prolog performs restricted first-order logical resolution using lazy backward-chaining. Using Prolog, one can specify a set of rules such that it can verify or deduce any given logical formulae.
 
 However, deductive logic requires a pre-defined set of \textit{rules} governing natural language, which is an untractable problem. Therefore, formal semantics also provides a mechanism to \textit{learn} the rules from the data, using \textit{inductive reasoning}. This kind of learning method belongs to the field of Inductive Logic Programming (ILP) \cite{dvzeroski2009relational}. In this line of approach, one starts with a background knowledge or Knowledge Base (KB) of predicates, and then learns rules or clauses from the given data. KB are often highly incomplete \cite{min2013distant}, and thus ILP can be used to induce rules and infer missing facts by reasoning over the existing relations and predicates. ILP systems can be broadly classified into \textit{forward-chaining} and \textit{backward-chaining} systems. Forward-chaining, also known as \textit{top-down} approaches use \textit{generate-and-test}: they generate clauses from a language definition, and test the generated programs against the positive and negative examples. Backward chaining or \textit{bottom-up} approaches start by examining features of the examples, extract specific clauses from those examples, and then generalize from those specific clauses.
 
@@ -249,7 +277,7 @@ Recently, the field of NLP has witnessed a paradigm shift in research with the a
 \subsection{Feed Forward Neural Networks}
 \label{sec:bg_ffn}
 
-A Feed-Forward Neural Network (FNN) consists of a collection of neurons which are connected to other neurons via synapses or weights. A FNN is further modelled into layers represented as input, hidden or output vectors and weights connecting input and hidden layers, and hidden and output layers. There can also be weights connecting hidden and hidden layers when the number of hidden layers is more than one. A simple formulation of an FNN can be given as:
+A Feed-Forward Neural Network (FNN) consists of a collection of neurons which are connected to other neurons via synapses or weights \cite{rosenblatt1958perceptron}. A FNN is further modelled into layers represented as input, hidden or output vectors and weights connecting input and hidden layers, and hidden and output layers. There can also be weights connecting hidden and hidden layers when the number of hidden layers is more than one. A simple formulation of an FNN can be given as:
 
 \begin{equation}
     f^{(i)} = g(W_ix + b_i)
@@ -355,7 +383,7 @@ One drawback of the vanilla Transformer architecture is that word order cannot b
   x_{i} = x_{i} + \text{PE}[i]
 \end{equation}
 
-Subsequently, an unique learned position feature is used to define the absolute position encoding \citep{devlin2018bert}. Instead of using a fixed function, the model can use a learned positional matrix $\theta_{PE} \in \mathcal{R}^{m \times d}$ of the same dimension (commonly referred to as learned positional embedding), where the features are learned by backpropagation during training.
+Subsequently, a unique learned position feature is used to define the absolute position encoding \citep{devlin2018bert}. Instead of using a fixed function, the model can use a learned positional matrix $\theta_{PE} \in \mathcal{R}^{m \times d}$ of the same dimension (commonly referred to as learned positional embedding), where the features are learned by backpropagation during training.
 
 While absolute position encodings, especially learned position embeddings are still used by many variants of the Transformer models, it lacks the capacity to model relative position distances between tokens \footnote{In Chapter \ref{sec:pos}, we investigate in detail several shortcomings of the learned position embedding scheme}. Thus, relative positional encodings were proposed \citep{shaw-etal-2018-self} which directly encode the relative distance between the words. Specifically, instead of maintaining a large embedding matrix ($\theta_{PE}$), a smaller embedding matrix is now maintained based on a window size $r$, and dynamically compute the position encoding of a token based on the relative distances between the current token and its neighbors within the window of size $r$.
 Please refer to \citet{wang2021on,dufter2021position} for a comprehensive overview of different position encoding strategies.
@@ -371,7 +399,7 @@ More recently, Transformer-based architectures became widely popular with the in
 \begin{itemize}
   \item \textbf{Encoder-only models} This model family only consists of a $n$ layered Transformer model as the encoder, such as BERT \citep{devlin2018bert}. This class of models is utilized to extract generalized representations of sentences, which can be further used in downstream tasks. RoBERTa \citep{liu-et-al-2019-roberta}, DistilBERT \citep{sanh2020distilbert}, ALBERT \citep{lan2019albert}, ELECTRA \citep{clark2020electra} are other examples of this class of model.
   \item \textbf{Encoder-Decoder models} This is a two-step model, which was originally defined in \cite{vaswani2017}. The model architecture contains two separate stacked Transformer layers, where the first stack is used to \textit{encode} the sentence representation, and the second stack is used to generate the target text conditioned on the encoded representation (i.e., to \textit{decode}). BART \citep{lewis-etal-2020-bart}, mBART \citep{liu2020multilingual}, T5 \citep{Raffel2020:T5} are more examples of this class of models.
-  \item \textbf{Decoder only models} In this family of models, they consists of only the decoder element to predict the text from a given input, without having a dedicated encoder block. The goal of these models if the predict the next token given a sentence or paragraph. GPT2 \citep{Radford2019:GPT2}, GPT-3 \citep{Brown2020:GPT3}, Transformer-XL \cite{dai-etal-2019-transformer} are models of this type.
+  \item \textbf{Decoder-only models} In this family of models, they consist of only the decoder element to predict the text from a given input, without having a dedicated encoder block. The goal of these models if the predict the next token given a sentence or paragraph. GPT2 \citep{Radford2019:GPT2}, GPT-3 \citep{Brown2020:GPT3}, Transformer-XL \cite{dai-etal-2019-transformer} are models of this type.
 \end{itemize}
 
 Transformer models can also be classified based on the type of training objective used while pre-training. Broadly, they can be grouped into two classes:
@@ -385,7 +413,31 @@ Transformer models can also be classified based on the type of training objectiv
 
 \subsection{Standard tasks for measuring progress in \acrshort{nlu}}
 
-With the advent of better and higher capacity models to represent text, the need for evaluating the progress in natural language understanding (\acrshort{nlu}) gave rise to development of various tasks and datasets. Popular instances of the datasets include SQUAD \citep{rajpurkar-etal-2016-squad} for Question Answering; SNLI \citep{bowman-etal-2015-large} and MNLI \citep{williams-etal-2018-broad} for Natural Language Inference; DecaNLP \citep{mccann2018natural} and the venerable GLUE \citep{wang-etal-2018-glue} and SuperGLUE \citep{wang-etal-2019-superglue} benchmarks for general language understanding. The GLUE benchmark was proposed to unify the measurement of progress in language understanding by using a collection of publicly released datasets, such as the Corpus of Linguistic Acceptability \citep[CoLA,][]{cola_warstadt2019neural}, Stanford Sentiment Treebank \citep[SST,][]{sst2_socher2013recursive}, Microsoft Research Paragraph Corpus \citep[MRPC,][]{mrpc_dolan2005automatically}, Quora Question Pairs (QQP)\footnote{\href{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}}, Multi-Genre NLI \citep[MNLI,][]{williams-etal-2018-broad}, Question NLI \citep[QNLI,][]{rajpurkar-etal-2016-squad, qnli_2_demszky2018transforming}, Recognizing Textual Entailment \citep[RTE,][]{rte1_dagan2005pascal, rte2_haim2006second, rte3_giampiccolo2007third, rte5_bentivogli2009fifth}, NLI formulation of the Winograd Schema Challenge \citep[WNLI,][]{Levesque2011:WSC}. The SuperGLUE benchmark \citep{wang-etal-2019-superglue} was proposed following the success of GLUE as a much harder benchmark, which consists of Boolean Questions \citep[BoolQ,][]{clark-etal-2019-boolq}, Commitment Bank \citep[CB,][]{de2019commitmentbank}, Choice of Plausible Alternatives \citep[COPA,][]{roemmele2011choice}, Multi-Sentence Reading Comprehension \citep[MultiRC,][]{khashabi-etal-2018-looking}, Reading Comprehension with Commonsense Reasoning Dataset \citep[ReCoRD,][]{zhang2018record}, Recognizing Textual Entailment \citep[RTE,][]{rte1_dagan2005pascal, rte2_haim2006second, rte3_giampiccolo2007third, rte5_bentivogli2009fifth}, Word-in-Context \citep[WiC,][]{pilehvar-camacho-collados-2019-wic} and Winograd Schema Challenge \citep[WSC,][]{Levesque2011:WSC}.
+With the advent of better and higher capacity models to represent text, the need for evaluating the progress in natural language understanding (\acrshort{nlu}) gave rise to development of various tasks and datasets. Popular instances of the datasets include SQUAD \citep{rajpurkar-etal-2016-squad} for Question Answering; SNLI \citep{bowman-etal-2015-large} and MNLI \citep{williams-etal-2018-broad} for Natural Language Inference; DecaNLP \citep{mccann2018natural} and the venerable GLUE \citep{wang-etal-2018-glue} and SuperGLUE \citep{wang-etal-2019-superglue} benchmarks for general language understanding. The GLUE benchmark was proposed to unify the measurement of progress in language understanding by using a collection of publicly released datasets:
+
+\begin{itemize}
+  \item Corpus of Linguistic Acceptability \citep[CoLA,][]{cola_warstadt2019neural}
+  \item Stanford Sentiment Treebank \citep[SST,][]{sst2_socher2013recursive}
+  \item  Microsoft Research Paragraph Corpus \citep[MRPC,][]{mrpc_dolan2005automatically}
+  \item Quora Question Pairs (QQP)\footnote{\href{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}}
+  \item Multi-Genre Natural Language Inference \citep[MNLI,][]{williams-etal-2018-broad}
+  \item Question NLI \citep[QNLI,][]{rajpurkar-etal-2016-squad, qnli_2_demszky2018transforming}
+  \item Recognizing Textual Entailment \citep[RTE,][]{rte1_dagan2005pascal, rte2_haim2006second, rte3_giampiccolo2007third, rte5_bentivogli2009fifth}
+  \item NLI formulation of the Winograd Schema Challenge \citep[WNLI,][]{Levesque2011:WSC}.
+\end{itemize}
+
+\noindent The SuperGLUE benchmark \citep{wang-etal-2019-superglue} was proposed following the success of GLUE as a much harder benchmark. This benchmark consist of the following datasets:
+
+\begin{itemize}
+  \item Boolean Questions \citep[BoolQ,][]{clark-etal-2019-boolq}
+  \item Commitment Bank \citep[CB,][]{de2019commitmentbank}
+  \item Choice of Plausible Alternatives \citep[COPA,][]{roemmele2011choice}
+  \item Multi-Sentence Reading Comprehension \citep[MultiRC,][]{khashabi-etal-2018-looking}
+  \item Reading Comprehension with Commonsense Reasoning Dataset \citep[ReCoRD,][]{zhang2018record}
+  \item Recognizing Textual Entailment \citep[RTE,][]{rte1_dagan2005pascal, rte2_haim2006second, rte3_giampiccolo2007third, rte5_bentivogli2009fifth}
+  \item Word-in-Context \citep[WiC,][]{pilehvar-camacho-collados-2019-wic}
+  \item Winograd Schema Challenge \citep[WSC,][]{Levesque2011:WSC}
+\end{itemize}
 
 Using these benchmarks, text understanding systems have been compared against each other to measure progress in the field. While \acrshort{rnn}s and LSTMs exhibited modest performance in these tasks, the advent of attention mechanisms \citep{bahdanau2014neural} increased the performance to considerable extent. However, we witnessed meteoric improvements on these benchmarks with every release of a new variant of the Transformer model, which typically consists of increasingly large amount of parameters and have been progressively trained on greater amount of unlabeled data \citep{kaplan2020scaling}. The performance rise has even skyrocketed beyond human performance on these tasks \citep[Figure~1]{kiela-etal-2021-dynabench}. This stunning progress with the pre-trained Transformer family of models on \acrshort{nlu} taks have attracted greater investments in pre-training even larger models \citep{Brown2020:GPT3, Zhang2022:OPT}; invited researchers to dig deep into the reasoning process employed by these models \citep{rogers-etal-2020-primer}; and have invited a higher level of scrutiny of the model outputs \citep{jia2017adversarial, gururangan-etal-2018-annotation}.
 
@@ -772,7 +824,7 @@ For all models, the common hyperparameters used are: Embedding dimension: 100 (e
     \item \textbf{Relation Networks} \citep{santoro2017simple}: $f_{{\theta}_1}$ : 256, $f_{{\theta}_2}$: 64, $g_{\theta}$ : 64
     \item \textbf{Compositional Memory Attention Network (MAC)} \citep{hudson2018compositional}: \# Iterations: 6, \texttt{shareQuestion}: True, Dropout - Memory, Read and Write: 0.2
     \item \textbf{Relational Recurrent Networks} \citep{santoro2018relational}: Memory slots: 2, Head size: 192, Number of heads: 4, Number of blocks : 1, forget bias : 1, input bias: 0, gate style: unit, key size: 64, \# Attention layers: 3, Dropout: 0
-    \item \textbf{BERT} \citep{devlin2018bert}: Layers : 12, Fixed pretrained embeddings from \\ \texttt{bert-base-uncased} using Pytorch HuggingFace BERT repository \footnote{\hyperlink{https://github.com/huggingface/pytorch-pretrained-BERT}{https://github.com/huggingface/pytorch-pretrained-BERT}}, Word dimension: 768, appended with a two-layer MLP for final prediction.
+    \item \textbf{BERT} \citep{devlin2018bert}: Layers : 12, Fixed pretrained embeddings from \\ \texttt{bert-base-uncased} using Pytorch HuggingFace BERT repository \footnote{\href{https://github.com/huggingface/pytorch-pretrained-BERT}{https://github.com/huggingface/pytorch-pretrained-BERT}}, Word dimension: 768, appended with a two-layer MLP for final prediction.
     \item \textbf{BERT-LSTM}: Same parameters as above, with a two-layer unidirectional LSTM encoder on top of BERT word embeddings.
     \item \textbf{GAT} \citep{Velickovic2017-mh}: Node dimension: 100, Message dimension: 100, Edge dimension: 20, number of rounds: 3
 \end{itemize}
@@ -1908,10 +1960,10 @@ We use this class of non-parametric probes to investigate RoBERTa's ability to l
 \section{Discussion}
 \label{sec:mlm_discussion}
 
-The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, many linguistic constructs are undefined. % (e.g.\ dependency or constituency parses would no longer be syntactic trees, what would sentences be but mere lists of words).
+The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, many linguistic constructs are undefined. (e.g.\ dependency or constituency parses would no longer be syntactic trees, what would sentences be but mere lists of words).
 Our fine-tuning results in \autoref{sec:mlm_glue_results} and parametric probing results in \autoref{sec:mlm_param_probing}, however, suggests that MLMs do not need to rely much on word order to achieve high accuracy, bringing into question previous claims that they learn a ``classical NLP pipeline.''
 
-The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, most linguistic constructs are undefined (e.g.\ dependency or constituency parses would no longer be syntactic trees, what would sentences be but mere lists of words).
+% The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, most linguistic constructs are undefined
 
 One might ask, though, whether an NLP pipeline would really need natural word order at all: can transformers not simply learn what the correct word order is from unordered text?
 First, the lower non-parametric probing accuracies of the randomized models indicate that they are not able to accurately reconstruct the original word order (see also \autoref{sec:mlm_ablations}).
@@ -2008,7 +2060,7 @@ Our results highlight the severity of position shortcuts taken by the model duri
 \label{sec:pos_technical_bg}
 
 Position encodings used by TLMs come in three broad categories: fixed sinusoidal embeddings as proposed by \citet{vaswani2017}, absolute or learned popularized by BERT \cite{Devlin2019:BERT} family of masked language models, and relative positions \citep{shaw-etal-2018-self} used by T5 \cite{Raffel2020:T5}.
-Fixed position embeddings \cite{vaswani2017} consists of representing token positions with a sinusoidal function. BERT (cite:devlin)-style family of masked language models propose using absolute position embeddings, which learn an unique vector assigned to each position.
+Fixed position embeddings \cite{vaswani2017} consists of representing token positions with a sinusoidal function. BERT \citep{Devlin2019:BERT}-style family of masked language models propose using absolute position embeddings, which learn an unique vector assigned to each position.
 Subsequently, relative position embedding techniques have been proposed, which involve computing position embeddings on the fly based on a neighborhood window. \autoref{tab:models_pe} provides an overview of different positional encodings used in public models.
 \citet{wang2021on} presents a comprehensive overview of current encoding strategies.
 
@@ -2086,7 +2138,7 @@ We use BLiMP \citep{warstadt-etal-2020-BLiMP-benchmark} for the grammatical acce
 % how to construct the input.
 % increase phase shift k in 10 intervals.
 We use all 67 subsets (a total of 67K data instances) of BLiMP \cite{warstadt-etal-2020-BLiMP-benchmark}. A model achieves a score of 1 if it successfully assigns a lower perplexity to the grammatical version of each example. We report the average score across the entire dataset for starting positions that are shifted in the intervals of 10.
-The inputs are fed to the models in the format explained in \autoref{app:trigger_tokens}.
+The inputs are fed to the models in the format explained in \autoref{sec:pos_technical_bg}.
 Recall that perplexities are ill-defined in case of Masked Language Models. Thus, we follow the formulation of \citet{salazar2019masked} to compute a pseudo-perplexity for RoBERTa and BART.
 We adopt the Minicons \cite{misra2022minicons} library to compute the perplexities, which provides a unified interface for models hosted in HuggingFace \citep{huggingface}.
 
@@ -2366,17 +2418,41 @@ We hope our work can inform the community on the pitfalls of using APEs, and ins
 \clearpage
 
 \chapter{Conclusion}
-\label{sec:org8fd280e}
+\label{chap:conclusion}
+
+In this thesis, we have used \textit{systematicity} as a tool to inspect and investigate the semantic and syntactic reasoning capabilities of state-of-the-art \acrshort{nlu} models. In NLP, we witness a trend of ever-increasing size of large language models of the Transformer family, following the laws of scale \citep{kaplan2020scaling}. These models tend to saturate established benchmarks quickly, even surpassing human-level performance \citep{kiela-etal-2021-dynabench}, and project a notion human-level reasoning capability. However, in this thesis we re-evaluate those notions using the principles of systematicity. We observe in our results that such models fail to display robust, systematic human-like behaviors while processing natural language, which can cause severe issues in production settings.  My work in this thesis attempts to highlight these issues; provides a mechanism to understand the black-box nature of the Transformer-family large language models; and allow us to evaluate their human-like generalization capability. The findings of this thesis will hopefully help the community to develop more robust and human-like \acrshort{nlu} models in the future.
+
 \section{Summary}
-\label{sec:org94aab9a}
-\section{Limitations}
-\label{sec:org217d56a}
+\label{sec:conc_summary}
+
+To summarize the major findings in this thesis:
+
+\begin{itemize}
+  \item \textbf{Generalization via composition is hard, depends on the structure of input.} In Chapter \autoref{chap:clutrr} we observe that \acrshort{nlu} models fail short of generalizing to systematic compositions of known rules. This highlights the models inability to reason by stitching known components, which is a key requirement for modular systems. We also observe the models to be highly sensitive to unwanted noise in the input, which a human can easily circumvent. Finally, we observe that one of the key hurdles for the model to achieve systematic generalization is its inability to comprehend the variability of syntax of natural language.
+
+  \item \textbf{Models face word-order insensitivity issues in inference and pre-training.} In Chapter \autoref{sec:unli}, we further find evidence of the poor syntactic encoding of state-of-the-art \acrshort{nlu} models, by applying the notions of systematicity to word-order. Specifically, we find these models are surprisingly \textit{in}-sensitive to drastic perturbations of word-order, which is undoubtedly one of the basic components needed for syntax understanding. We observe for downstream tasks such as MNLI \citep{williams2017broad}, a state-of-the-art model can still perform optimally (or sometimes even better) on inputs where word-order is scrambled, making the input devoid of the original semantic information. Furthermore, in Chapter \autoref{sec:mlm}, we observe the same models achieve near optimal downstream performance when pre-trained from scratch on word-order shuffled data. Thus, we observe word-order being a powerful tool to investigate the systematicity of model reasoning capability.
+
+  \item \textbf{Syntax representation of large language models is considerably weaker than we thought.} Following the results of Chapter \autoref{sec:unli} and Chapter \autoref{sec:mlm}, one might be quick to conclude that Transformer-family of models have no syntactic abilities at all. However, that is not the case. Our results highlights a key aspect of the internal workings of Transformer-family of models: they do not require the same notions of classic syntax processing pipelines (pos-tagging, named-entity recognition, parsing, etc) as we thought them to have in order to achieve good downstream performance. Rather, their high performance can be explained by their distributional nature: ability to learn the n-gram statistics of tokens from the training copora. Our results can also highlight that fact that our current methods of evaluating syntax in these models is outdated, and we need better understanding of syntax evaluation mechanisms, such that they are co-related with the downstream task results.
+
+  \item \textbf{A probable cause of weak syntax encoding is due to its poor understanding of relative positions.} Finally, in Chapter \autoref{sec:pos} we attempt to understand the reason models are weak in their syntax encoding. We observe that it can be partially explained by the poor relative position encoding scheme employed by the Transformer-family of models. Due to their lack of proper relative position understanding, these models are prone to different sentence processing behaviors when subjected to understanding a sentence within a context in isolation. We provide a thorough analysis and conjecture that the positional encoding schemes employed by these models should be revisited closely in order to improve their syntax representation abilities.
+
+\end{itemize}
+
+% TODO: should I need a limitation section?
+% \section{Limitations}
+% \label{sec:conc_limits}
+
 \section{Future Work}
-\label{sec:org9de237c}
+\label{sec:conc_future}
 
-A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consider ``the details of human language, how it is learned, processed, and how it changes, rather than just chasing state-of-the-art numbers on a benchmark task.'' We expand upon this view, and suggest one particular future direction: we should train models not only to do well on clean test data, but also to not to overgeneralize to corrupted input. %perform natural language understanding in an humanlike way
+The work presented in this thesis opens up several exciting prospects for future work. A non-exhaustive set of ideas for future work based on top of our results is listed here.
 
+\paragraph{Mutually exclusive learning} A few years ago, \cite{manning-etal-2015-computational} encouraged NLP to consider ``the details of human language, how it is learned, processed, and how it changes, rather than just chasing state-of-the-art numbers on a benchmark task.'' In this thesis, we expand upon this view, and suggest one particular future direction: we should train models not only to do well on clean test data, but also be \textit{consistent} in their understanding of corrupt, malformed or irrelevant data. For instance, a systematic model should avoid processing a malformed, corrupt or noisy input - instead it should provide mechanisms for early detection and exit. This concept is studied under the realm of \textit{mutual exclusivity}, which has been shown to be a recurrent problem of neural networks \citep{gandhi2019mutual}. A good future direction to alleviate the issues of word-order insensitivity would be to design word-order exclusive models, which will provide an early exit mechanism when they encounter corrupt input.
 
+\paragraph{Leveraging distributional overlap to measure model performance} Our results in Chapter \autoref{sec:mlm} highlight the distributional characteristics which the large language models employ to achieve good model performance. The results suggests that the Transformer-family of models utilize their massive amount of parameters to memorize the statistics of n-gram distributions during pre-training. Recent results \citep{feldman2020neural, carlini2021, carlini2022a} also corroborate the claim that models with larger amount of parameters memorize longer contiguous stretches of the input text. Future work can leverage this fact to devise tailored evaluation datasets for each model, such that the test distribution has the least amount of overlap with the n-gram distributions learned by the model.
+
+\paragraph{Developing privacy sensitive \acrshort{nlu} models}
+The results from Chapter \autoref{sec:unli} and Chapter \autoref{sec:mlm} also open an exciting future direction to develop privacy sensitive \acrshort{nlu} models. Recent results increasingly highlight a growing concern for developing privacy sensitive models. Transformer models are shown to memorize large amount of training data, which can be extracted via prompting methods \citep{carlini2021, carlini2022a}, sensitive token information can be gained by attack vectors in embedding space \citep{song2020information}, or by carefully crafted adversarial attacks \citep{henderson2018ethical}. Current privacy preserving techniques typically involve extensive computation, and result in sub-optimal downstream task performance \citep{jayaraman2019evaluating}. Given our results, leveraging word-order to pre-train Transformer-family models can be a powerful alternative to develop privacy sensitive \acrshort{nlu} models. Any prompting based attack vector will not be able to extract the same sentences used during training, as the input is itself shuffled and corrupted. A shuffled input would also result in retrieving sensitive information harder, as the context required to extract the same information is not in its original position in the training data. The resulting model would not lose downstream performance considerably, as the model only requires the distributional statistic to perform optimally (\autoref{sec:mlm_downstream_results}).
 
 \clearpage
 

@@ -99,11 +99,14 @@ morestring=[b]'
 \makeglossaries
 
 % GLossary entries
-\newglossaryentry{tlm}{name=Transformers,description={{A class of models first derived by Vaswani et al. 2017}}}
+% \newglossaryentry{tlm}{name=Transformers,description={{A class of models first derived by Vaswani et al. 2017}}}
 % Acronyms
 \newacronym{llm}{LLMs}{Large Language Models}
 \newacronym{nlu}{NLU}{Natural Language Understanding}
 \newacronym{rnn}{RNN}{Recurrent Neural Networks}
+\newacronym{mlm}{MLM}{Masked Language Models}
+\newacronym{tlm}{TLM}{Transformer Language Models}
+\newacronym{ape}{APE}{Absolute Position Encodings}
 
 
 \newcommand{\xhdr}[1]{{\noindent\bfseries #1}.}
@@ -394,7 +397,7 @@ Please refer to \citet{wang2021on,dufter2021position} for a comprehensive overvi
 Transformer architectures introduce mechanisms to drastically increase the amount of trainable model parameters, compared to \acrshort{rnn} and LSTM counterparts.
 With increasing number of model parameters, the requirement to train on large datasets became inevitable - as otherwise it is not possible to fully train the model parameters. However, it is challenging to design tasks of such scale due to extremely expensive annotation costs. In contrast, it is relatively easy to obtain large-scale unlabeled corpora, typically through scraping the internet \cite{raffel2019exploring} or collecting all literary works \cite{zhu2015aligning}. Thus emerged the idea of \textit{pre-training}, where a massive, unlabeled corpus is leveraged to train a \textit{language model}, i.e. predicting the probability of tokens given the context (\autoref{sec:bg_ngram_lang}). Given an input context, the aim of a given model is to compute a representation of the same, in order to predict the next token probability distribution, typically in the form of a softmax function over the full vocabulary. Learning such a language model on top of the massive corpora yields better contextual token representation, which are then utilized to perform various downstream tasks. The large, unlabeled data can be leveraged to learn useful word embeddings either using pairwise ranking \citep{collobert2008unified}, or through the use of shallow architectures \citep{mikolov2013efficient}, or by computing global word-word co-occurence statistics \citep{pennington2014glove}. However, these pre-trained word embeddings are still context-independent, and requires learning context-dependent parameters from scratch on the downstream task. Thus, efforts have been made to pre-train the entire model parameters instead of generating word embeddings by training in a language modeling objective, using bidirectional LSTM based architectures \citep{peters2018deep}. These models are then used to fine-tune on downstream tasks such as text classification \citep{howard2018universal}.
 
-More recently, Transformer-based architectures became widely popular with the introduction of BERT \citep{devlin2018bert}. BERT is fundamentally a stack of Transformer layers, having multiple self-attention heads. To learn its massive amount of parameters, BERT is pre-trained on unlabeled corpora using two self-supervised training objectives: masked language modeling (MLM) and next sentence prediction (NSP) (predicting if two sentences are adjacent to each other). In MLM, an input sentence is corrupted by randomly masking some percentage of tokens, and the objective of the model is to leverage the context to predict the correct masked tokens. In NSP, BERT is provided an additional objective to predict if two given sentences are neighbors \footnote{In the followup works, such as RoBERTa, the NSP objective has been subsequently discarded in favor of pure MLM objective on larger batch sizes.}. BERT significantly improved the state-of-the art in many downstream tasks - ranging from text classication, question answering, natural language inference, machine translation, summarizatio, to name a few. Subsequently, several flavor of Transformer models have been proposed, which can be broadly classified into three distinct classes:
+More recently, Transformer-based architectures became widely popular with the introduction of BERT \citep{devlin2018bert}. BERT is fundamentally a stack of Transformer layers, having multiple self-attention heads. To learn its massive amount of parameters, BERT is pre-trained on unlabeled corpora using two self-supervised training objectives: masked language modeling (\acrshort{mlm}) and next sentence prediction (NSP) (predicting if two sentences are adjacent to each other). In \acrshort{mlm}, an input sentence is corrupted by randomly masking some percentage of tokens, and the objective of the model is to leverage the context to predict the correct masked tokens. In NSP, BERT is provided an additional objective to predict if two given sentences are neighbors \footnote{In the followup works, such as RoBERTa, the NSP objective has been subsequently discarded in favor of pure \acrshort{mlm} objective on larger batch sizes.}. BERT significantly improved the state-of-the art in many downstream tasks - ranging from text classication, question answering, natural language inference, machine translation, summarizatio, to name a few. Subsequently, several flavor of Transformer models have been proposed, which can be broadly classified into three distinct classes:
 
 \begin{itemize}
   \item \textbf{Encoder-only models} This model family only consists of a $n$ layered Transformer model as the encoder, such as BERT \citep{devlin2018bert}. This class of models is utilized to extract generalized representations of sentences, which can be further used in downstream tasks. RoBERTa \citep{liu-et-al-2019-roberta}, DistilBERT \citep{sanh2020distilbert}, ALBERT \citep{lan2019albert}, ELECTRA \citep{clark2020electra} are other examples of this class of model.
@@ -1379,7 +1382,7 @@ in that we additionally include the following: we (i) outline theoretically-info
 % cite our two permutations papers & Yoon's student's in relation to our translation paper.
 While our work (and \citeauthor{pham-etal-2020-out,gupta-etal-2021-bert}) only permutes data during fine-tuning and/or evaluation,
 %raising the natural question: what is the result of permuting during training. \newcite{sinha2021masked} addresses this question.
-recently \citeauthor{sinha2021masked} explored the sensitivity during pre-training, and found that models trained on n-gram permuted sentences perform remarkably close to regular MLM pre-training.
+recently \citeauthor{sinha2021masked} explored the sensitivity during pre-training, and found that models trained on n-gram permuted sentences perform remarkably close to regular \acrshort{mlm} pre-training.
 In the context of generation, \cite{parthasarathi2021sometimes} crafted linguistically relevant perturbations (on the basis of part-of-speech tagging and dependency parsing) to evaluate whether permutation hinders automatic machine translation models. Relatedly, but not for translation, \cite{alleman2021syntactic} investigated a smaller inventory of perturbations with emphasis on phrasal boundaries and the effects of n-gram perturbations on different layers in the network. % AW: Koustuv, please check this
 
 % TODO: gururangan citation is double, check and remove
@@ -1432,40 +1435,40 @@ The following chapter is also a direct consequence of the results observed in th
 \label{sec:mlm}
 
 The field of natural language processing (NLP) has become dominated by the pretrain-and-finetune paradigm, where we first obtain a good parametric \emph{prior} in order to subsequently model downstream tasks accurately.
-In particular, masked language model (MLM) pre-training, as epitomized by BERT \citep{devlin-etal-2019-bert}, has proven wildly successful, although the precise reason for this success has remained unclear.
+In particular, masked language model (\acrshort{mlm}) pre-training, as epitomized by BERT \citep{devlin-etal-2019-bert}, has proven wildly successful, although the precise reason for this success has remained unclear.
 On one hand, we can view BERT as the newest in a long line of NLP techniques  \cite{deerwester1990indexing, landauer1997solution, collobert2008unified, mikolov2013, peters-etal-2018-deep} that exploit the well-known distributional hypothesis~\cite{harris1954distributional}.
 %\footnote{One might even argue that BERT is not actually all that different from earlier distributional models like word2vec~\cite{mikolov2013}, see \autoref{app:bert-is-word2vec}.}
 On the other hand, it has been claimed that BERT ``rediscovers the classical NLP pipeline''~\cite{tenney-etal-2019-bert}, suggesting that it has learned ``the types of syntactic and semantic abstractions traditionally believed necessary for language processing''
 rather than ``simply modeling complex co-occurrence statistics''~(ibid. p.1).
 
-In this chapter, we aim to uncover how much of MLM's success comes from learning simple distributional information, as opposed to grammatical abstractions \citep{tenney-etal-2019-bert,manning2020emergent}. Thus, in this chapter I discuss our work \citep{sinha-etal-2021-masked}, where we disentangle these two hypotheses by measuring the effect of removing word order information during pre-training:
+In this chapter, we aim to uncover how much of \acrshort{mlm}'s success comes from learning simple distributional information, as opposed to grammatical abstractions \citep{tenney-etal-2019-bert,manning2020emergent}. Thus, in this chapter I discuss our work \citep{sinha-etal-2021-masked}, where we disentangle these two hypotheses by measuring the effect of removing word order information during pre-training:
 any sophisticated (English) NLP pipeline would presumably depend on the syntactic information conveyed by the order of words.
-We find that surprisingly most of MLM's high performance can in fact be explained by the ``distributional prior'' rather than its ability to replicate the classical NLP pipeline.
+We find that surprisingly most of \acrshort{mlm}'s high performance can in fact be explained by the ``distributional prior'' rather than its ability to replicate the classical NLP pipeline.
 
-Concretely, we pre-train MLMs~(RoBERTa, \citealt{liu2019b}) on various corpora with permuted word order while preserving some degree of distributional information, and examine their downstream performance.
+Concretely, we pre-train \acrshort{mlm}s~(RoBERTa, \citealt{liu2019b}) on various corpora with permuted word order while preserving some degree of distributional information, and examine their downstream performance.
 %In our main experiments, we pre-train models on
 %various permuted corpora , by randomly shuffling $n$-grams within the sentence (where $n \in \{1,2,3,4\}$).
-We also experiment with training MLMs without positional embeddings, making them entirely order agnostic,
+We also experiment with training \acrshort{mlm}s without positional embeddings, making them entirely order agnostic,
 and with training on a corpus sampled from the source corpus's %uniform or
 unigram distribution%, removing both distributional and word order information
 . We then evaluate these ``permuted'' models in a wide range of settings and compare with regularly-pre-trained models.
 
 We demonstrate that pre-training on permuted data has surprisingly little effect on downstream task performance after fine-tuning (on non-shuffled training data).
-In our previous chapter we observed that MLMs are quite robust to permuting downstream test data (\autoref{sec:unli_results_accept}) and even do quite well using permuted ``unnatural'' downstream train data \cite{sinha2020b,gupta-etal-2021-bert}. In this chapter, we show that downstream performance for ``unnatural language pre-training'' is much closer to standard MLM pre-training than one might expect.
+In our previous chapter we observed that \acrshort{mlm}s are quite robust to permuting downstream test data (\autoref{sec:unli_results_accept}) and even do quite well using permuted ``unnatural'' downstream train data \cite{sinha2020b,gupta-etal-2021-bert}. In this chapter, we show that downstream performance for ``unnatural language pre-training'' is much closer to standard \acrshort{mlm} pre-training than one might expect.
 
 In an effort to shed light on these findings, we experiment with various probing tasks. We verify via non-parametric probes that the permutations do in fact make the model worse at syntax-dependent tasks. However, just like on the downstream fine-tuning tasks, permuted models perform well on parametric syntactic probes, in some cases almost matching the unpermuted model's performance, which is quite surprising given how important word order is crosslinguistically (\citealt{greenberg1963some, dryer1992greenbergian, cinque1999adverbs}, i.a.).
 
 Our results can be interpreted in different ways.
 One could argue that our downstream and probing tasks are flawed, and that we need to examine models with examples that truly test strong generalization and compositionality.
 Alternatively, one could argue that prior works have overstated the dependence of human language understanding on word order, and that human language understanding depends less on the structure of the sentence and more on the structure of the \emph{world}, which can be inferred to a large extent from distributional information.
-This work is meant to deepen our understanding of MLM pre-training and, through this, move us closer to finding out what is actually required for adequately modelling natural language.
+This work is meant to deepen our understanding of \acrshort{mlm} pre-training and, through this, move us closer to finding out what is actually required for adequately modelling natural language.
 
 
 
 \section{Technical Background}
 \label{sec:mlm_bg}
 
-Masked Language Modelling (MLM) is a pre-training technique popularized by BERT \citep{devlin2018bert}. Unlike the autoregressive processing of traditional Transformer \citep{vaswani2017} models, BERT introduces bi-directional attention mechanism in which the model no longer have to restrict attentions to past tokens: the model can now attend to any tokens in the input, in both left-to-right and right-to-left directions (\autoref{sec:bg_pretraining}). To train such bi-directional self-attention models, MLM pre-training is used where first the input sentence is corrupted by replacing 15\% of tokens with mask token (\texttt{<MASK>}), and then the training objective entails predicting the masked tokens in the output. Thus, to predict any mask token, the model can attend to the entire context (hence the bi-directionality). This kind of pre-training technique allows models to be trained in larger batch sizes, effectively utilizing the GPU operations. Having access to bi-directional context also allows the model to learn long-range dependencies.
+Masked Language Modelling (\acrshort{mlm}) is a pre-training technique popularized by BERT \citep{devlin2018bert}. Unlike the autoregressive processing of traditional Transformer \citep{vaswani2017} models, BERT introduces bi-directional attention mechanism in which the model no longer have to restrict attentions to past tokens: the model can now attend to any tokens in the input, in both left-to-right and right-to-left directions (\autoref{sec:bg_pretraining}). To train such bi-directional self-attention models, \acrshort{mlm} pre-training is used where first the input sentence is corrupted by replacing 15\% of tokens with mask token (\texttt{<MASK>}), and then the training objective entails predicting the masked tokens in the output. Thus, to predict any mask token, the model can attend to the entire context (hence the bi-directionality). This kind of pre-training technique allows models to be trained in larger batch sizes, effectively utilizing the GPU operations. Having access to bi-directional context also allows the model to learn long-range dependencies.
 
 \section{Experimental Setup}
 \label{sec:mlm_experimental_setup}
@@ -1474,7 +1477,7 @@ Masked Language Modelling (MLM) is a pre-training technique popularized by BERT 
 \subsection{Sentence word order permutation}
 \label{sec:mlm_sentence_permutation}
 
-To investigate to what extent the performance of MLM pre-training is a consequence of distributional information, we construct a training corpus devoid of natural word order but preserving local distributional information. We construct word order-randomized versions of the BookWiki corpus (the Toronto Books Corpus, \citealt{zhu2015aligning}, plus English Wikipedia) from \citet{liu2019b}, following the setup described in \autoref{sec:unli_exp_setup}. %, where each sentence is stripped of its original word order.
+To investigate to what extent the performance of \acrshort{mlm} pre-training is a consequence of distributional information, we construct a training corpus devoid of natural word order but preserving local distributional information. We construct word order-randomized versions of the BookWiki corpus (the Toronto Books Corpus, \citealt{zhu2015aligning}, plus English Wikipedia) from \citet{liu2019b}, following the setup described in \autoref{sec:unli_exp_setup}. %, where each sentence is stripped of its original word order.
 Concretely, given a sentence $S$ containing $N$ words, we permute the sentence using a seeded random function $\mathcal{F}_1$ such that no word can remain in its original position. In total, there exist $(N-1)!$ possible permutations of a given sentence. We randomly sample a single permutation per sentence, to keep the total dataset size similar to the original.
 
 We extend the permutation function $\mathcal{F}_1$ to a function $\mathcal{F}_n$ that preserves $n$-gram information. Specifically, given a sentence $S$ of length $N$ and $n$-gram value $n$, we sample a starting position $i$ for possible contiguous $n$-grams $\in \{0, N-n\}$ and convert the span $S[i,i+n]$ to a single token, to form $\hat{S}$, of length $\hat{N} = N - (n+1)$. We continue this process repeatedly (without using the previously created n-grams) until there exists no starting position for selecting a contiguous n-gram in $\hat{S}$. For example, given a sentence of length $N=6$, $\mathcal{F}_4$ will first convert one span of 4 tokens into a word, to have $\hat{S}$ consisting of three tokens (one conjoined token of 4 contiguous words, and two leftover words).
@@ -1541,7 +1544,7 @@ Finally, we consider a randomly initialized RoBERTa model \RT\, to observe the e
 \section{Evaluated Models \& Tasks}
 \label{sec:mlm_evaluated_models}
 
-We use the RoBERTa (base) \cite{liu2019b} MLM architecture, due to its relative computational efficiency and good downstream task performance. We expect that other variants of MLMs would provide similar insights, given their similar characteristics.
+We use the RoBERTa (base) \cite{liu2019b} \acrshort{mlm} architecture, due to its relative computational efficiency and good downstream task performance. We expect that other variants of \acrshort{mlm}s would provide similar insights, given their similar characteristics.
 
 In all of our experiments, we use the original 16GB BookWiki corpus.\footnote{We release the pre-trained RoBERTa models used in our experiments through the FairSeq repository:  \href{https://github.com/pytorch/fairseq/tree/master/examples/shuffled_word_order}{https://github.com/pytorch/fairseq/tree/master/examples /shuffled\_word\_order}.} We denote the model trained on the original, un-modified BookWiki corpus as \OR{} (for ``natural''). We use two types of word order randomization methods: permuting words at the sentence level, and resampling words at the corpus level.
 
@@ -1645,7 +1648,7 @@ We hypothesize that \OR\ represents shuffled and non-shuffled sentences very dif
 \label{sec:mlm_probing_results}
 
 %Downstream tasks paint only a partial picture of the information contained in the pre-trained representation.
-To investigate how much syntactic information is contained in the MLM representations, we evaluate several probing tasks on our trained models. We consider two classes of probes: \textit{parametric} probes, which make use of learnable parameters, and \textit{non-parametric} probes, which directly examine the language model's predictions.
+To investigate how much syntactic information is contained in the \acrshort{mlm} representations, we evaluate several probing tasks on our trained models. We consider two classes of probes: \textit{parametric} probes, which make use of learnable parameters, and \textit{non-parametric} probes, which directly examine the language model's predictions.
 
 \subsubsection{Parametric Probing}
 \label{sec:mlm_param_probing}
@@ -1732,7 +1735,7 @@ that parametric ones do not.
 
 We also train further model ablations with low to high distributional priors. Following the construction of the corpus bootstrap resample, we train a model where words are drawn uniformly from BookWiki corpus, thus destroying the natural frequency distribution (\RU). We further study an ablation for a high distributional prior, \RV, where we shuffle words (unigram) in a buffer created with joining multiple sentences such that maximum token length of the buffer is 512. This ablation---which is similar to the paragraph word shuffle condition in \cite{gauthier-levy-2019-linking}---will allow us to study the effect of unigram shuffling in a window larger than the one for \RI. Buffer size is chosen to be 512 because BERT/RoBERTa is typically trained with that maximum sequence length.
 
-We observe dev set results on the GLUE benchmark of these ablations, along with baselines \RC, \RT\ and \NP\ and random shuffles in \autoref{table:glue_ablations} and \autoref{fig:mlm_all_glue_plot}. We observe that \RV\ exhibits worse overall scores than \RI, however it is still significantly better than \NP\ or \RC\ baselines. We observe that destroying the natural frequency distribution of words (\RU) yields comparable or slightly better results compared to random corpus model \RC. This result shows that merely replicating the natural distribution of words without any context is not useful for the model to learn. These results indicate that at least some form of distributional prior is required for MLM-based models to learn a good downstream representation.
+We observe dev set results on the GLUE benchmark of these ablations, along with baselines \RC, \RT\ and \NP\ and random shuffles in \autoref{table:glue_ablations} and \autoref{fig:mlm_all_glue_plot}. We observe that \RV\ exhibits worse overall scores than \RI, however it is still significantly better than \NP\ or \RC\ baselines. We observe that destroying the natural frequency distribution of words (\RU) yields comparable or slightly better results compared to random corpus model \RC. This result shows that merely replicating the natural distribution of words without any context is not useful for the model to learn. These results indicate that at least some form of distributional prior is required for \acrshort{mlm}-based models to learn a good downstream representation.
 
 \input{tables/mlm/seed_diff}
 
@@ -1785,10 +1788,10 @@ We also conduct extensive experiments with Second Order Tree CRF Neural Dependen
     \label{fig:bpplm}
 \end{figure}
 
-We measure perplexity of various pre-trained randomization models on text that is randomized using the same function $\mathcal{F}$. Conventional language models compute the perplexity of a sentence $S$ by using past tokens ($S_{<t} = (w_1, w_2, \ldots, w_{t-1})$) and the application of chain rule ($\sum_{t=1}^{|S|} \log P_{\textit{LM}}(w_t | S_{t-1})$). However, this formulation is not defined for MLM, as a word is predicted using the entire sentence as a context.  Following \citet{salazar2020a}, we measure \textit{Pseudo-Perplexity}, i.e., given a sentence $S$, we compute the log-probability of the missing word in $S$ by iteratively masking out the specific word, and computing the average log-probability per word in $S$:
+We measure perplexity of various pre-trained randomization models on text that is randomized using the same function $\mathcal{F}$. Conventional language models compute the perplexity of a sentence $S$ by using past tokens ($S_{<t} = (w_1, w_2, \ldots, w_{t-1})$) and the application of chain rule ($\sum_{t=1}^{|S|} \log P_{\textit{LM}}(w_t | S_{t-1})$). However, this formulation is not defined for \acrshort{mlm}, as a word is predicted using the entire sentence as a context.  Following \citet{salazar2020a}, we measure \textit{Pseudo-Perplexity}, i.e., given a sentence $S$, we compute the log-probability of the missing word in $S$ by iteratively masking out the specific word, and computing the average log-probability per word in $S$:
 
 \begin{equation}
-    \texttt{PLL}(S) = \frac{1}{|S|} \sum_{w \in S} \log P_{\texttt{MLM}} (w | S_{\setminus w}; \theta)
+    \texttt{PLL}(S) = \frac{1}{|S|} \sum_{w \in S} \log P_{\texttt{\acrshort{mlm}}} (w | S_{\setminus w}; \theta)
 \end{equation}
 
 We bootstrap the \texttt{PLL} score of a test corpus $T$ by drawing 100 samples five times with replacement. We also similarly compute the bootstrap perplexity  following \citeauthor{salazar2020a}:
@@ -1934,7 +1937,7 @@ In this work, we take these investigations a step further: we show that the word
 
 Random controls have been explored in a variety of prior work.
 \citet{wietingkiela2019} show that random sentence encoders are surprisingly powerful baselines.  \citet{gauthier-levy-2019-linking} use random sentence reordering to label some tasks as ``syntax-light'' making them more easily decodeable from images of the brain.
-\citet{shen2020a} show that entire layers of MLM transformers can be randomly initialized and kept frozen throughout training without detrimental effect and that those layers perform better on some probing tasks than their frozen counterparts.
+\citet{shen2020a} show that entire layers of \acrshort{mlm} transformers can be randomly initialized and kept frozen throughout training without detrimental effect and that those layers perform better on some probing tasks than their frozen counterparts.
 Models have been found to be surprisingly robust to randomizing or cutting syntactic tree structures they were hoped to rely on~\cite{scheible2013cutting,williams2018latent}, and randomly permuting attention weights often induces only minimal changes in output \cite{jain-wallace-2019-attention}. In computer vision, it is well known that certain architectures constitute good ``deep image priors'' for fine-tuning~\cite{ulyanov2018deep} or pruning~\cite{frankle2020training}, and that even randomly wired networks can perform well at image recognition~\cite{xie2019exploring}. Here, we explore randomizing the data, rather than the model, to assess whether certain claims about which phenomena the model has learned are established in fact.
 
 % Commenting this section out as per suggestion by Dieuwke
@@ -1961,7 +1964,7 @@ We use this class of non-parametric probes to investigate RoBERTa's ability to l
 \label{sec:mlm_discussion}
 
 The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, many linguistic constructs are undefined. (e.g.\ dependency or constituency parses would no longer be syntactic trees, what would sentences be but mere lists of words).
-Our fine-tuning results in \autoref{sec:mlm_glue_results} and parametric probing results in \autoref{sec:mlm_param_probing}, however, suggests that MLMs do not need to rely much on word order to achieve high accuracy, bringing into question previous claims that they learn a ``classical NLP pipeline.''
+Our fine-tuning results in \autoref{sec:mlm_glue_results} and parametric probing results in \autoref{sec:mlm_param_probing}, however, suggests that \acrshort{mlm}s do not need to rely much on word order to achieve high accuracy, bringing into question previous claims that they learn a ``classical NLP pipeline.''
 
 % The assumption that word order information is crucial for any classical NLP pipeline (especially for English) is deeply ingrained in our understanding of syntax itself \citep{chomsky1957syntactic}: without order, most linguistic constructs are undefined
 
@@ -1977,14 +1980,14 @@ Thus, our results seem to suggest that we may need to revisit what we mean by ``
 
 % There are many interesting and potentially exciting avenues for future work that we could not explore due to limitation of space. An interesting question revolves around whether this phenomenon is more pronounced for English than for other languages. It is natural to wonder whether more word-order flexible or morphologically-rich languages would suffer from the same problem. Using the methods discussed in this work, we could imagine devising a way to determine the degree of order-dependence for tasks across languages. Another possible extension pertains to other tasks, including extractive question answering (QA) or sequence tagging, for which we can also to determine whether word order information is acquired downstream or during pre-training.
 
-To summarize, in this chapter, we revisited the hypothesis that masked language modelling's impressive performance can be explained in part by its ability to learn classical NLP pipelines. We investigated targeted pre-training on sentences with various degrees of randomization in their word order, and observed overwhelmingly that MLM's success is most likely not due to its ability to discover syntactic and semantic mechanisms necessary for a traditional language processing pipeline during pre-training. Instead, our experiments suggest that MLM's success can largely be explained by it having learned higher-order distributional statistics that make for a useful prior for subsequent fine-tuning. These results should hopefully encourage the development of better, more challenging tasks that require sophisticated reasoning, and harder probes to narrow down what exact linguistic information is present in the representations learned by our models.
+To summarize, in this chapter, we revisited the hypothesis that masked language modelling's impressive performance can be explained in part by its ability to learn classical NLP pipelines. We investigated targeted pre-training on sentences with various degrees of randomization in their word order, and observed overwhelmingly that \acrshort{mlm}'s success is most likely not due to its ability to discover syntactic and semantic mechanisms necessary for a traditional language processing pipeline during pre-training. Instead, our experiments suggest that \acrshort{mlm}'s success can largely be explained by it having learned higher-order distributional statistics that make for a useful prior for subsequent fine-tuning. These results should hopefully encourage the development of better, more challenging tasks that require sophisticated reasoning, and harder probes to narrow down what exact linguistic information is present in the representations learned by our models.
 %
 
 
 % \section{Follow-up findings in the community}
 % \label{sec:mlm_followup}
 
-% Our work in this chapter involving surprising word-order insensitivity of MLM models during pre-training has garnered significant interest in the community since its publication in 2021. In this section I highlight some of the interesting publications following the results from our work.
+% Our work in this chapter involving surprising word-order insensitivity of \acrshort{mlm} models during pre-training has garnered significant interest in the community since its publication in 2021. In this section I highlight some of the interesting publications following the results from our work.
 
 % \citet{Chiang2022OnTT}
 
@@ -2046,7 +2049,7 @@ We investigate several zero shot, few shot and full shot tasks by shifting the s
     % However, this phenomena is not uniform across tasks, highlighting a potential task to token position bias.
     % However, for some tasks phase-shifted sentences allow for better zero shot task performance, highlighting the token to position bias.
     \item Autoregressive models, including the recently published OPT \cite{Zhang2022:OPT}, show erratic zero and few-shot performance on sub-window representations, highlighting the brittleness of in-context learning evaluation.
-    \item Masked Language Models (MLMs) encode sentences in non-standard positions better than their autoregressive counterparts.
+    \item Masked Language Models (\acrshort{mlm}s) encode sentences in non-standard positions better than their autoregressive counterparts.
     \item During fine-tuning models suffer drastically on cross phase-shifted evaluation, suggesting position specific overfitting.
 \end{itemize}
 
@@ -2161,8 +2164,8 @@ We compute the perplexities of several publicly available models---RoBERTa \cite
 We compute the task score by comparing grammatical and ungrammatical sentence perplexities, and applying the phase shift in increasing values of $k$ to the sentences and models (\autoref{fig:acceptability}).
 
 While computing the task scores and perplexities of the models, we observed that all of the models exhibit poor task performance on phase shifts.
-Due to the non-shiftable nature of the \texttt{[CLS]} token in masked language models (MLMs), we fixed the position of \texttt{[CLS]} token to start position during phase shifting.
-However, we observed a marked improvement in task performance when we use trigger tokens in the beginning of the sentence, typically the end-of-sentence (\texttt{[EOS]}) token in case of MLM models (RoBERTa, BART).
+Due to the non-shiftable nature of the \texttt{[CLS]} token in masked language models (\acrshort{mlm}s), we fixed the position of \texttt{[CLS]} token to start position during phase shifting.
+However, we observed a marked improvement in task performance when we use trigger tokens in the beginning of the sentence, typically the end-of-sentence (\texttt{[EOS]}) token in case of \acrshort{mlm} models (RoBERTa, BART).
 An explanation for this ambiguity in results is that typically when models are pre-trained, multiple sentences are packed together in the context window by delimiting the start of each sentence with an \texttt{[EOS]} token.
 While this is not the case for GPT2, we also observed improved performance in some cases when we add a beginning of sentence (\texttt{[BOS]}) token to the sentence and add a special \texttt{[EOS]} token to delimit the start of a sentence. Thus, in all of our results, we opt with this configuration (adding an \texttt{[EOS]} token before the sentence) to ensure fairer evaluation for all model families.
 Concretely, the input to a model uses the following template:
@@ -2400,10 +2403,10 @@ In this chapter, we investigate the abilities of APEs in encoding the relative p
 
 \begin{itemize}
   \item \textbf{Reduced sub-context window sentence processing capability of TLMs.} Majority of TLM's show worse perplexity scores when the position information is shifted, emulating a different start of sentence (\autoref{sec:pos_acceptability}).
-  \item \textbf{MLMs offer better sub-context sentence representations.} Masked Language Models have much better ability to reconcile sentence representations from within a context window, compared to their autoregressive counterparts (\autoref{fig:acceptability}).
-  \item \textbf{MLM models have lower surprisal scores in sub-context positions.} Even so, Masked LM's also display large variations in perplexity, leading to wide fluctuations in the best starting position for a given sentence. This highlights different sub-window representation capability of MLMs, which can be leveraged further to develop more generalizable models.
+  \item \textbf{\acrshort{mlm}s offer better sub-context sentence representations.} Masked Language Models have much better ability to reconcile sentence representations from within a context window, compared to their autoregressive counterparts (\autoref{fig:acceptability}).
+  \item \textbf{\acrshort{mlm} models have lower surprisal scores in sub-context positions.} Even so, Masked LM's also display large variations in perplexity, leading to wide fluctuations in the best starting position for a given sentence. This highlights different sub-window representation capability of \acrshort{mlm}s, which can be leveraged further to develop more generalizable models.
   \item \textbf{Systematicity issues for Autoregressive models in Prompting.} Autoregressive models remains highly susceptible to the shift in starting positions, possibly due to mismatch in their own, implicit position representation vs the provided one \citep{haviv2022}. This is evident with the wildly fluctuating and significantly worse results on prompting (\autoref{sec:pos_further_eval_prompts}).
-  \item \textbf{Poor out-of-context generalization in full fine-tuning.} Full finetuning with different class of models also highlights the over-dependence of models (both MLM and Autoregressive) on the starting position of a given sentence. Notably, models display poor \textit{out-of-phase} generalization, and present the best results when trained without any phase shift, highlighting a potential position-to-data bias (\autoref{sec:pos_finetuning}).
+  \item \textbf{Poor out-of-context generalization in full fine-tuning.} Full finetuning with different class of models also highlights the over-dependence of models (both \acrshort{mlm} and Autoregressive) on the starting position of a given sentence. Notably, models display poor \textit{out-of-phase} generalization, and present the best results when trained without any phase shift, highlighting a potential position-to-data bias (\autoref{sec:pos_finetuning}).
   \item \textbf{Different sentence processing behavior in sub-context positions.} When provided with different starting positions, the models attention behaviors also drastically changes (\autoref{sec:pos_attention_analysis}), exhibiting systematicity issues in in-context sentence representation capability of large language models.
 \end{itemize}
 

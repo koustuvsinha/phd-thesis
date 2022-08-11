@@ -168,7 +168,10 @@ morestring=[b]'
 \chapter*{Acknowledgements}
 \label{sec:org111920c}
 \chapter*{Abstract}
-\label{sec:orgec62e8c}
+\label{sec:abstract_en}
+
+In this thesis, I investigate several approaches to evaluate modern neural language models through the lens of \textit{systematicity}, in order to assess their limits of human-level reasoning and comprehension of natural language. First, I investigate their limits in encoding the natural language semantics by proposing a diagnostic challenge dataset known as CLUTRR. Drawing inspiration from first-order logic, this dataset specifically tests for systematicity in length generalization in natural language understanding models, in the form of a question-answering task. I observe most major models fail in generalizing to longer chain of reasoning, with the main limitation arising from their rudimentary understanding of syntax. Next, I apply the principles of systematicity to evaluate the syntax encoding strategy of large language models by applying permutations to the word order seen during inference and training. I observe a surprising fact that a trained neural language model can still perform optimally when subjected to sentences of shuffled word orders, devoid of their original meaning, and furthermore they can even improve their performance significantly on specific permutations. Next, I investigate the reasons of such behavior by pre-training large language models on meaningless, word-order shuffled corpora, to find they too behave optimally on downstream semantic and syntactic tasks. These results highlight a potential distributional nature of large language models, such that they only focus on n-grams during computation. Finally, I attempt to investigate the root cause of these effects, to find the component of the model most responsible. I observe that certain classes of position embeddings lead the models to overfit on the token positions, subjecting models to exhibit un-systematic behavior on out-of-position sentences. My work in this thesis attempts to shed more light to the black box nature of the state-of-the-art neural language models, and introduces mechanisms to test and ensure systematic behaviors in their understanding of natural language.
+
 \chapter*{Abstract in French}
 \label{sec:org71795cd}
 \chapter*{Contributions to Original Knowledge}

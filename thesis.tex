@@ -1359,7 +1359,7 @@ In recent years, the impact of the hypothesis sentence \citep{gururangan-etal-20
     \label{fig:bleu_2}
 \end{figure}
 
-A natural question to ask following our findings: what is it about particular permutations that leads models to accept them? Since the permutation operation is drastic and only rarely preserves local word relations, we first investigate whether there exists a relationship between \PermAcc\ scores and local word order preservation. Concretely, we compare bi-gram word overlap (BLEU-2) with the percentage of permutations that are deemed correct (\autoref{fig:bleu_2}).\footnote{We observe, due to our permutation process, the maximum BLEU-3 and BLEU-4 scores are negligibly low ($< 0.2$  BLEU-3 and $< 0.1$ BLEU-4), already calling into question the hypothesis that n-grams are the sole explanation for our finding. Because of this, we only compare BLEU-2 scores. Detailed experiments on specially constructed permutations that cover the entire range of BLEU-3 and BLEU-4 is provided in \autoref{app_sec:bleu_all}.} Although the probability of a permuted sentence to be predicted correctly does appear to track BLEU-2 score (Figure \ref{fig:bleu_2}), the percentage of examples which were assigned the gold label by the Transformer-based models is still higher than we would expect from permutations with lower BLEU-2 (66\% for the lowest BLEU-2 range of $0-0.15$), suggesting preserved relative word order alone cannot explain the high permutation acceptance rates.
+A natural question to ask following our findings: what is it about particular permutations that leads models to accept them? Since the permutation operation is drastic and only rarely preserves local word relations, we first investigate whether there exists a relationship between \PermAcc\ scores and local word order preservation. Concretely, we compare bi-gram word overlap (BLEU-2) with the percentage of permutations that are deemed correct (\autoref{fig:bleu_2}).\footnote{We observe, due to our permutation process, the maximum BLEU-3 and BLEU-4 scores are negligibly low ($< 0.2$  BLEU-3 and $< 0.1$ BLEU-4), already calling into question the hypothesis that n-grams are the sole explanation for our finding. Because of this, we only compare BLEU-2 scores.} Although the probability of a permuted sentence to be predicted correctly does appear to track BLEU-2 score (Figure \ref{fig:bleu_2}), the percentage of examples which were assigned the gold label by the Transformer-based models is still higher than we would expect from permutations with lower BLEU-2 (66\% for the lowest BLEU-2 range of $0-0.15$), suggesting preserved relative word order alone cannot explain the high permutation acceptance rates.
 
 Thus, we find that local order preservation does correlate with \PermAcc, but it doesn't fully explain the high \PermAcc\ scores.
 We now further ask whether $\Omega$ is related to a more abstract measure of local word relations, i.e., part-of-speech (POS) neighborhood.
@@ -1664,7 +1664,7 @@ We use the Wiki 103 validation and test set to validate and test the array of pr
 
 \subsection{Fine-tuning tasks}
 
-We evaluate downstream performance using the General Language Understanding and Evaluation (GLUE) benchmark, the Paraphrase Adversaries from Word Scrambling (PAWS) dataset, and various parametric and non-parametric tasks (see \autoref{sec:probing_results}).
+We evaluate downstream performance using the General Language Understanding and Evaluation (GLUE) benchmark, the Paraphrase Adversaries from Word Scrambling (PAWS) dataset, and various parametric and non-parametric tasks (see \autoref{sec:mlm_probing_results}).
 
 \xhdr{GLUE} %We use the GLUE \cite{wang2018glue} benchmark tasks to inspect the reliance of word order learning during pre-training. This
 The GLUE \cite{wang-etal-2018-glue} benchmark is a collection of 9 datasets for evaluating natural language understanding systems, of which we use Corpus of Linguistic Acceptability \cite[CoLA,][]{cola_warstadt2019neural}, Stanford Sentiment Treebank \cite[SST,][]{sst2_socher2013recursive}, Microsoft Research Paragraph Corpus \cite[MRPC,][]{mrpc_dolan2005automatically}, Quora Question Pairs (QQP)\footnote{\href{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}{http://data.quora.com/First-Quora-Dataset-Release-Question-Pairs}}, Multi-Genre NLI \cite[MNLI,][]{williams-etal-2018-broad}, Question NLI \cite[QNLI,][]{rajpurkar-etal-2016-squad, qnli_2_demszky2018transforming}, Recognizing Textual Entailment \cite[RTE,][]{rte1_dagan2005pascal, rte2_haim2006second, rte3_giampiccolo2007third, rte5_bentivogli2009fifth}.
@@ -2289,7 +2289,7 @@ We observe that the task performance of all models, except for RoBERTa, drastica
 
 % \section{Impact of position information on zero to few-shot settings}
 \subsection{Impact of phase shifts on in-context learning}
-\label{sec:pos_prompting}
+\label{sec:pos_prompting_ps}
 
 \input{figs/pos/prompt_aggregate}
 
